@@ -1,48 +1,90 @@
+import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
+// Create axios instance with default configuration
+const axiosInstance: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Request interceptor for adding auth tokens, etc.
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // Add auth token if available
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor for handling errors globally
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    // Handle common errors
+    if (error.response) {
+      // Server responded with error status
+      const message = error.response.data?.message || error.message;
+      throw new Error(`API Error: ${message}`);
+    } else if (error.request) {
+      // Request made but no response received
+      throw new Error("Network Error: No response from server");
+    } else {
+      // Something else happened
+      throw new Error(`Request Error: ${error.message}`);
+    }
+  }
+);
+
 export const api = {
   baseUrl: API_BASE_URL,
+  instance: axiosInstance,
 
-  async fetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.statusText}`);
-    }
-
-    return response.json();
+  async get<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await axiosInstance.get<T>(endpoint, config);
+    return response.data;
   },
 
-  get<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    return this.fetch<T>(endpoint, { ...options, method: "GET" });
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response = await axiosInstance.post<T>(endpoint, data, config);
+    return response.data;
   },
 
-  post<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<T> {
-    return this.fetch<T>(endpoint, {
-      ...options,
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+  async put<T>(
+    endpoint: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response = await axiosInstance.put<T>(endpoint, data, config);
+    return response.data;
   },
 
-  put<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<T> {
-    return this.fetch<T>(endpoint, {
-      ...options,
-      method: "PUT",
-      body: JSON.stringify(data),
-    });
+  async patch<T>(
+    endpoint: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response = await axiosInstance.patch<T>(endpoint, data, config);
+    return response.data;
   },
 
-  delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
-    return this.fetch<T>(endpoint, { ...options, method: "DELETE" });
+  async delete<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await axiosInstance.delete<T>(endpoint, config);
+    return response.data;
   },
 };
