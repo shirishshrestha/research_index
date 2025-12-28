@@ -1,53 +1,83 @@
 import { Container } from "@/components/shared";
+import { Card } from "@/components/ui/card";
+import { Icon } from "@/components/shared";
+
+const features = [
+  {
+    title: "Global Search & Discovery",
+    description:
+      "Global research search engine with fast filters, smart auto complete, and smooth navigation across authors, journals, institutions.",
+    icon: "search",
+  },
+  {
+    title: "Author & Journal Profiles",
+    description:
+      "Verified academic identities with ORCID, ROR, DOAJ badges ensure authentic author, journal profiles and scholarly recognition.",
+    icon: "user",
+  },
+  {
+    title: "Citation & Impact Metrics",
+    description:
+      "Smarter research with transparent metrics—h-Index, citations, impact, Article Rank—delivering normalized, contextual insights for decisions.",
+    icon: "bookOpen",
+  },
+  {
+    title: "Interactive Analytics & Visualization",
+    description:
+      "Interactive co-author networks, citation graphs, and dashboards turn complex data into actionable visual insights for discovery.",
+    icon: "users",
+  },
+  {
+    title: "Workflow & Export Tools",
+    description:
+      "Streamlined research management with exports, reports, and alerts—integrated into workflows for sharing, productivity, and impact.",
+    icon: "fileText",
+  },
+  {
+    title: "Accessibility & Compliance",
+    description:
+      "Inclusive, barrier-free knowledge with WCAG-compliant design, transparent data, and responsive access across devices and user needs.",
+    icon: "settings",
+  },
+];
 
 export function FeaturesSection() {
-  const features = [
-    {
-      title: "Comprehensive Resources",
-      description: "Access a wide range of research materials and resources",
-      icon: "📚",
-    },
-    {
-      title: "Easy Search",
-      description: "Find what you need quickly with our advanced search",
-      icon: "🔍",
-    },
-    {
-      title: "Organized Content",
-      description: "Well-structured and categorized for easy navigation",
-      icon: "📋",
-    },
-    {
-      title: "Regular Updates",
-      description: "Stay current with regularly updated content",
-      icon: "🔄",
-    },
-  ];
-
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="section-padding bg-gray-50">
       <Container>
-        <div className="text-center mb-12">
-          <h2 className="heading-2 heading-gradient">Key Features</h2>
-          <p className="subheading mt-4" style={{ color: "#555" }}>
-            Everything you need for effective research
+        {/* Section Header */}
+        <div className=" mb-12 text-start mx-auto">
+          <p className="subheading ">Our Solutions</p>
+          <h2 className="heading-2 heading-gradient mb-5">
+            Solutions built on <br /> trust, data, and expertise.
+          </h2>
+          <p className="heading-para max-w-3xl">
+            Our platform integrates enriched datasets, predictive analytics, and
+            workflow software with human insight – delivering clarity,
+            confidence, and transformation.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Feature Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
-            <div
+            <Card
               key={index}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              className="flex flex-col items-start gap-5 p-6 rounded-lg bg-white shadow-none border-none hover:shadow-md transition-shadow"
             >
-              <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="heading-4 mb-2" style={{ color: "#023B8B" }}>
-                {feature.title}
-              </h3>
-              <p className="text-sm" style={{ color: "#555" }}>
-                {feature.description}
-              </p>
-            </div>
+              <div className=" flex items-center justify-between w-full">
+                <h3 className="heading-3 text-text-black max-w-[70%]">
+                  {feature.title}
+                </h3>
+                {/* Icon */}
+                <Icon name={feature.icon} size={24} color="#023b8b" />
+              </div>
+
+              {/* Content */}
+              <div className="space-y-3">
+                <p className="para">{feature.description}</p>
+              </div>
+            </Card>
           ))}
         </div>
       </Container>

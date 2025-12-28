@@ -1,29 +1,149 @@
-import { Container } from "@/components/shared";
-import { Button } from "@/components/shared/Button";
+"use client";
+
+import { Container, SearchInput } from "@/components/shared";
+import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+// Use plain <img> for SVGs so CSS height/width behave predictably
+
+const stats = [
+  { value: 139, label: "Countries Represented" },
+  { value: 22110, label: "Journals" },
+  { value: 11699408, label: "Article Records" },
+];
 
 export function HeroSection() {
+  const [searchType, setSearchType] = useState<"journals" | "articles">(
+    "journals"
+  );
+
+  const handleSearch = (value: string) => {
+    console.log("Searching for:", value, "Type:", searchType);
+    // Add your search logic here
+  };
+
   return (
-    <section
-      className="py-20 text-white"
-      style={{
-        background: "linear-gradient(180deg, #023B8B 25.96%, #012558 70.66%)",
-      }}
-    >
-      <Container>
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h1 className="heading-1">Welcome to Resource Index</h1>
-          <p className="subheading text-white/90">
-            Discover and explore a comprehensive collection of research
-            resources
-          </p>
-          <div className="flex gap-4 justify-center mt-8">
-            <Button variant="secondary">Get Started</Button>
-            <Button
-              variant="primary"
-              className="bg-white text-[#023B8B] hover:bg-gray-100"
-            >
-              Learn More
-            </Button>
+    <section className="section-padding text-white relative overflow-hidden bg-hero-gradient">
+      <Container className="relative">
+        <div className="grid lg:grid-cols-[2fr_1.1fr] gap-8 items-center">
+          <div className="">
+            <div className="space-y-5">
+              <p className="text-sm md:text-lg font-normal">
+                Nepal Open Research Hub
+              </p>
+              <h1 className="heading-1">
+                Explore open access research publications, journals and
+                scholarly articles.
+              </h1>
+            </div>
+
+            {/* Search Type Selector (shadcn RadioGroup) */}
+            <div className="flex gap-6 mt-8.75">
+              <RadioGroup
+                value={searchType}
+                onValueChange={(v) =>
+                  setSearchType(v as "journals" | "articles")
+                }
+                className="flex items-center gap-6"
+              >
+                <label
+                  htmlFor="search-journals"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <RadioGroupItem
+                    id="search-journals"
+                    value="journals"
+                    className="border-secondary"
+                    circleClass="fill-secondary"
+                  />
+                  <span className="text-base md:text-lg">Journals</span>
+                </label>
+
+                <label
+                  htmlFor="search-articles"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <RadioGroupItem
+                    id="search-articles"
+                    value="articles"
+                    className="border-secondary"
+                    circleClass="fill-secondary"
+                  />
+                  <span className="text-base md:text-lg font-normal">
+                    Articles
+                  </span>
+                </label>
+              </RadioGroup>
+            </div>
+
+            {/* Search Bar */}
+            <div className="space-y-5 mt-15">
+              <div className="flex gap-3">
+                <SearchInput
+                  placeholder="Search author, journal, articles, institutions....."
+                  onSearch={handleSearch}
+                  debounceMs={500}
+                  className="flex-1"
+                />
+                <Button size="lg" className="">
+                  <Search size={20} />
+                  Search
+                </Button>
+              </div>
+              <Link
+                href="/search/advanced"
+                className="inline-flex items-center gap-2 text-sm hover:text-white/80 transition-colors"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2 4h12M4 8h8M6 12h4"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Advanced Search
+              </Link>
+            </div>
+
+            {/* Statistics Counter */}
+            <div className="grid grid-cols-3 gap-6 pt-8">
+              {stats.map((stat, index) => (
+                <div
+                  key={index}
+                  className={`${
+                    index !== stats.length - 1
+                      ? "border-r border-white/20 pr-6"
+                      : ""
+                  }`}
+                >
+                  <h3 className="heading-3 text-secondary mb-2">
+                    {stat.value.toLocaleString()}
+                  </h3>
+                  <div className="sub-body">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Side - Space for Structure */}
+          <div className="hidden lg:block relative h-full">
+            <Image
+              width={500}
+              height={500}
+              src="/hero.svg"
+              alt="shapes"
+              className="absolute right-3 -top-20 h-170 w-auto pointer-events-none"
+            />
           </div>
         </div>
       </Container>

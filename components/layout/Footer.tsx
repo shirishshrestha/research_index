@@ -1,40 +1,36 @@
+import { ChevronRight, CreativeCommons } from "lucide-react";
 import Link from "next/link";
+import { Icon } from "../shared";
+import Image from "next/image";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer
-      style={{
-        background: "linear-gradient(180deg, #023B8B 25.96%, #012558 70.66%)",
-      }}
-    >
-      <div className="container mx-auto px-4 py-12">
+    <footer className="bg-gradient-blue">
+      <div className="wrapper py-12.5">
         {/* Top Section with Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-15 mb-8">
           {/* Contributors */}
           <div>
-            <h3
-              className="text-lg font-bold text-white mb-4"
-              style={{ fontFamily: "Merriweather, serif" }}
-            >
+            <h3 className="text-lg font-semibold  leading-8.75 text-white mb-2.5">
               Contributors
             </h3>
             <ul className="space-y-2">
-              <li className="flex items-center">
-                <span className="text-white mr-2">›</span>
+              <li className="flex items-center gap-2.5">
+                <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/authors"
-                  className="text-white hover:text-white/80 text-sm transition-colors"
+                  className="text-white hover:underline text-sm transition-colors"
                 >
                   Authors
                 </Link>
               </li>
-              <li className="flex items-center">
-                <span className="text-white mr-2">›</span>
+              <li className="flex items-center gap-2.5">
+                <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/institutions"
-                  className="text-white hover:text-white/80 text-sm transition-colors"
+                  className="text-white hover:underline text-sm transition-colors"
                 >
                   Institutions
                 </Link>
@@ -44,36 +40,33 @@ export function Footer() {
 
           {/* Libraries */}
           <div>
-            <h3
-              className="text-lg font-bold text-white mb-4"
-              style={{ fontFamily: "Merriweather, serif" }}
-            >
+            <h3 className="text-lg font-semibold  leading-8.75 text-white mb-2.5">
               Libraries
             </h3>
             <ul className="space-y-2">
-              <li className="flex items-center">
-                <span className="text-white mr-2">›</span>
+              <li className="flex items-center gap-2.5">
+                <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/articles"
-                  className="text-white hover:text-white/80 text-sm transition-colors"
+                  className="text-white hover:underline text-sm transition-colors"
                 >
                   Articles
                 </Link>
               </li>
-              <li className="flex items-center">
-                <span className="text-white mr-2">›</span>
+              <li className="flex items-center gap-2.5">
+                <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/journals"
-                  className="text-white hover:text-white/80 text-sm transition-colors"
+                  className="text-white hover:underline text-sm transition-colors"
                 >
                   Journals
                 </Link>
               </li>
-              <li className="flex items-center">
-                <span className="text-white mr-2">›</span>
+              <li className="flex items-center gap-2.5">
+                <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/search"
-                  className="text-white hover:text-white/80 text-sm transition-colors"
+                  className="text-white hover:underline text-sm transition-colors"
                 >
                   Topics
                 </Link>
@@ -83,27 +76,24 @@ export function Footer() {
 
           {/* About */}
           <div>
-            <h3
-              className="text-lg font-bold text-white mb-4"
-              style={{ fontFamily: "Merriweather, serif" }}
-            >
+            <h3 className="text-lg font-semibold leading-8.75 text-white mb-2.5">
               About
             </h3>
             <ul className="space-y-2">
-              <li className="flex items-center">
-                <span className="text-white mr-2">›</span>
+              <li className="flex items-center gap-2.5">
+                <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/about"
-                  className="text-white hover:text-white/80 text-sm transition-colors"
+                  className="text-white hover:underline text-sm transition-colors"
                 >
                   About Platform
                 </Link>
               </li>
-              <li className="flex items-center">
-                <span className="text-white mr-2">›</span>
+              <li className="flex items-center gap-2.5">
+                <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/contact"
-                  className="text-white hover:text-white/80 text-sm transition-colors"
+                  className="text-white hover:underline text-sm transition-colors"
                 >
                   Contact
                 </Link>
@@ -118,115 +108,87 @@ export function Footer() {
         {/* Bottom Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left: Logo and Copyright */}
-          <div>
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="flex items-center">
-                <div className="relative">
-                  <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                    <circle cx="30" cy="30" r="3" fill="white" />
-                    <circle cx="15" cy="20" r="2" fill="white" />
-                    <circle cx="45" cy="20" r="2" fill="white" />
-                    <circle cx="15" cy="40" r="2" fill="white" />
-                    <circle cx="45" cy="40" r="2" fill="white" />
-                    <circle cx="30" cy="10" r="2" fill="white" />
-                    <circle cx="30" cy="50" r="2" fill="white" />
-                    <circle cx="10" cy="30" r="2" fill="white" />
-                    <circle cx="50" cy="30" r="2" fill="white" />
-                  </svg>
-                </div>
-              </div>
-              <div>
-                <h2
-                  className="text-xl font-bold text-white"
-                  style={{ fontFamily: "Merriweather, serif" }}
-                >
-                  RESEARCH INDEX
-                </h2>
-              </div>
+          <div className="space-y-5">
+            <div className="flex flex-col items-start gap-2.5 space-x-3 mb-4">
+              <Link href="/">
+                <Image
+                  src="/logo-white.png"
+                  width={255}
+                  height={80}
+                  alt="Logo"
+                />
+              </Link>
+              <p className="text-white text-sm mb-2">
+                © Nepal Research Index {currentYear} — All Rights Reserved
+              </p>
             </div>
-            <p className="text-white/80 text-sm mb-2">
-              © Nepal Research Index {currentYear} — All Rights Reserved
-            </p>
-            <div className="flex items-center flex-wrap gap-2 text-sm text-white/80">
-              <Link
-                href="/privacy"
-                className="hover:text-white transition-colors"
-              >
+            <div className="flex items-center gap-3 flex-wrap text-sm text-white">
+              <Link href="/privacy" className="hover:underline">
                 Privacy
               </Link>
               <span>|</span>
-              <Link
-                href="/terms"
-                className="hover:text-white transition-colors"
-              >
+              <Link href="/terms" className="hover:underline">
                 Terms & Conditions
               </Link>
               <span>|</span>
-              <Link
-                href="/code-of-conduct"
-                className="hover:text-white transition-colors"
-              >
+              <Link href="/code-of-conduct" className="hover:underline">
                 Code of Conduct
               </Link>
               <span>|</span>
-              <Link
-                href="/media"
-                className="hover:text-white transition-colors"
-              >
+              <Link href="/media" className="hover:underline">
                 Media NRIP Research Labs
               </Link>
             </div>
           </div>
 
           {/* Right: License Information */}
-          <div className="text-white/90 text-sm space-y-3">
-            <div className="flex items-start space-x-2">
+          <div className="text-white/90 text-sm space-y-6.25">
+            <div className="flex flex-col gap-3 items-start space-x-2">
               <div className="flex space-x-1 pt-1">
-                <span className="inline-block px-1 py-0.5 border border-white rounded text-xs">
-                  CC
-                </span>
-                <span className="inline-block px-1 py-0.5 border border-white rounded text-xs">
-                  BY
-                </span>
-                <span className="inline-block px-1 py-0.5 border border-white rounded text-xs">
-                  SA
-                </span>
+                <Icon name="Creative-Commons" size={20} color="white" />
+                <Icon name="by-content-sign" size={20} color="white" />
+                <Icon name="Sa-Content-Sign" size={20} color="white" />
               </div>
-              <p>
-                Content on this site is licensed under a{" "}
-                <Link
-                  href="https://creativecommons.org/licenses/by-sa/4.0/"
-                  className="underline hover:text-white"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Creative Commons Attribution-ShareAlike 4.0 International (CC
-                  BY-SA 4.0) license
-                </Link>
-                .
-              </p>
+              <div className="space-y-0.5">
+                <p className="flex flex-col">
+                  Content on this site is licensed under a
+                </p>
+                <p>
+                  Creative Commons{" "}
+                  <Link
+                    href="https://creativecommons.org/licenses/by-sa/4.0/"
+                    className="underline hover:text-white"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+                    license.
+                  </Link>
+                </p>
+              </div>
             </div>
-            <div className="flex items-start space-x-2">
+            <div className="flex flex-col gap-3 items-start space-x-2">
               <div className="flex space-x-1 pt-1">
-                <span className="inline-block px-1 py-0.5 border border-white rounded text-xs">
-                  CC
-                </span>
-                <span className="inline-block px-1 py-0.5 border border-white rounded text-xs">
-                  0
-                </span>
+                <Icon name="Creative-Commons" size={20} color="white" />
+                <Icon name="Zero-Content-Sign" size={20} color="white" />
               </div>
-              <p>
-                Copyrights and related rights for article metadata waived via{" "}
-                <Link
-                  href="https://creativecommons.org/publicdomain/zero/1.0/"
-                  className="underline hover:text-white"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  CC0 1.0 Universal (CC0) Public Domain Dedication
-                </Link>
-                .
-              </p>
+              <div className="space-y-0.5">
+                {" "}
+                <p>
+                  Copyrights and related rights for article metadata waived via{" "}
+                </p>
+                <p>
+                  {" "}
+                  <Link
+                    href="https://creativecommons.org/publicdomain/zero/1.0/"
+                    className="underline hover:text-white"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    CC0 1.0 Universal (CC0) Public Domain Dedication.
+                  </Link>
+                </p>
+              </div>
             </div>
           </div>
         </div>
