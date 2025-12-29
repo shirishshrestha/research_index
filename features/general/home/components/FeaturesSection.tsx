@@ -7,37 +7,37 @@ const features = [
     title: "Global Search & Discovery",
     description:
       "Global research search engine with fast filters, smart auto complete, and smooth navigation across authors, journals, institutions.",
-    icon: "search",
+    icon: "world",
   },
   {
     title: "Author & Journal Profiles",
     description:
       "Verified academic identities with ORCID, ROR, DOAJ badges ensure authentic author, journal profiles and scholarly recognition.",
-    icon: "user",
+    icon: "curriculum",
   },
   {
     title: "Citation & Impact Metrics",
     description:
       "Smarter research with transparent metrics—h-Index, citations, impact, Article Rank—delivering normalized, contextual insights for decisions.",
-    icon: "bookOpen",
+    icon: "discussion",
   },
   {
     title: "Interactive Analytics & Visualization",
     description:
       "Interactive co-author networks, citation graphs, and dashboards turn complex data into actionable visual insights for discovery.",
-    icon: "users",
+    icon: "hand",
   },
   {
     title: "Workflow & Export Tools",
     description:
       "Streamlined research management with exports, reports, and alerts—integrated into workflows for sharing, productivity, and impact.",
-    icon: "fileText",
+    icon: "data",
   },
   {
     title: "Accessibility & Compliance",
     description:
       "Inclusive, barrier-free knowledge with WCAG-compliant design, transparent data, and responsive access across devices and user needs.",
-    icon: "settings",
+    icon: "access-control",
   },
 ];
 
@@ -63,14 +63,14 @@ export function FeaturesSection() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="flex flex-col items-start gap-5 p-6 rounded-lg bg-white shadow-none border-none hover:shadow-md transition-shadow"
+              className="flex flex-col items-start gap-5 p-6 rounded-lg bg-white shadow-none border-none hover:shadow-md group transition-shadow"
             >
               <div className=" flex items-center justify-between w-full">
-                <h3 className="heading-3 text-text-black max-w-[70%]">
+                <h3 className="heading-3 group-hover:underline text-text-black max-w-[70%]">
                   {feature.title}
                 </h3>
                 {/* Icon */}
-                <Icon name={feature.icon} size={24} color="#023b8b" />
+                <Icon name={feature.icon} size={42} />
               </div>
 
               {/* Content */}

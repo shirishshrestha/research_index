@@ -685,15 +685,10 @@ export function cn(...inputs: ClassValue[]) {
 **File:** `app/(general)/page.tsx`
 
 ```tsx
-import { MainLayout } from "@/components/layout";
 import { HomePage } from "@/features/home";
 
 export default function Home() {
-  return (
-    <MainLayout>
-      <HomePage />
-    </MainLayout>
-  );
+  return <HomePage />;
 }
 ```
 
@@ -901,7 +896,6 @@ export default function LoginPage() {
 **Articles Page:** `app/(general)/articles/page.tsx`
 
 ```tsx
-import { MainLayout } from "@/components/layout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -911,16 +905,14 @@ export const metadata: Metadata = {
 
 export default function ArticlesPage() {
   return (
-    <MainLayout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="heading-2 heading-gradient mb-8">Research Articles</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <p className="col-span-full text-center text-gray-600">
-            Article listings coming soon...
-          </p>
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="heading-2 heading-gradient mb-8">Research Articles</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <p className="col-span-full text-center text-gray-600">
+          Article listings coming soon...
+        </p>
       </div>
-    </MainLayout>
+    </div>
   );
 }
 ```

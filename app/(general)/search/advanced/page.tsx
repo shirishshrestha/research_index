@@ -1,4 +1,4 @@
-import { MainLayout } from "@/components/layout";
+
 import { Breadcrumb, commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { Container } from "@/components/shared";
 import { Metadata } from "next";
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function AdvancedSearchPage() {
   return (
-    <MainLayout>
+    
       <Container>
         <Breadcrumb
           variant="hero"
@@ -30,6 +30,6 @@ export default function AdvancedSearchPage() {
           {/* Add advanced search form here */}
         </div>
       </div>
-    </MainLayout>
+    
   );
 }

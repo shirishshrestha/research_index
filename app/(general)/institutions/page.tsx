@@ -1,4 +1,3 @@
-import { MainLayout } from "@/components/layout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,7 +7,6 @@ export const metadata: Metadata = {
 
 export default function InstitutionsPage() {
   return (
-    <MainLayout>
       <div className="container mx-auto px-4 py-8">
         <h1 className="heading-2 heading-gradient mb-8">
           Academic Institutions
@@ -20,6 +18,5 @@ export default function InstitutionsPage() {
           </p>
         </div>
       </div>
-    </MainLayout>
   );
 }

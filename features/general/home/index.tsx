@@ -2,6 +2,7 @@ import {
   HeroSection,
   FeaturesSection,
   AboutPlatformSection,
+  LatestJournalsSection,
 } from "./components";
 
 export function HomePage() {
@@ -10,6 +11,7 @@ export function HomePage() {
       <HeroSection />
       <FeaturesSection />
       <AboutPlatformSection />
+      <LatestJournalsSection />
     </>
   );
 }

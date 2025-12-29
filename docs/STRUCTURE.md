@@ -226,14 +226,10 @@ export function ResourcesPage() {
 }
 
 // /app/resources/page.tsx
-import { MainLayout } from "@/components/layout";
+
 import { ResourcesPage } from "@/features/resources";
 
 export default function Resources() {
-  return (
-    <MainLayout>
-      <ResourcesPage />
-    </MainLayout>
-  );
+  return <ResourcesPage />;
 }
 ```

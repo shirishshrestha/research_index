@@ -17,6 +17,7 @@
   --white-01: #fff;
   --white-02: #f2f2f2;
   --blue-01: #8db3ed;
+  --blue-02: #f1f4fc;
 
   /* Gradients */
   --gradient-blue: linear-gradient(
@@ -43,7 +44,7 @@
   );
   --radius: 0.625rem;
   --background: #f9f9f9;
-  --foreground: oklch(0.145 0 0);
+  --foreground: #555;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -52,12 +53,12 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: #8db3ed;
+  --accent-foreground: #fff;
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: #8db3ed;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -69,7 +70,7 @@
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-border: oklch(92.191% 0.0001 271.152 / 0.637);
   --sidebar-ring: oklch(0.708 0 0);
 }
 
@@ -80,11 +81,12 @@
   --font-roboto: var(--font-roboto);
   --color-background: var(--background);
   --color-white-02: var(--white-02);
-  --color-foreground: var(--text-black);
+  --color-foreground: var(--foreground);
   --color-text-white: var(--text-white);
   --color-text-gray: var(--text-gray);
   --color-text-black: var(--text-black);
   --color-blue-01: var(--blue-01);
+  --color-blue-02: var(--blue-02);
   --color-primary-foreground: var(--text-white);
   --color-secondary-foreground: var(--text-black);
   --color-gradient-blue: var(--gradient-blue);
@@ -93,12 +95,12 @@
   --color-hero-gradient: var(--hero-gradient);
   --color-muted: #f5f5f5;
   --color-muted-foreground: var(--text-gray);
-  --color-accent: #f0f4f8;
-  --color-accent-foreground: var(--text-black);
-  --color-destructive: #dc2626;
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
   --color-border: #e5e7eb;
   --color-input: #e5e7eb;
-  --color-ring: var(--primary);
+  --color-ring: var(--ring);
   --color-card: var(--white-01);
   --color-card-foreground: var(--text-black);
   --color-popover: var(--white-01);
@@ -138,7 +140,7 @@
       #4570b0 46.91%,
       #153463 65.41%,
       #011b42 79.88%
-    );
+    ) !important;
   }
 }
 
@@ -152,11 +154,6 @@
 
 .bg-gradient-green-1 {
   background: var(--gradient-green-1) !important;
-}
-
-body {
-  background: white;
-  color: var(--text-black);
 }
 
 h1,

@@ -3,7 +3,6 @@
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "use-debounce";
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
 
 export interface SearchInputProps {
   placeholder?: string;

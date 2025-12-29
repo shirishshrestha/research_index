@@ -113,12 +113,14 @@ export function Header() {
                         <li key={item.title}>
                           <NavigationMenuLink
                             className="cursor-pointer"
-                            href={item.href}
                             asChild
                           >
-                            <span className="block text-primary select-none rounded-md p-2 text-sm leading-none no-underline outline-none hover:bg-accent hover:text-accent-foreground">
+                            <Link
+                              href={item.href}
+                              className="block text-primary select-none rounded-md p-2 text-sm leading-none no-underline outline-none hover:bg-accent hover:text-accent-foreground"
+                            >
                               {item.title}
-                            </span>
+                            </Link>
                           </NavigationMenuLink>
                         </li>
                       ))}
@@ -142,21 +144,20 @@ export function Header() {
             <NavigationMenuList>
               {/* Contributors Menu */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-[16px] cursor-pointer font-normal text-primary transition-colors hover:text-primary/80">
+                <NavigationMenuTrigger className="text-[16px] cursor-pointer bg-transparent! font-normal hover:text-accent! text-primary! ">
                   Contributors
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-50 gap-1">
                     {contributorsItems.map((item) => (
                       <li key={item.title}>
-                        <NavigationMenuLink
-                          className="cursor-pointer"
-                          href={item.href}
-                          asChild
-                        >
-                          <span className="block select-none text-primary rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <NavigationMenuLink className="cursor-pointer" asChild>
+                          <Link
+                            href={item.href}
+                            className="block select-none text-primary rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
                             {item.title}
-                          </span>
+                          </Link>
                         </NavigationMenuLink>
                       </li>
                     ))}
@@ -166,21 +167,20 @@ export function Header() {
 
               {/* Libraries Menu */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-[16px] cursor-pointer font-normal text-primary transition-colors hover:text-primary/80">
+                <NavigationMenuTrigger className="text-[16px] bg-transparent! cursor-pointer font-normal text-primary! transition-colors hover:text-accent!">
                   Libraries
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid w-50 gap-1">
                     {librariesItems.map((item) => (
                       <li key={item.title}>
-                        <NavigationMenuLink
-                          className="cursor-pointer"
-                          href={item.href}
-                          asChild
-                        >
-                          <span className="block text-primary select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <NavigationMenuLink className="cursor-pointer" asChild>
+                          <Link
+                            href={item.href}
+                            className="block text-primary select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                          >
                             {item.title}
-                          </span>
+                          </Link>
                         </NavigationMenuLink>
                       </li>
                     ))}
@@ -191,11 +191,13 @@ export function Header() {
               {/* Main Links */}
               {mainLinks.map((link) => (
                 <NavigationMenuItem key={link.title}>
-                  <NavigationMenuLink
-                    href={link.href}
-                    className="text-[16px] text-primary transition-colors hover:text-primary/80 h-9 px-4 py-2 inline-flex items-center justify-center"
-                  >
-                    {link.title}
+                  <NavigationMenuLink asChild>
+                    <Link
+                      href={link.href}
+                      className="text-[16px]  text-primary transition-colors hover:text-accent h-9 px-4 py-2 inline-flex items-center justify-center bg-transparent!"
+                    >
+                      {link.title}
+                    </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}

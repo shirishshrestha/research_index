@@ -1,18 +1,32 @@
 import { Container } from "@/components/shared";
+import Image from "next/image";
 
 export function AboutPlatformSection() {
   return (
-    <section className="section-padding bg-gradient-blue relative overflow-hidden">
-      <Container>
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
+    <Container>
+      <section className="py-12.5 rounded-4xl bg-gradient-blue relative overflow-hidden">
+        <Image
+          width={500}
+          height={400}
+          src="/shape1.svg"
+          alt="shapes"
+          className="absolute hidden lg:inline left-12.5 top-0 h-auto w-auto pointer-events-none"
+        />
+        <Image
+          width={500}
+          height={400}
+          src="/shape2.svg"
+          alt="shapes"
+          className="absolute hidden lg:inline right-12.5 top-0 h-auto w-auto pointer-events-none"
+        />
+        <div className="relative z-10 max-w-[80%] lg:max-w-4xl 2xl:max-w-5xl mx-auto text-center space-y-8.75">
           {/* Section Header */}
-          <p className="text-white/90 text-sm md:text-base font-medium">
-            About the Platform
-          </p>
-
-          <h2 className="heading-2">
-            Empowering Research Through Intelligence
-          </h2>
+          <div className="space-y-3">
+            <p className="subheading text-blue-02!">About the Platform</p>
+            <h2 className="heading-2">
+              Empowering Research Through <br /> Intelligence
+            </h2>
+          </div>
 
           <div className="space-y-4 text-white/90">
             <p className="text-base md:text-lg leading-relaxed">
@@ -31,13 +45,7 @@ export function AboutPlatformSection() {
             </p>
           </div>
         </div>
-
-        {/* Decorative Background Elements */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-300 rounded-lg transform rotate-12"></div>
-          <div className="absolute bottom-10 right-10 w-40 h-40 bg-green-400 rounded-lg transform -rotate-6"></div>
-        </div>
-      </Container>
-    </section>
+      </section>
+    </Container>
   );
 }

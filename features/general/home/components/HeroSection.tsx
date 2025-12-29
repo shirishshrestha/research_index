@@ -116,7 +116,7 @@ export function HeroSection() {
             </div>
 
             {/* Statistics Counter */}
-            <div className="grid grid-cols-3 gap-6 pt-8">
+            <div className="grid grid-cols-3 gap-6 pt-12.5">
               {stats.map((stat, index) => (
                 <div
                   key={index}
@@ -142,7 +142,7 @@ export function HeroSection() {
               height={500}
               src="/hero.svg"
               alt="shapes"
-              className="absolute right-3 -top-20 h-170 w-auto pointer-events-none"
+              className="absolute right-3 -top-20  h-180 xl:h-175 2xl:h-160 w-auto pointer-events-none"
             />
           </div>
         </div>
