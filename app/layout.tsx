@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${merriweather.variable} ${roboto.variable} antialiased`}
+        className={`${merriweather.variable} ${roboto.variable} font-roboto antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

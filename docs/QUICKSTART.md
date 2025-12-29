@@ -28,14 +28,8 @@ app/my-page/page.tsx
 ```
 
 ```tsx
-import { MainLayout } from "@/components/layout";
-
 export default function MyPage() {
-  return (
-    <MainLayout>
-      <h1 className="heading-1">My Page</h1>
-    </MainLayout>
-  );
+  return <h1 className="heading-1">My Page</h1>;
 }
 ```
 

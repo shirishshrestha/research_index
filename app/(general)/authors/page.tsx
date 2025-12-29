@@ -1,23 +1,35 @@
-import { MainLayout } from "@/components/layout";
+import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
+import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
+import { AuthorsListView } from "@/features/general/authors";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Authors - Resource Index",
-  description: "Browse research authors",
+  description:
+    "Explore our growing list of authors contributing to Nepal's research excellence across diverse disciplines.",
 };
 
 export default function AuthorsPage() {
   return (
-    <MainLayout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="heading-2 heading-gradient mb-8">Research Authors</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Author cards will go here */}
-          <p className="col-span-full text-center text-gray-600">
-            Author listings coming soon...
-          </p>
-        </div>
-      </div>
-    </MainLayout>
+    <section>
+      <Container>
+        <Breadcrumb
+          items={[
+            commonBreadcrumbs.home,
+            { label: "Contributors", href: "#" },
+            commonBreadcrumbs.authors,
+          ]}
+        />
+      </Container>
+
+      <PageHeroSection
+        heading="Empowering Authors, Showcasing Knowledge"
+        para="The Nepal Research Indexing Platform celebrates the scholars behind every discovery. Explore our growing list of authors contributing to Nepal's research excellence across diverse disciplines. Together, we strengthen visibility, foster collaboration, and advance global academic impact."
+      />
+
+      <Container>
+        <AuthorsListView />
+      </Container>
+    </section>
   );
 }

@@ -1,4 +1,3 @@
-import { MainLayout } from "@/components/layout";
 import { AboutPage } from "@/features/general/about";
 import { Metadata } from "next";
 
@@ -8,9 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function About() {
-  return (
-    <MainLayout>
-      <AboutPage />
-    </MainLayout>
-  );
+  return <AboutPage />;
 }

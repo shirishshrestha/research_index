@@ -9,58 +9,32 @@ export interface BreadcrumbItem {
 interface BreadcrumbProps {
   items: BreadcrumbItem[];
   className?: string;
-  variant?: "default" | "hero";
 }
 
-export function Breadcrumb({
-  items,
-  className = "",
-  variant = "default",
-}: BreadcrumbProps) {
-  if (variant === "hero") {
-    return (
-      <nav className={`breadcrumb-bg px-6 py-4 ${className}`}>
-        <ol className="flex items-center flex-wrap gap-2 text-sm">
-          {items.map((item, index) => (
-            <li key={index} className="flex items-center">
-              {index > 0 && (
-                <ChevronRight className="mx-2 h-4 w-4 text-white/60" />
-              )}
-              {item.href ? (
-                <Link
-                  href={item.href}
-                  className="text-white hover:text-white/80 transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <span className="text-white font-semibold">{item.label}</span>
-              )}
-            </li>
-          ))}
-        </ol>
-      </nav>
-    );
-  }
-
-  // Default variant - simple breadcrumb
+export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
   return (
-    <nav className={`py-3 ${className}`}>
-      <ol className="flex items-center flex-wrap gap-2 text-sm">
+    <nav className={`py-8.75 ${className}`}>
+      <ol className="flex items-center flex-wrap gap-1 text-base">
         {items.map((item, index) => (
-          <li key={index} className="flex items-center">
-            {index > 0 && (
-              <ChevronRight className="mx-2 h-4 w-4 text-gray-400" />
-            )}
+          <li key={index} className="flex items-center gap-1">
+            {index > 0 && <ChevronRight className="h-4 w-4 text-gray-500" />}
             {item.href ? (
               <Link
                 href={item.href}
-                className="text-[#023B8B] hover:text-[#012558] transition-colors"
+                className={`${
+                  items.length - 1 !== index ? "underline" : "text-text-black"
+                } `}
               >
                 {item.label}
               </Link>
             ) : (
-              <span className="text-gray-700 font-medium">{item.label}</span>
+              <span
+                className={`${
+                  items.length - 1 !== index ? "underline" : "text-text-black"
+                } `}
+              >
+                {item.label}
+              </span>
             )}
           </li>
         ))}
@@ -78,6 +52,7 @@ export function buildBreadcrumbs(...items: BreadcrumbItem[]): BreadcrumbItem[] {
 export const commonBreadcrumbs = {
   home: { label: "Research Index", href: "/" },
   search: { label: "Search", href: "/search" },
+  contributors: { label: "Contributors" },
   advancedSearch: { label: "Advanced Search", href: "/search/advanced" },
   libraries: { label: "Libraries" },
   topics: { label: "Topics", href: "/search" },
