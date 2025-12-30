@@ -1,0 +1,1 @@
+export { InstitutionsListView } from "./InstitutionsListView";

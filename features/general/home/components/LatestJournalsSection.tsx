@@ -106,7 +106,7 @@ export function LatestJournalsSection() {
             {journals.map((journal, index) => (
               <Card
                 key={`${index} - ${journal.title}`}
-                className="p-6.25 group border-transparent border-b-3  hover:border-b-primary justify-between rounded-xl bg-white flex sm:flex-row shadow-none transition-all space-y-4"
+                className="p-6.25 group border-0 border-b-transparent border-b-3  hover:border-b-primary justify-between rounded-xl bg-white flex sm:flex-row shadow-none transition-all space-y-4"
               >
                 {/* Card Header with External Link Icon */}
                 <div className="flex flex-col justify-between h-full items-start">

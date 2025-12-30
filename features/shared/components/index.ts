@@ -1,3 +1,3 @@
 export { FilterToolbar } from "./FilterToolbar";
-export { AuthorCard } from "./AuthorCard";
+export { ListCard } from "./ListCard";
 export { Pagination } from "./Pagination";

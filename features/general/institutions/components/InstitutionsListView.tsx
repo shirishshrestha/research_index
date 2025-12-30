@@ -7,41 +7,41 @@ import {
   Pagination,
 } from "@/features/shared/components";
 
-const mockAuthors = [
+const mockInstitutions = [
   {
     id: "1",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
+    name: "KAHS",
+    position: "Karnali Academy of Health Sciences (KAHS)",
+    affiliation: "Karnali Province",
+    verifiedAffiliation: "Verified email at kahs.org.np ",
   },
   {
     id: "2",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
+    name: "KAHS",
+    position: "Karnali Academy of Health Sciences (KAHS)",
+    affiliation: "Karnali Province",
+    verifiedAffiliation: "Verified email at kahs.org.np ",
   },
   {
     id: "3",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
+    name: "KAHS",
+    position: "Karnali Academy of Health Sciences (KAHS)",
+    affiliation: "Karnali Province",
+    verifiedAffiliation: "Verified email at kahs.org.np ",
   },
   {
     id: "4",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
+    name: "KAHS",
+    position: "Karnali Academy of Health Sciences (KAHS)",
+    affiliation: "Karnali Province",
+    verifiedAffiliation: "Verified email at kahs.org.np ",
   },
   {
     id: "5",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
+    name: "KAHS",
+    position: "Karnali Academy of Health Sciences (KAHS)",
+    affiliation: "Karnali Province",
+    verifiedAffiliation: "Verified email at kahs.org.np ",
   },
 ];
 
@@ -59,6 +59,12 @@ const affiliationOptions = [
   { value: "pu", label: "Pokhara University (PU)" },
   { value: "nast", label: "Nepal Academy of Science and Technology (NAST)" },
   { value: "purbanchal", label: "Purbanchal University (APU)" },
+];
+
+const researchFocusOptions = [
+  { value: "applied", label: "Applied Research" },
+  { value: "basic", label: "Basic Research" },
+  { value: "interdisciplinary", label: "Interdisciplinary" },
 ];
 
 const fieldOptions = [
@@ -83,7 +89,7 @@ const sortOptions = [
   { value: "publications", label: "Most Publications" },
 ];
 
-export function AuthorsListView() {
+export function InstitutionsListView() {
   return (
     <div className="pt-12.5! section-padding">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
@@ -106,22 +112,21 @@ export function AuthorsListView() {
                   defaultOpen={false}
                   showCard={true}
                 />
-                {/* Affiliations */}
-                <FilterToolbar.SearchableRadioGroup
-                  label="Affiliations"
-                  options={affiliationOptions}
-                  paramName="affiliation"
-                  searchPlaceholder="Search affiliations..."
-                  accordion={true}
-                  defaultOpen={false}
-                  showCard={true}
-                />
                 {/* Field of Research */}
                 <FilterToolbar.SearchableRadioGroup
                   label="Field of Research"
                   options={fieldOptions}
                   paramName="field"
                   searchPlaceholder="Search categories..."
+                  accordion={true}
+                  defaultOpen={false}
+                  showCard={true}
+                />
+                {/* Research Focus */}
+                <FilterToolbar.RadioGroup
+                  label="Research Focus"
+                  options={researchFocusOptions}
+                  paramName="research_focus"
                   accordion={true}
                   defaultOpen={false}
                   showCard={true}
@@ -136,6 +141,49 @@ export function AuthorsListView() {
                   defaultOpen={false}
                   showCard={true}
                 />
+                {/* <FilterToolbar.SliderGroup
+                  label="Journal Performance Metrics"
+                  accordion
+                  defaultOpen={false}
+                  showCard
+                  sliders={[
+                    {
+                      label: "Impact Factor",
+                      paramName: "impact_factor",
+                      min: 1,
+                      max: 5,
+                      step: 1,
+                      defaultValue: 1,
+                    },
+                    {
+                      label: "CiteScore",
+                      paramName: "cite_score",
+                      min: 1,
+                      max: 10,
+                      step: 1,
+                      defaultValue: 1,
+                    },
+                    {
+                      label: "Time to 1st Decision",
+                      paramName: "time_to_decision",
+                      min: 1,
+                      max: 10,
+                      step: 1,
+                      defaultValue: 1,
+                    },
+                    {
+                      label: "Time to Acceptance",
+                      paramName: "time_to_acceptance",
+                      min: 1,
+                      max: 10,
+                      step: 1,
+                      defaultValue: 1,
+                    },
+                  ]}
+                  onChange={(paramName, value) => {
+                    console.log(`${paramName} changed to ${value}`);
+                  }}
+                /> */}
               </FilterToolbar>
             </div>
           </div>
@@ -145,7 +193,7 @@ export function AuthorsListView() {
           {/* Search and Sort */}
           <FilterToolbar containerClass="flex-row! bg-white p-4 rounded-lg shadow-xs">
             <FilterToolbar.Search
-              placeholder="Search authors..."
+              placeholder="Search institutions..."
               paramName="search"
             />
             <FilterToolbar.Select
@@ -155,7 +203,7 @@ export function AuthorsListView() {
               placeholder="Relevance"
             />
           </FilterToolbar>
-          {mockAuthors.length > 0 && (
+          {mockInstitutions.length > 0 && (
             <Pagination
               currentPage={1}
               totalPages={Math.ceil(400 / 10)}
@@ -167,13 +215,17 @@ export function AuthorsListView() {
 
           {/* Results List */}
           <div className="space-y-4">
-            {mockAuthors.map((author) => (
-              <ListCard key={author.id} {...author} />
+            {mockInstitutions.map((institution) => (
+              <ListCard
+                key={institution.id}
+                {...institution}
+                fallbackImageUrl="/fallback-logo.png"
+              />
             ))}
           </div>
 
           {/* Pagination */}
-          {mockAuthors.length > 0 && (
+          {mockInstitutions.length > 0 && (
             <Pagination
               currentPage={1}
               totalPages={Math.ceil(400 / 10)}
