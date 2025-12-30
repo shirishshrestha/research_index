@@ -10,15 +10,17 @@ export interface AuthorCardProps {
   verifiedAffiliation?: string;
   imageUrl?: string;
   href?: string;
+  fallbackImageUrl?: string;
 }
 
-export function AuthorCard({
+export function ListCard({
   id,
   name,
   position,
   verifiedAffiliation,
   imageUrl,
-  href = `/authors/${id}`,
+  href = "/",
+  fallbackImageUrl = "/fallback-image.png",
 }: AuthorCardProps) {
   return (
     <Card className="p-6.25 group rounded-xl border-0 transition-all border-b-3  border-transparent hover:border-b-primary flex flex-row justify-between gap-4 hover:shadow-md">
@@ -36,7 +38,7 @@ export function AuthorCard({
               />
             ) : (
               <Image
-                src={"/fallback-image.png"}
+                src={fallbackImageUrl}
                 alt={name}
                 width={64}
                 height={64}
@@ -52,9 +54,11 @@ export function AuthorCard({
               {name}
             </h4>
           </Link>
-          <p className="text-sm text-text-gray">{position}</p>
+          <p className="text-sm leading-5.5 text-text-gray">{position}</p>
           {verifiedAffiliation && (
-            <p className="text-sm text-text-gray">{verifiedAffiliation}</p>
+            <p className="text-sm leading-5.5 text-text-gray">
+              {verifiedAffiliation}
+            </p>
           )}
         </div>
       </div>

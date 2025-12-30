@@ -1,3 +1,6 @@
+import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
+import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
+import { InstitutionsListView } from "@/features/general/institutions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,16 +10,25 @@ export const metadata: Metadata = {
 
 export default function InstitutionsPage() {
   return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="heading-2 heading-gradient mb-8">
-          Academic Institutions
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Institution cards will go here */}
-          <p className="col-span-full text-center text-gray-600">
-            Institution listings coming soon...
-          </p>
-        </div>
-      </div>
+    <section>
+      <Container>
+        <Breadcrumb
+          items={[
+            commonBreadcrumbs.home,
+            commonBreadcrumbs.contributors,
+            commonBreadcrumbs.institutions,
+          ]}
+        />
+      </Container>
+
+      <PageHeroSection
+        heading="Connecting Institutions, Advancing Knowledge"
+        para="The Nepal Research Indexing Platform features leading institutions shaping the nation's research landscape. Explore universities and organizations fostering innovation, collaboration, and academic excellence across Nepal's diverse fields of study."
+      />
+
+      <Container>
+        <InstitutionsListView />
+      </Container>
+    </section>
   );
 }

@@ -23,6 +23,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Slider } from "@/components/ui/slider";
 
 import type {
   FilterToolbarProps,
@@ -31,8 +32,10 @@ import type {
   FilterToolbarDateInputProps,
   FilterToolbarRadioGroupProps,
   FilterToolbarSearchableRadioGroupProps,
+  FilterToolbarSliderGroupProps,
   SelectOption,
   RadioOption,
+  SliderOption,
 } from "../utils/types";
 
 const FilterToolbarContext = React.createContext<boolean | null>(null);
@@ -261,7 +264,7 @@ FilterToolbar.RadioGroup = function FilterToolbarRadioGroup({
               <AccordionTrigger className="text-lg font-roboto font-medium text-text-black hover:no-underline py-0">
                 {label}
               </AccordionTrigger>
-              <AccordionContent className="pt-4.5! pb-0!">
+              <AccordionContent className="pt-4.5! pb-0! ">
                 {content}
               </AccordionContent>
             </AccordionItem>
@@ -288,7 +291,7 @@ FilterToolbar.RadioGroup = function FilterToolbarRadioGroup({
             <AccordionTrigger className="text-lg font-roboto font-medium text-text-black hover:no-underline py-0">
               {label}
             </AccordionTrigger>
-            <AccordionContent className="pt-4.5! pb-0!">
+            <AccordionContent className="pt-4.5! pb-0! max-h-60 overflow-y-auto">
               {content}
             </AccordionContent>
           </AccordionItem>
@@ -392,7 +395,7 @@ FilterToolbar.SearchableRadioGroup =
                 <AccordionTrigger className="text-lg font-roboto font-medium text-text-black hover:no-underline py-0">
                   {label}
                 </AccordionTrigger>
-                <AccordionContent className="pt-4.5! pb-0!">
+                <AccordionContent className="pt-4.5! pb-0! ">
                   {content}
                 </AccordionContent>
               </AccordionItem>
@@ -419,7 +422,7 @@ FilterToolbar.SearchableRadioGroup =
               <AccordionTrigger className="text-lg font-roboto font-medium text-text-black hover:no-underline py-0">
                 {label}
               </AccordionTrigger>
-              <AccordionContent className="pt-4.5! pb-0!">
+              <AccordionContent className="pt-4.5! pb-0! max-h-60 overflow-y-auto">
                 {content}
               </AccordionContent>
             </AccordionItem>
@@ -437,3 +440,161 @@ FilterToolbar.SearchableRadioGroup =
 
     return wrapper;
   };
+
+FilterToolbar.SliderGroup = function FilterToolbarSliderGroup({
+  label = "Filters",
+  sliders = [],
+  onChange,
+  className = "",
+  accordion = false,
+  defaultOpen = true,
+  showCard = true,
+}: FilterToolbarSliderGroupProps) {
+  useFilterToolbarContext();
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Track local slider values for smooth UI updates
+  const [localValues, setLocalValues] = React.useState<Record<string, number>>(
+    {}
+  );
+
+  const handleSliderCommit = (
+    paramName: string,
+    value: number[],
+    sliderConfig: SliderOption
+  ) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const newValue = value[0];
+
+    if (newValue !== sliderConfig.defaultValue) {
+      params.set(paramName, newValue.toString());
+    } else {
+      params.delete(paramName);
+    }
+
+    params.delete("page");
+    router.push(`?${params.toString()}`, { scroll: false });
+    onChange?.(paramName, newValue);
+  };
+
+  const content = (
+    <div className="space-y-6">
+      {sliders.map((slider: SliderOption) => {
+        const urlValue = searchParams.get(slider.paramName);
+        const defaultVal =
+          slider.defaultValue?.toString() ?? slider.min.toString();
+        const currentValue = urlValue ?? defaultVal;
+        const numValue = Number(currentValue);
+
+        // Use local value if dragging, otherwise use URL value
+        const displayValue = localValues[slider.paramName] ?? numValue;
+
+        // Generate tick marks for every integer point
+        const ticks = [];
+        for (let i = slider.min; i <= slider.max; i += 1) {
+          ticks.push(i);
+        }
+
+        return (
+          <div key={slider.paramName} className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-base font-medium text-text-gray">
+                {slider.label}
+              </label>
+            </div>
+
+            <Slider
+              min={slider.min}
+              max={slider.max}
+              step={slider.step ?? 1}
+              value={[displayValue]}
+              onValueChange={(val) =>
+                setLocalValues((prev) => ({
+                  ...prev,
+                  [slider.paramName]: val[0],
+                }))
+              }
+              onValueCommit={(val) => {
+                handleSliderCommit(slider.paramName, val, slider);
+                setLocalValues((prev) => {
+                  const updated = { ...prev };
+                  delete updated[slider.paramName];
+                  return updated;
+                });
+              }}
+              className="w-full"
+            />
+
+            <div className="relative flex justify-between text-sm text-muted-foreground px-1">
+              {ticks.map((tick) => (
+                <span key={tick} className="text-center">
+                  {tick}
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const wrapper = showCard ? (
+    <Card className={`shadow-none py-3! ${className}`}>
+      <CardContent className="py-0 px-3">
+        {accordion ? (
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue={defaultOpen ? "item-1" : undefined}
+          >
+            <AccordionItem value="item-1" className="border-none">
+              <AccordionTrigger className="text-lg font-roboto font-medium text-text-black hover:no-underline py-0">
+                {label}
+              </AccordionTrigger>
+              <AccordionContent className="pt-4.5! pb-0!">
+                {content}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        ) : (
+          <div className="space-y-3">
+            <label className="block text-lg font-medium leading-6 text-text-black">
+              {label}
+            </label>
+            {content}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  ) : (
+    <div className={`space-y-3 ${className}`}>
+      {accordion ? (
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue={defaultOpen ? "item-1" : undefined}
+        >
+          <AccordionItem value="item-1" className="border-none">
+            <AccordionTrigger className="text-lg font-roboto font-medium text-text-black hover:no-underline py-0">
+              {label}
+            </AccordionTrigger>
+            <AccordionContent className="pt-4.5! pb-0!">
+              {content}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      ) : (
+        <>
+          <label className="block text-lg font-medium leading-6 text-text-black">
+            {label}
+          </label>
+          {content}
+        </>
+      )}
+    </div>
+  );
+
+  return wrapper;
+};

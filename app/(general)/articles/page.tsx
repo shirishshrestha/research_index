@@ -1,3 +1,6 @@
+import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
+import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
+import { ArticlesListView } from "@/features/general/articles";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,14 +10,25 @@ export const metadata: Metadata = {
 
 export default function ArticlesPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="heading-2 heading-gradient mb-8">Research Articles</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Article cards will go here */}
-        <p className="col-span-full text-center text-gray-600">
-          Article listings coming soon...
-        </p>
-      </div>
-    </div>
+    <section>
+      <Container>
+        <Breadcrumb
+          items={[
+            commonBreadcrumbs.home,
+            { label: "Research", href: "#" },
+            commonBreadcrumbs.articles,
+          ]}
+        />
+      </Container>
+
+      <PageHeroSection
+        heading="Explore Research Articles"
+        para="Discover cutting-edge research from Nepal and beyond. Browse through peer-reviewed articles, publications, and scholarly works across diverse academic disciplines. Access open research and contribute to the global knowledge ecosystem."
+      />
+
+      <Container>
+        <ArticlesListView />
+      </Container>
+    </section>
   );
 }

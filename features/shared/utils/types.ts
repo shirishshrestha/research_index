@@ -14,6 +14,15 @@ export interface RadioOption {
   label: string;
 }
 
+export interface SliderOption {
+  label: string;
+  paramName: string;
+  min: number;
+  max: number;
+  step?: number;
+  defaultValue?: number;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Author Types                                                                */
 /* -------------------------------------------------------------------------- */
@@ -88,6 +97,16 @@ export interface FilterToolbarSearchableRadioGroupProps {
   paramName: string;
   searchPlaceholder?: string;
   maxHeight?: string;
+  className?: string;
+  accordion?: boolean;
+  defaultOpen?: boolean;
+  showCard?: boolean;
+}
+
+export interface FilterToolbarSliderGroupProps {
+  label?: string;
+  sliders: SliderOption[];
+  onChange?: (paramName: string, value: number) => void;
   className?: string;
   accordion?: boolean;
   defaultOpen?: boolean;

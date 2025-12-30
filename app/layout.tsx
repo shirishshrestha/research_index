@@ -6,13 +6,13 @@ import { Providers } from "@/lib/providers";
 const merriweather = Merriweather({
   variable: "--font-merriweather",
   subsets: ["latin"],
-  weight: ["300", "400", "700", "900"],
+  weight: ["300", "400", "700"],
 });
 
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700", "900"],
+  weight: ["300", "400", "500", "700"],
 });
 
 export const metadata: Metadata = {

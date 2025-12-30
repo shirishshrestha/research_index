@@ -13,7 +13,7 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-15 mb-8">
           {/* Contributors */}
           <div>
-            <h3 className="text-lg font-semibold  leading-8.75 text-white mb-2.5">
+            <h3 className="text-lg font-semibold leading-8.75 text-white mb-2.5">
               Contributors
             </h3>
             <ul className="space-y-2">
@@ -109,7 +109,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left: Logo and Copyright */}
           <div className="space-y-5">
-            <div className="flex flex-col items-start gap-2.5 space-x-3 mb-4">
+            <div className="flex flex-col items-start gap-3 space-x-3 mb-4">
               <Link href="/">
                 <Image
                   src="/logo-white.png"
