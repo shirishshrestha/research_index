@@ -282,4 +282,8 @@ h6 {
   .wrapper {
     @apply container mx-auto px-3 md:px-10 xl:px-20;
   }
+
+  .follow-button {
+    @apply border-primary mt-2.75 text-sm px-4 py-1 text-primary;
+  }
 }

@@ -5,3 +5,5 @@ export type { IconProps, IconName } from "./Icon";
 export { SearchInput } from "./SearchInput";
 export type { SearchInputProps } from "./SearchInput";
 export { PageHeroSection } from "./PageHeroSection";
+export { TopicCard } from "./TopicCard";
+export type { TopicCardProps } from "./TopicCard";

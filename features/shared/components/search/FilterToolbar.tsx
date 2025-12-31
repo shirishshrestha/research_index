@@ -36,7 +36,7 @@ import type {
   SelectOption,
   RadioOption,
   SliderOption,
-} from "../utils/types";
+} from "../../utils/types";
 
 const FilterToolbarContext = React.createContext<boolean | null>(null);
 

@@ -43,7 +43,7 @@ const librariesItems: { title: string; href: string }[] = [
   },
   {
     title: "Topics",
-    href: "/search",
+    href: "/topics",
   },
 ];
 

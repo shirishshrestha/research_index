@@ -1,0 +1,2 @@
+export { AuthorProfileTab } from "./AuthorProfileTab";
+export { ResearchTab } from "./ResearchTab";

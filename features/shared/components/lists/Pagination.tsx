@@ -1,6 +1,4 @@
-/**
- * Pagination Component
- */
+"use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -17,7 +15,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
-import type { PaginationProps } from "../utils/types";
+import type { PaginationProps } from "../../utils/types";
 
 /**
  * Pagination Component
