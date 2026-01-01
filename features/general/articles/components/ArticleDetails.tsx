@@ -2,7 +2,12 @@ import { ProfileTabs } from "@/features/shared/components/profile";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/shared";
 import { ChevronDown } from "lucide-react";
-import { CitationsTab, OverviewTab } from "./TabDetails";
+import {
+  CitationsTab,
+  OverviewTab,
+  ReferencesTab,
+  SimilarArticlesTab,
+} from "./TabDetails";
 
 export function ArticleDetails() {
   // Mock data for demonstration
@@ -93,12 +98,12 @@ export function ArticleDetails() {
           {
             label: "References",
             value: "references",
-            content: <> {/*<OverviewTab article={article} />*/}</>,
+            content: <ReferencesTab />,
           },
           {
             label: "Similar Articles",
             value: "similar-articles",
-            content: <> {/*<OverviewTab article={article} />*/}</>,
+            content: <SimilarArticlesTab />,
           },
         ]}
         moreOptions={
