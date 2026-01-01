@@ -1,3 +1,6 @@
+import { Breadcrumb, Container } from "@/components/shared";
+import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
+import { ArticleDetails } from "@/features/general/articles";
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -7,7 +10,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   return {
-    title: `Article ${id} - Resource Index`,
+    title: `Article Details - Resource Index`,
     description: `View details for article ${id}`,
   };
 }
@@ -20,12 +23,21 @@ export default async function ArticlePage({
   const { id } = await params;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="heading-2 heading-gradient mb-8">Article Details</h1>
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <p className="text-gray-600">Article ID: {id}</p>
-        {/* Article content will go here */}
-      </div>
-    </div>
+    <section>
+      <Container>
+        <Breadcrumb
+          items={[
+            commonBreadcrumbs.home,
+            commonBreadcrumbs.libraries,
+            commonBreadcrumbs.articles,
+            { label: "Article Details", href: `/articles/${id}` },
+          ]}
+        />
+      </Container>
+
+      <Container>
+        <ArticleDetails />
+      </Container>
+    </section>
   );
 }

@@ -1,9 +1,12 @@
 "use client";
 
 import { ArticleCard } from "@/features/general/articles/components";
-import { FilterToolbar, Pagination } from "@/features/shared/components";
+import {
+  FilterToolbar,
+  Pagination,
+  CategoryFilter,
+} from "@/features/shared/components";
 import { sortOptionsExtended } from "@/features/shared/constants/filterOptions";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 const categories = [
   { label: "Article", value: "article", count: 282 },
@@ -64,41 +67,10 @@ const mockArticles = [
 ];
 
 export const ResearchTab = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-  const activeCategory = searchParams.get("category") || "article";
-
-  const handleCategoryChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("category", value);
-    router.replace(`${pathname}?${params.toString()}`);
-  };
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
       {/* Left Sidebar - Categories */}
-      <div className="space-y-2">
-        {categories.map((category) => {
-          const isActive = activeCategory === category.value;
-          return (
-            <button
-              key={category.value}
-              onClick={() => handleCategoryChange(category.value)}
-              className={`w-full text-left p-2.5 rounded transition-all ${
-                isActive
-                  ? "border border-[#F2F2F2] bg-[#F1F4FC]"
-                  : "border border-transparent hover:bg-gray-50"
-              }`}
-            >
-              <span className="text-base text-text-black">
-                {category.label}{" "}
-                <span className="text-text-gray">({category.count})</span>
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      <CategoryFilter categories={categories} />
 
       {/* Right Content - Articles */}
       <div className="space-y-6.25">

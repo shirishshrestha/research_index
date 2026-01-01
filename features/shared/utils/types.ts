@@ -126,3 +126,14 @@ export interface PaginationProps {
   showFirstLast?: boolean;
   className?: string;
 }
+
+export interface Category {
+  label: string;
+  value: string;
+  count?: number;
+}
+
+export interface CategoryFilterProps {
+  categories: Category[];
+  paramName?: string;
+}
