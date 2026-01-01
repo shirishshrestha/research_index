@@ -7,6 +7,7 @@ export function ProfileTabs({
   tabs,
   paramKey = "tab",
   moreOptions,
+  clearParamsOnTabSwitch,
 }: ProfileTabsProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -18,9 +19,15 @@ export function ProfileTabs({
     const params = new URLSearchParams(searchParams.toString());
     params.set(paramKey, value);
 
-    // Remove category param when switching away from research tab
-    if (value !== "research" && params.has("category")) {
-      params.delete("category");
+    // If a map of params to clear was provided, remove them when switching away from their tab
+    if (clearParamsOnTabSwitch) {
+      Object.entries(clearParamsOnTabSwitch).forEach(
+        ([tabValue, paramList]) => {
+          if (value !== tabValue) {
+            paramList.forEach((param) => params.delete(param));
+          }
+        }
+      );
     }
 
     router.replace(`${pathname}?${params.toString()}`);

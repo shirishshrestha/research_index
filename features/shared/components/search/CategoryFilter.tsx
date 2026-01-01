@@ -26,17 +26,17 @@ export const CategoryFilter = ({
           <button
             key={category.value}
             onClick={() => handleCategoryChange(category.value)}
-            className={`w-full text-left p-2.5 rounded-md transition-all ${
+            aria-pressed={isActive}
+            aria-label={`Filter by ${category.label}`}
+            className={`w-full text-left p-2.5 rounded transition-all ${
               isActive
                 ? "border border-[#F2F2F2] bg-[#F1F4FC]"
-                : "border border-white-02 bg-white hover:bg-gray-50"
+                : "border border-transparent hover:bg-gray-50"
             }`}
           >
             <span className="text-base text-text-black">
               {category.label}{" "}
-              {category.count && (
-                <span className="text-text-gray">({category.count})</span>
-              )}
+              <span className="text-text-gray">({category.count})</span>
             </span>
           </button>
         );
