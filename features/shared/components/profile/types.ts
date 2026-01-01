@@ -8,6 +8,11 @@ export interface ProfileTabsProps {
   tabs: ProfileTab[];
   paramKey?: string;
   moreOptions?: React.ReactNode;
+  /**
+   * Optional map of tabValue -> list of query params that should be cleared
+   * when switching away from that tab. Example: { research: ["category"] }
+   */
+  clearParamsOnTabSwitch?: Record<string, string[]>;
 }
 
 export interface ProfileStatsProps {
