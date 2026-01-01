@@ -28,21 +28,9 @@ const mockArticles = [
   },
 ];
 
-export const CitationsTab = () => {
+export const SimilarArticlesTab = () => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
-      <aside className="">
-        <div className="flex flex-col gap-1.25 sticky top-32">
-          <p
-            className={`w-full text-left p-2.5 rounded-md transition-all border border-white-02 bg-white hover:bg-gray-50
-              `}
-          >
-            <span className="text-base text-text-black">
-              All Citations (33)
-            </span>
-          </p>
-        </div>
-      </aside>
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6">
       <aside className="space-y-8.75">
         {mockArticles.map((article) => (
           <div key={article.id} className="space-y-6.25">
@@ -57,6 +45,7 @@ export const CitationsTab = () => {
           </div>
         ))}
       </aside>
+      <aside></aside>
     </div>
   );
 };
