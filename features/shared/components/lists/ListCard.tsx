@@ -23,11 +23,11 @@ export function ListCard({
   fallbackImageUrl = "/fallback-image.png",
 }: AuthorCardProps) {
   return (
-    <Card className="p-6.25 group rounded-xl border-0 transition-all border-b-3  border-transparent hover:border-b-primary flex flex-row justify-between gap-4 hover:shadow-md">
+    <Card className="p-6.25 group rounded-md border-0 transition-all border-b-3  border-transparent hover:border-b-primary flex flex-row justify-between gap-4 hover:shadow-md">
       {/* Profile Image */}
       <div className="flex items-center gap-3.75 justify-between">
         <Link href={href}>
-          <div className="w-16 h-16 rounded-xl bg-gray-200 shrink-0 overflow-hidden">
+          <div className="w-16 h-16 rounded-md bg-gray-200 shrink-0 overflow-hidden">
             {imageUrl ? (
               <Image
                 src={imageUrl}

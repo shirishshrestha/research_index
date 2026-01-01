@@ -38,6 +38,16 @@ export function usePut<TData, TVariables>(
   });
 }
 
+export function usePatch<TData, TVariables>(
+  endpoint: string,
+  options?: UseMutationOptions<TData, Error, TVariables>
+) {
+  return useMutation<TData, Error, TVariables>({
+    mutationFn: (data: TVariables) => api.patch<TData>(endpoint, data),
+    ...options,
+  });
+}
+
 export function useDelete<TData>(
   endpoint: string,
   options?: UseMutationOptions<TData, Error, void>

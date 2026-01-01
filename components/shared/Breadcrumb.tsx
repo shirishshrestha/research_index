@@ -55,7 +55,7 @@ export const commonBreadcrumbs = {
   contributors: { label: "Contributors" },
   advancedSearch: { label: "Advanced Search", href: "/search/advanced" },
   libraries: { label: "Libraries" },
-  topics: { label: "Topics", href: "/search" },
+  topics: { label: "Topics", href: "/topics" },
   articles: { label: "Articles", href: "/articles" },
   journals: { label: "Journals", href: "/journals" },
   authors: { label: "Authors", href: "/authors" },

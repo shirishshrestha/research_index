@@ -43,7 +43,7 @@ const librariesItems: { title: string; href: string }[] = [
   },
   {
     title: "Topics",
-    href: "/search",
+    href: "/topics",
   },
 ];
 
@@ -194,7 +194,7 @@ export function Header() {
                   <NavigationMenuLink asChild>
                     <Link
                       href={link.href}
-                      className="text-[16px]  text-primary transition-colors hover:text-accent h-9 px-4 py-2 inline-flex items-center justify-center bg-transparent!"
+                      className="text-[16px]  text-primary transition-colors hover:text-accent! h-9 px-4 py-2 inline-flex items-center justify-center bg-transparent!"
                     >
                       {link.title}
                     </Link>
@@ -264,7 +264,7 @@ export function Header() {
                         key={link.title}
                         href={link.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="block py-2 text-[16px] hover:text-primary transition-colors"
+                        className="block py-2 text-base hover:text-accent! "
                       >
                         {link.title}
                       </Link>

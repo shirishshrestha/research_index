@@ -1,1 +1,1 @@
-export { useGet, usePost, usePut, useDelete } from "./useApi";
+export { useGet, usePost, usePut, usePatch, useDelete } from "./useApi";

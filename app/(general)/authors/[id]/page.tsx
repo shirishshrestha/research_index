@@ -1,4 +1,7 @@
 import { Metadata } from "next";
+import { Breadcrumb, Container } from "@/components/shared";
+import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
+import { AuthorDetails } from "@/features/general/authors";
 
 export async function generateMetadata({
   params,
@@ -20,12 +23,21 @@ export default async function AuthorPage({
   const { id } = await params;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="heading-2 heading-gradient mb-8">Author Profile</h1>
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <p className="text-gray-600">Author ID: {id}</p>
-        {/* Author profile content will go here */}
-      </div>
-    </div>
+    <section>
+      <Container>
+        <Breadcrumb
+          items={[
+            commonBreadcrumbs.home,
+            commonBreadcrumbs.contributors,
+            commonBreadcrumbs.authors,
+            { label: `Author Details` },
+          ]}
+        />
+      </Container>
+
+      <Container>
+        <AuthorDetails />
+      </Container>
+    </section>
   );
 }
