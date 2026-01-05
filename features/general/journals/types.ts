@@ -14,3 +14,16 @@ export interface JournalCardProps {
   metrics: JournalMetric[];
   href?: string;
 }
+
+export interface JournalDetails {
+  journalCover?: string;
+  title: string;
+  institution: string;
+  issn: string;
+  doiPrefix: string;
+  license: string;
+  badge?: {
+    label: string;
+    value: string | number;
+  };
+}

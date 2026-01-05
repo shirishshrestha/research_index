@@ -194,7 +194,7 @@ export function Header() {
                   <NavigationMenuLink asChild>
                     <Link
                       href={link.href}
-                      className="text-[16px]  text-primary transition-colors hover:text-accent! h-9 px-4 py-2 inline-flex items-center justify-center bg-transparent!"
+                      className="text-[16px]  text-primary transition-colors hover:text-accent! h-9 px-4 py-2 inline-flex items-center justify-center bg-transparent! focus:text-primary "
                     >
                       {link.title}
                     </Link>

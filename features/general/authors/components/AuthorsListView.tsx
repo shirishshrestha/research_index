@@ -168,7 +168,7 @@ export function AuthorsListView() {
           {/* Results List */}
           <div className="space-y-4">
             {mockAuthors.map((author) => (
-              <ListCard key={author.id} {...author} />
+              <ListCard key={author.id} {...author} href="/authors/1" />
             ))}
           </div>
 

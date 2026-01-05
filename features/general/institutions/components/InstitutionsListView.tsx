@@ -220,6 +220,7 @@ export function InstitutionsListView() {
                 key={institution.id}
                 {...institution}
                 fallbackImageUrl="/fallback-logo.png"
+                href="/institutions/1"
               />
             ))}
           </div>

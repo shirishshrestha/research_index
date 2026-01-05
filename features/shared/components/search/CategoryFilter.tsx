@@ -28,15 +28,17 @@ export const CategoryFilter = ({
             onClick={() => handleCategoryChange(category.value)}
             aria-pressed={isActive}
             aria-label={`Filter by ${category.label}`}
-            className={`w-full text-left p-2.5 rounded transition-all ${
+            className={`w-full cursor-pointer text-left p-2.5 rounded transition-all ${
               isActive
                 ? "border border-[#F2F2F2] bg-[#F1F4FC]"
-                : "border border-transparent hover:bg-gray-50"
+                : "border border-white-02 bg-white hover:bg-gray-50"
             }`}
           >
             <span className="text-base text-text-black">
               {category.label}{" "}
-              <span className="text-text-gray">({category.count})</span>
+              {category.count && (
+                <span className="text-text-gray">({category.count})</span>
+              )}
             </span>
           </button>
         );

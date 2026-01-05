@@ -1,7 +1,14 @@
+export interface ProfileTabDropdownItem {
+  label: string;
+  value: string;
+  content: React.ReactNode;
+}
+
 export interface ProfileTab {
   label: string;
   value: string;
   content: React.ReactNode;
+  dropdown?: ProfileTabDropdownItem[];
 }
 
 export interface ProfileTabsProps {
