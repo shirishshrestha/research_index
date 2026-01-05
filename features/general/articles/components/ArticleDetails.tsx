@@ -71,7 +71,11 @@ export function ArticleDetails() {
             <p className="desc">Published at: {article.publishedAt}</p>
           </div>
         </div>
-        <Button variant={"ghost"} className="p-0 leading-normal" id="abstract">
+        <Button
+          variant={"ghost"}
+          className="p-0 leading-normal hover:bg-transparent! hover:text-primary"
+          id="abstract"
+        >
           <Icon name="pdf" size={20} className="mr-2" />
           View Full PDF
         </Button>

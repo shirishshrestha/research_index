@@ -46,6 +46,7 @@ export function InstitutionDetails() {
       </div>
       <div className="">
         <ProfileTabs
+          clearParamsOnTabSwitch={{ research: ["category"] }}
           tabs={[
             {
               label: "Profile",

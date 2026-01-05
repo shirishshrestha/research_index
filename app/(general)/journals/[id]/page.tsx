@@ -1,4 +1,7 @@
 import { Metadata } from "next";
+import { JournalDetails } from "@/features/general/journals/components";
+import { Container, PageHeroSection } from "@/components/shared";
+import { Breadcrumb, commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 
 export async function generateMetadata({
   params,
@@ -20,12 +23,16 @@ export default async function JournalPage({
   const { id } = await params;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="heading-2 heading-gradient mb-8">Journal Details</h1>
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <p className="text-gray-600">Journal ID: {id}</p>
-        {/* Journal content will go here */}
-      </div>
-    </div>
+    <Container>
+      <Breadcrumb
+        items={[
+          commonBreadcrumbs.home,
+          commonBreadcrumbs.libraries,
+          commonBreadcrumbs.journals,
+          { label: "Journal Details" },
+        ]}
+      />
+      <JournalDetails />
+    </Container>
   );
 }
