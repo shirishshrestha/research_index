@@ -2,6 +2,7 @@ import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { TopicsListView } from "@/features/general/topics";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Topics - Resource Index",
@@ -27,7 +28,9 @@ export default function TopicsPage() {
       />
 
       <Container>
-        <TopicsListView />
+        <Suspense fallback={<div>Loading...</div>}>
+          <TopicsListView />
+        </Suspense>
       </Container>
     </section>
   );

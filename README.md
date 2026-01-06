@@ -71,7 +71,7 @@ A comprehensive resource indexing platform built with Next.js, TypeScript, and T
 2. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 3. Create environment file:
@@ -87,7 +87,7 @@ cp .env.example .env.local
 Run the development server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -97,13 +97,13 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Build the production application:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ### Start Production Server
 
 ```bash
-npm start
+pnpm start
 ```
 
 ## Features

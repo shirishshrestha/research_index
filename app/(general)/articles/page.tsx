@@ -2,6 +2,7 @@ import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { ArticlesListView } from "@/features/general/articles";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Articles - Resource Index",
@@ -27,7 +28,9 @@ export default function ArticlesPage() {
       />
 
       <Container>
-        <ArticlesListView />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ArticlesListView />
+        </Suspense>
       </Container>
     </section>
   );

@@ -2,6 +2,7 @@ import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { JournalsListView } from "@/features/general/journals";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Journals - Resource Index",
@@ -27,7 +28,9 @@ export default function JournalsPage() {
       />
 
       <Container>
-        <JournalsListView />
+        <Suspense fallback={<div>Loading...</div>}>
+          <JournalsListView />
+        </Suspense>
       </Container>
     </section>
   );

@@ -74,7 +74,7 @@ const mockArticles: Article[] = [
 
 export function LatestIssuesTab() {
   return (
-    <div className=" section-padding pt-0!">
+    <div className=" ">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
         {/* Left Sidebar - Filters */}
         <aside className="space-y-6">

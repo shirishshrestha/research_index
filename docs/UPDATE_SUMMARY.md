@@ -4,7 +4,8 @@
 
 ### 1. Package Manager Migration
 
-- ✅ Switched from npm to **pnpm**
+✅ Switched from npm to **pnpm**
+
 - ✅ Generated `pnpm-lock.yaml`
 - ✅ Removed `package-lock.json`
 - ✅ All dependencies installed with pnpm
