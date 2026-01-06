@@ -2,6 +2,7 @@ import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { AuthorsListView } from "@/features/general/authors";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Authors - Resource Index",
@@ -28,7 +29,9 @@ export default function AuthorsPage() {
       />
 
       <Container>
-        <AuthorsListView />
+        <Suspense fallback={<div>Loading...</div>}>
+          <AuthorsListView />
+        </Suspense>
       </Container>
     </section>
   );

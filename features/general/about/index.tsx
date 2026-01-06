@@ -7,7 +7,6 @@ export function AboutPage() {
       <div className="py-6">
         <Container>
           <Breadcrumb
-            variant="default"
             items={[commonBreadcrumbs.home, commonBreadcrumbs.about]}
           />
         </Container>

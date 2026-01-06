@@ -1,4 +1,3 @@
-
 import { Breadcrumb, commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { Container } from "@/components/shared";
 import { Metadata } from "next";
@@ -10,17 +9,14 @@ export const metadata: Metadata = {
 
 export default function AdvancedSearchPage() {
   return (
-    
-      <Container>
-        <Breadcrumb
-          variant="hero"
-          items={[
-            commonBreadcrumbs.home,
-            commonBreadcrumbs.search,
-            commonBreadcrumbs.advancedSearch,
-          ]}
-        />
-      </Container>
+    <Container>
+      <Breadcrumb
+        items={[
+          commonBreadcrumbs.home,
+          commonBreadcrumbs.search,
+          commonBreadcrumbs.advancedSearch,
+        ]}
+      />
       <div className="container mx-auto px-4 py-8">
         <h1 className="heading-2 heading-gradient mb-8">Advanced Search</h1>
         <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
@@ -30,6 +26,6 @@ export default function AdvancedSearchPage() {
           {/* Add advanced search form here */}
         </div>
       </div>
-    
+    </Container>
   );
 }
