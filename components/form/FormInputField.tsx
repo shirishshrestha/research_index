@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Control, FieldPath, FieldValues } from "react-hook-form";
+import { ReactNode } from "react";
 
 interface FormInputFieldProps<TFieldValues extends FieldValues = FieldValues> {
   control: Control<TFieldValues>;
@@ -18,8 +19,8 @@ interface FormInputFieldProps<TFieldValues extends FieldValues = FieldValues> {
   description?: string;
   form_classname?: string;
   maxLength?: number;
-  showCounter?: boolean;
   type?: string;
+  children?: ReactNode;
 }
 
 export const FormInputField = <TFieldValues extends FieldValues = FieldValues>({
@@ -31,7 +32,7 @@ export const FormInputField = <TFieldValues extends FieldValues = FieldValues>({
   description,
   form_classname = "",
   maxLength,
-  showCounter = false,
+  children,
   ...props
 }: FormInputFieldProps<TFieldValues>) => {
   return (
@@ -45,18 +46,12 @@ export const FormInputField = <TFieldValues extends FieldValues = FieldValues>({
             <div className="relative">
               <Input
                 placeholder={placeholder}
-                className={`${className} ${
-                  showCounter && maxLength ? "pr-16" : ""
-                }`}
+                className={`${className} `}
                 maxLength={maxLength}
                 {...field}
                 {...props}
               />
-              {showCounter && maxLength && (
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 bg-primary text-white text-xs font-medium px-2 py-1 rounded">
-                  {maxLength - (field.value?.length || 0)}
-                </span>
-              )}
+              {children}
             </div>
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}

@@ -7,15 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import { FormInputField } from "@/components/form";
 import { Eye, EyeOff } from "lucide-react";
 import { Icon } from "@/components/shared";
 
@@ -96,68 +89,44 @@ export default function LoginPage() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8.75"
               >
-                <FormField
+                <FormInputField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-text-black">
-                        Email
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="you@domain.com"
-                          className="w-full h-12"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  type="email"
+                  label="Email"
+                  placeholder="you@domain.com"
+                  form_classname=""
                 />
 
-                <FormField
+                <FormInputField
                   control={form.control}
                   name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-text-black">
-                        Password
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
-                            className="w-full h-12 pr-10"
-                            {...field}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                          >
-                            {showPassword ? (
-                              <EyeOff className="w-5 h-5" />
-                            ) : (
-                              <Eye className="w-5 h-5" />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <div className="text-left mt-2">
-                        <Link
-                          href="/forgot-password"
-                          className="text-sm text-text-black! hover:underline"
-                        >
-                          Forget your password?
-                        </Link>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  type={showPassword ? "text" : "password"}
+                  label="Password"
+                  placeholder="Enter your password"
+                  className="pr-10"
+                  form_classname="relative"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-9.5 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                  <div className="text-left mt-2">
+                    <Link
+                      href="/forgot-password"
+                      className="text-sm text-text-black! hover:underline"
+                    >
+                      Forget your password?
+                    </Link>
+                  </div>
+                </FormInputField>
 
                 <Button
                   type="submit"
