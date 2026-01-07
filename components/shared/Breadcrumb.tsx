@@ -22,7 +22,9 @@ export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
               <Link
                 href={item.href}
                 className={`${
-                  items.length - 1 !== index ? "underline" : "text-text-black"
+                  items.length - 1 !== index
+                    ? "underline underline-offset-[3.2px]"
+                    : "text-text-black"
                 } `}
               >
                 {item.label}
@@ -30,7 +32,9 @@ export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
             ) : (
               <span
                 className={`${
-                  items.length - 1 !== index ? "underline" : "text-text-black"
+                  items.length - 1 !== index
+                    ? "underline underline-offset-[3.2px]"
+                    : "text-text-black"
                 } `}
               >
                 {item.label}

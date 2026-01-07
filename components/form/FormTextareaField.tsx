@@ -48,7 +48,7 @@ export const FormTextareaField = <
             <div className="relative">
               <Textarea
                 placeholder={placeholder}
-                className={`${className} min-h-[200px] ${
+                className={`${className} min-h-50 ${
                   showCounter && maxLength ? "pr-16" : ""
                 }`}
                 maxLength={maxLength}
