@@ -13,7 +13,7 @@ export function ArticleCard({
 }: ArticleCardProps) {
   return (
     <Link href={href}>
-      <Card className="p-6.25 group hover:border-0 hover:border-b-3 duration-50 transition-all hover:border-b-primary shadow-none">
+      <Card className="p-6.25 group  hover:shadow-md duration-300 transition-shadow shadow-none">
         <div className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-4 ">
             <div className="flex-1">

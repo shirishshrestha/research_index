@@ -41,7 +41,7 @@ export const AuthorProfileTab = ({ author }: AuthorProfileProps) => {
                 key={discipline}
                 className="flex items-center gap-2 text-text-gray"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-[100%] bg-primary shrink-0" />
                 {discipline}
               </li>
             ))}

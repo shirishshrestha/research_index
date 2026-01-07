@@ -32,12 +32,14 @@ export const OverviewTab = ({ article }: ArticleDetailsProps) => {
       </aside>
       <aside className="space-y-8.75">
         <div className="space-y-3.75">
-          <h3 className="heading-4 text-text-black">Abstract</h3>
+          <h3 className="heading-4 text-text-black scroll-mt-32" id="abstract">
+            Abstract
+          </h3>
           <p className="sub-body">{article.abstract}</p>
         </div>
 
         {article.erratumFor && (
-          <div className="space-y-3.75">
+          <div className="space-y-3.75 scroll-mt-32" id="erratum">
             <h3 className="heading-4 text-text-black">Erratum for</h3>
             <div className="space-y-1.25">
               <p className="heading-para text-primary!">
@@ -52,12 +54,12 @@ export const OverviewTab = ({ article }: ArticleDetailsProps) => {
           </div>
         )}
 
-        <div className="space-y-3.75">
+        <div className="space-y-3.75 scroll-mt-32" id="publicationType">
           <h3 className="heading-4 text-text-black">Publication Type</h3>
           <p className="text-base text-text-gray">{article.publicationType}</p>
         </div>
 
-        <div className="space-y-3.75">
+        <div className="space-y-3.75 scroll-mt-32" id="meshTerms">
           <h3 className="heading-4 text-text-black">MeSH Terms</h3>
           <ul>
             {article.meshTerms.map((term, index) => (
@@ -69,7 +71,7 @@ export const OverviewTab = ({ article }: ArticleDetailsProps) => {
           </ul>
         </div>
 
-        <div className="space-y-3.75">
+        <div className="space-y-3.75 scroll-mt-32" id="relatedInfo">
           <h3 className="heading-4 text-text-black">Related Information</h3>
 
           <ul className="space-y-2.5">
@@ -81,7 +83,7 @@ export const OverviewTab = ({ article }: ArticleDetailsProps) => {
           </ul>
         </div>
 
-        <div className="space-y-3.75">
+        <div className="space-y-3.75 scroll-mt-32" id="linkOut">
           <h3 className="heading-4 text-text-black">
             LinkOut - More Resources
           </h3>

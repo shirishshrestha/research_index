@@ -4,7 +4,7 @@ import {
   ProfileTabs,
 } from "@/features/shared/components/profile";
 import { ChevronDown } from "lucide-react";
-import { InstitutionProfileTab, ResearchTab } from "./TabDetails";
+import { InstitutionProfileTab, MembersTab, ResearchTab } from "./TabDetails";
 
 export function InstitutionDetails() {
   // Mock data for demonstration
@@ -72,13 +72,7 @@ export function InstitutionDetails() {
             {
               label: "Members",
               value: "members",
-              content: (
-                <div className="text-center py-16">
-                  <p className="text-text-gray">
-                    Institution members will be displayed here
-                  </p>
-                </div>
-              ),
+              content: <MembersTab />,
             },
           ]}
           moreOptions={

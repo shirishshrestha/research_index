@@ -3,25 +3,76 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Eye, EyeOff, Upload } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Eye, EyeOff } from "lucide-react";
+
+const titles = [
+  { value: "mr", label: "Mr" },
+  { value: "mrs", label: "Mrs" },
+  { value: "ms", label: "Ms" },
+  { value: "dr", label: "Dr" },
+  { value: "prof", label: "Professor" },
+  { value: "assoc_prof", label: "Associate Professor" },
+  { value: "asst_prof", label: "Assistant Professor" },
+];
+
+const authorSignupSchema = z
+  .object({
+    title: z.string().min(1, { message: "Please select a title" }),
+    fullName: z.string().min(2, { message: "Full name is required" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    institute: z.string().min(2, { message: "Institute is required" }),
+    designation: z.string().min(2, { message: "Designation is required" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export default function AuthorSignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const form = useForm<z.infer<typeof authorSignupSchema>>({
+    resolver: zodResolver(authorSignupSchema),
+    defaultValues: {
+      title: "",
+      fullName: "",
+      email: "",
+      institute: "",
+      designation: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof authorSignupSchema>) {
+    console.log(values);
+    // Handle signup logic here
+  }
 
   return (
     <div className="max-h-screen flex">
@@ -44,187 +95,214 @@ export default function AuthorSignupPage() {
           </div>
 
           {/* Sign Up Form */}
-          <form className="space-y-5">
-            {/* Title and Profile Picture */}
-            <div className="flex gap-4 items-start">
-              <div className="flex-1">
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-text-black mb-2"
-                >
-                  Title
-                </label>
-                <Input
-                  id="title"
-                  type="text"
-                  placeholder=""
-                  className="w-full h-12"
-                />
-              </div>
-              <div className="flex flex-col items-center">
-                <label className="block text-sm font-medium text-text-black mb-2 invisible">
-                  Photo
-                </label>
-                <label
-                  htmlFor="profile-upload"
-                  className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors overflow-hidden"
-                >
-                  {profileImage ? (
-                    <img
-                      src={profileImage}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Upload className="w-6 h-6 text-gray-500" />
-                  )}
-                  <input
-                    id="profile-upload"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleImageUpload}
-                  />
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="fullName"
-                className="block text-sm font-medium text-text-black mb-2"
-              >
-                Full Name
-              </label>
-              <Input
-                id="fullName"
-                type="text"
-                placeholder=""
-                className="w-full h-12"
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-text-black">
+                      Title
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full ">
+                          <SelectValue placeholder="Select a title" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {titles.map((title) => (
+                          <SelectItem key={title.value} value={title.value}>
+                            {title.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-text-black mb-2"
-              >
-                Email
-              </label>
-              <Input
-                id="email"
-                type="email"
-                placeholder=""
-                className="w-full h-12"
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-text-black">
+                      Full Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="e.g. Jane Doe"
+                        className="w-full "
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div>
-              <label
-                htmlFor="institute"
-                className="block text-sm font-medium text-text-black mb-2"
-              >
-                Institute
-              </label>
-              <Input
-                id="institute"
-                type="text"
-                placeholder=""
-                className="w-full h-12"
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-text-black">
+                      Email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="you@institution.edu"
+                        className="w-full "
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div>
-              <label
-                htmlFor="designation"
-                className="block text-sm font-medium text-text-black mb-2"
-              >
-                Designation
-              </label>
-              <Input
-                id="designation"
-                type="text"
-                placeholder=""
-                className="w-full h-12"
+              <FormField
+                control={form.control}
+                name="institute"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-text-black">
+                      Institute
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Your institute or affiliation"
+                        className="w-full "
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-text-black mb-2"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder=""
-                  className="w-full h-12 pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              <FormField
+                control={form.control}
+                name="designation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-text-black">
+                      Designation
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="e.g. Assistant Professor"
+                        className="w-full "
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-text-black">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Create a password"
+                          className="w-full  pr-10"
+                          {...field}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-text-black">
+                      Confirm Password
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm your password"
+                          className="w-full  pr-10"
+                          {...field}
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div>
+                {" "}
+                <Button
+                  type="submit"
+                  className="w-fit px-12.5 py-2 bg-gradient-blue text-white hover:opacity-90"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </button>
+                  Sign Up
+                </Button>
+                <div className="mt-3.75">
+                  <p className="text-sm text-gray-600">
+                    Already have an account?{" "}
+                    <Link
+                      href="/login"
+                      className="text-primary hover:underline font-medium"
+                    >
+                      Login
+                    </Link>
+                  </p>
+                </div>
               </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-text-black mb-2"
-              >
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder=""
-                  className="w-full h-12 pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full h-12 bg-gradient-blue text-white hover:opacity-90"
-            >
-              Sign Up
-            </Button>
-          </form>
-
-          {/* Login Link */}
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="text-blue-600 hover:underline font-medium"
-              >
-                Login
-              </Link>
-            </p>
-          </div>
+            </form>
+          </Form>
         </div>
       </div>
     </div>
