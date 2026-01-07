@@ -21,6 +21,8 @@ export const iconNames = [
   "Sa-Content-Sign",
   "Zero-Content-Sign",
   "Creative-Commons",
+  "vision",
+  "mission",
 ] as const;
 
 export type IconName = (typeof iconNames)[number];

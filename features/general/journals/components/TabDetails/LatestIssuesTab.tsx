@@ -9,11 +9,9 @@ import {
   categoryOptions,
   languageOptions,
 } from "@/features/shared/constants/filterOptions";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ArticleCard } from "@/features/general/articles";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Article {
   id: string;

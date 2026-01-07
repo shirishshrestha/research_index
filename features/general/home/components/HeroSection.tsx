@@ -129,7 +129,7 @@ export function HeroSection() {
                   <h3 className="heading-3 text-secondary mb-2">
                     {stat.value.toLocaleString()}
                   </h3>
-                  <div className="sub-body">{stat.label}</div>
+                  <div className="sub-body text-white!">{stat.label}</div>
                 </div>
               ))}
             </div>

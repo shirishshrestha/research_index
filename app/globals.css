@@ -288,3 +288,14 @@ h6 {
     @apply border-primary mt-2.75 text-sm px-4 py-1 text-primary;
   }
 }
+
+.about__card {
+  border-radius: 8px;
+  padding: 25px;
+  background: white;
+  transition: all 1s ease-in-out;
+}
+
+.about__card:hover {
+  background: var(--gradient-blue);
+}
