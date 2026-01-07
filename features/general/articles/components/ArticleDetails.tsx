@@ -74,7 +74,6 @@ export function ArticleDetails() {
         <Button
           variant={"ghost"}
           className="p-0 leading-normal hover:bg-transparent! hover:text-primary"
-          id="abstract"
         >
           <Icon name="pdf" size={20} className="mr-2" />
           View Full PDF

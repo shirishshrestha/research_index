@@ -4,7 +4,7 @@ import {
   ProfileTabs,
 } from "@/features/shared/components/profile";
 import { ChevronDown } from "lucide-react";
-import { AuthorProfileTab, ResearchTab } from "./TabDetails";
+import { AuthorProfileTab, FollowingTab, ResearchTab } from "./TabDetails";
 
 export function AuthorDetails() {
   // Mock data for demonstration
@@ -82,13 +82,7 @@ export function AuthorDetails() {
             {
               label: "Following",
               value: "following",
-              content: (
-                <div className="text-center py-16">
-                  <p className="text-text-gray">
-                    Following list will be displayed here
-                  </p>
-                </div>
-              ),
+              content: <FollowingTab />,
             },
           ]}
           moreOptions={

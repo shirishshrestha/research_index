@@ -30,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${merriweather.variable} ${roboto.variable} font-roboto antialiased`}
+        suppressHydrationWarning
       >
         <Providers>{children}</Providers>
       </body>
