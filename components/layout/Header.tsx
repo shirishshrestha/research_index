@@ -61,15 +61,15 @@ const mainLinks: { title: string; href: string }[] = [
 const supportItems: { title: string; href: string }[] = [
   {
     title: "Institutional Supporter Model",
-    href: "/institutional-supporter-model",
+    href: "/support/institutional-supporter-model",
   },
   {
     title: "Author Supporter Model",
-    href: "/author-supporter-model",
+    href: "/support/author-supporter-model",
   },
   {
     title: "Sponsorship & Partnership",
-    href: "/sponsorship-partnership",
+    href: "/support/sponsorship-partnership",
   },
 ];
 
