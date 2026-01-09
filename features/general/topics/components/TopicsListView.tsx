@@ -4,66 +4,73 @@ import { TopicCard } from "@/components/shared";
 
 export const mockTopics = [
   {
-    id: "hum",
+    id: 1,
     label: "Humanities and Religion",
     count: 742,
   },
   {
-    id: "law",
+    id: 2,
     label: "Law / Jurisprudence",
     count: 215,
   },
   {
-    id: "soc",
+    id: 3,
     label: "Social Sciences",
     count: 680,
   },
   {
-    id: "math",
+    id: 4,
     label: "Mathematics",
     count: 194,
   },
   {
-    id: "nat",
+    id: 5,
     label: "Natural Sciences",
     count: 812,
   },
   {
-    id: "tech",
+    id: 6,
+    label: "Natural Sciences",
+    count: 812,
+  },
+  {
+    id: 7,
     label: "Technology",
     count: 533,
   },
   {
-    id: "agri",
+    id: 8,
     label: "Forestry, Agricultural Sciences & Landscape Planning",
     count: 380,
   },
   {
-    id: "med",
+    id: 9,
     label: "Medicine",
     count: 421,
   },
   {
-    id: "dent",
+    id: 10,
     label: "Odontology",
     count: 98,
   },
   {
-    id: "pharm",
+    id: 11,
     label: "Pharmacy",
     count: 167,
   },
   {
-    id: "vet",
+    id: 12,
     label: "Veterinary Medicine",
     count: 143,
   },
   {
-    id: "inter",
+    id: 13,
     label: "Interdisciplinary Research Areas",
     count: 256,
   },
 ];
+
+// Note: Mock data for "tech" topic is available in TopicDetailView component
 
 export function TopicsListView() {
   return (

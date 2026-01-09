@@ -21,7 +21,7 @@ export function Footer() {
                 <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/authors"
-                  className="text-white hover:underline text-sm transition-colors"
+                  className="text-white hover:underline underline-offset-2   text-sm transition-colors"
                 >
                   Authors
                 </Link>
@@ -30,7 +30,7 @@ export function Footer() {
                 <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/institutions"
-                  className="text-white hover:underline text-sm transition-colors"
+                  className="text-white hover:underline underline-offset-2  text-sm transition-colors"
                 >
                   Institutions
                 </Link>
@@ -48,7 +48,7 @@ export function Footer() {
                 <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/articles"
-                  className="text-white hover:underline text-sm transition-colors"
+                  className="text-white hover:underline underline-offset-2  text-sm transition-colors"
                 >
                   Articles
                 </Link>
@@ -57,7 +57,7 @@ export function Footer() {
                 <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/journals"
-                  className="text-white hover:underline text-sm transition-colors"
+                  className="text-white hover:underline underline-offset-2 text-sm transition-colors"
                 >
                   Journals
                 </Link>
@@ -66,7 +66,7 @@ export function Footer() {
                 <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/search"
-                  className="text-white hover:underline text-sm transition-colors"
+                  className="text-white hover:underline underline-offset-2 text-sm transition-colors"
                 >
                   Topics
                 </Link>
@@ -84,7 +84,7 @@ export function Footer() {
                 <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/about"
-                  className="text-white hover:underline text-sm transition-colors"
+                  className="text-white hover:underline underline-offset-2 text-sm transition-colors"
                 >
                   About Platform
                 </Link>
@@ -93,7 +93,7 @@ export function Footer() {
                 <ChevronRight size={20} color="white" strokeWidth={"1.5"} />
                 <Link
                   href="/contact"
-                  className="text-white hover:underline text-sm transition-colors"
+                  className="text-white hover:underline underline-offset-2 text-sm transition-colors"
                 >
                   Contact
                 </Link>
@@ -123,19 +123,31 @@ export function Footer() {
               </p>
             </div>
             <div className="flex items-center gap-3 flex-wrap text-sm text-white">
-              <Link href="/privacy" className="hover:underline">
+              <Link
+                href="/privacy"
+                className="hover:underline underline-offset-2"
+              >
                 Privacy
               </Link>
               <span>|</span>
-              <Link href="/terms" className="hover:underline">
+              <Link
+                href="/terms"
+                className="hover:underline underline-offset-2"
+              >
                 Terms & Conditions
               </Link>
               <span>|</span>
-              <Link href="/code-of-conduct" className="hover:underline">
+              <Link
+                href="/code-of-conduct"
+                className="hover:underline underline-offset-2"
+              >
                 Code of Conduct
               </Link>
               <span>|</span>
-              <Link href="/media" className="hover:underline">
+              <Link
+                href="/media"
+                className="hover:underline underline-offset-2"
+              >
                 Media NRIP Research Labs
               </Link>
             </div>
@@ -157,7 +169,7 @@ export function Footer() {
                   Creative Commons{" "}
                   <Link
                     href="https://creativecommons.org/licenses/by-sa/4.0/"
-                    className="underline hover:text-white"
+                    className="underline underline-offset-3 hover:text-white"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -181,7 +193,7 @@ export function Footer() {
                   {" "}
                   <Link
                     href="https://creativecommons.org/publicdomain/zero/1.0/"
-                    className="underline hover:text-white"
+                    className="underline underline-offset-3 hover:text-white"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
