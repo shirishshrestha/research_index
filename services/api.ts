@@ -1,7 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from "axios";
+import type { RootState } from "@/store/store";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// Store reference will be set after store initialization
+let store: { getState: () => RootState } | null = null;
+
+export const setApiStore = (storeInstance: { getState: () => RootState }) => {
+  store = storeInstance;
+};
 
 // Create axios instance with default configuration
 const axiosInstance: AxiosInstance = axios.create({
@@ -9,15 +16,19 @@ const axiosInstance: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Enable sending cookies with requests
 });
 
 // Request interceptor for adding auth tokens, etc.
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Add auth token if available
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Add auth token from Redux store if available
+    if (store) {
+      const state = store.getState();
+      const token = state.auth.tokens?.access;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },

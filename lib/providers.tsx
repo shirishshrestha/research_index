@@ -1,7 +1,12 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useEffect } from "react";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "@/store/store";
+import { setApiStore } from "@/services/api";
+import { setupTokenRefreshInterceptor } from "./tokenRefresh";
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -17,7 +22,19 @@ export function Providers({ children }: { children: ReactNode }) {
       })
   );
 
+  // Set store reference for API service and setup token refresh
+  useEffect(() => {
+    setApiStore(store);
+    setupTokenRefreshInterceptor();
+  }, []);
+
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
   );
 }

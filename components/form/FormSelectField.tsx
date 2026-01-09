@@ -59,7 +59,7 @@ export const FormSelectField = <
       name={name}
       render={({ field }) => (
         <FormItem className={form_classname}>
-          {label && <FormLabel className="mb-3.75">{label}</FormLabel>}
+          {label && <FormLabel className="">{label}</FormLabel>}
           <Select
             onValueChange={field.onChange}
             defaultValue={field.value}
