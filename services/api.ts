@@ -38,25 +38,25 @@ axiosInstance.interceptors.request.use(
 );
 
 // Response interceptor for handling errors globally
-axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Handle common errors
-    if (error.response) {
-      // Server responded with error status
-      const message = error.response.data?.message || error.message;
-      throw new Error(`API Error: ${message}`);
-    } else if (error.request) {
-      // Request made but no response received
-      throw new Error("Network Error: No response from server");
-    } else {
-      // Something else happened
-      throw new Error(`Request Error: ${error.message}`);
-    }
-  }
-);
+// axiosInstance.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     // Handle common errors
+//     if (error.response) {
+//       // Server responded with error status
+//       const message = error.response.data?.message || error.message;
+//       throw new Error(`API Error: ${message}`);
+//     } else if (error.request) {
+//       // Request made but no response received
+//       throw new Error("Network Error: No response from server");
+//     } else {
+//       // Something else happened
+//       throw new Error(`Request Error: ${error.message}`);
+//     }
+//   }
+// );
 
 export const api = {
   baseUrl: API_BASE_URL,

@@ -21,31 +21,19 @@ export const loginFn = async (data: LoginRequest): Promise<LoginResponse> => {
 /**
  * Logout API function
  */
-export const logoutFn = async (
-  refreshToken?: string
-): Promise<{ message: string }> => {
-  return api.post<{ message: string }>(
-    AUTH_ENDPOINTS.LOGOUT,
-    refreshToken ? { refresh: refreshToken } : {},
-    {
-      withCredentials: true,
-    }
-  );
+export const logoutFn = async (): Promise<{ message: string }> => {
+  return api.post<{ message: string }>(AUTH_ENDPOINTS.LOGOUT, {
+    withCredentials: true,
+  });
 };
 
 /**
  * Refresh token API function
  */
-export const refreshTokenFn = async (
-  refreshToken?: string
-): Promise<RefreshTokenResponse> => {
-  return api.post<RefreshTokenResponse>(
-    AUTH_ENDPOINTS.REFRESH_TOKEN,
-    refreshToken ? { refresh: refreshToken } : {},
-    {
-      withCredentials: true,
-    }
-  );
+export const refreshTokenFn = async (): Promise<RefreshTokenResponse> => {
+  return api.post<RefreshTokenResponse>(AUTH_ENDPOINTS.REFRESH_TOKEN, {
+    withCredentials: true,
+  });
 };
 
 /**

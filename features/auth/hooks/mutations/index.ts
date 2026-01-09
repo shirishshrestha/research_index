@@ -91,12 +91,13 @@ export function useRegisterAuthorMutation(form?: FormWithSetError) {
             tokens: data.tokens,
           })
         );
-        toast.success("Registration successful! Welcome aboard!");
-        router.push("/");
+        toast.success("Registration successful! Redirecting to login...");
+        router.push("/login");
       },
       onError: (error) => {
         const axiosError = error as AxiosError<Record<string, string[]>>;
         const data = axiosError?.response?.data;
+
         if (data && typeof data === "object" && form) {
           let hasFieldError = false;
           Object.entries(data).forEach(([field, messages]) => {

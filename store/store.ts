@@ -16,7 +16,7 @@ import authReducer from "@/features/auth/redux/authSlice";
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["user", "tokens", "isAuthenticated"], // Only persist these fields
+  whitelist: ["user", "isAuthenticated"], // Only persist these fields
 };
 
 const rootReducer = combineReducers({
