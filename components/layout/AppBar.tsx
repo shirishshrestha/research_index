@@ -1,0 +1,83 @@
+"use client";
+
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { logout } from "@/features/auth/redux";
+import { useRouter } from "next/navigation";
+import { logoutFn } from "@/features/auth/api/functions";
+import { broadcastLogout } from "@/lib/broadcastLogout";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { LogOut, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+
+export function AppBar() {
+  const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logoutFn();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      broadcastLogout();
+      dispatch(logout());
+      router.push("/login");
+    }
+  };
+
+  return (
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background px-6 shadow-sm">
+      <div className="flex items-center gap-2">
+        <SidebarTrigger />
+      </div>
+
+      <div className="flex items-center gap-3">
+        {/* User Menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">
+                <User className="h-4 w-4" />
+              </div>
+              <span className="hidden md:inline-block">{user?.email}</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">
+                  {user?.full_name}
+                </p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {user?.email}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-destructive"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Logout</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </header>
+  );
+}

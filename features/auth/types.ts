@@ -5,7 +5,7 @@ export interface AuthTokens {
 export interface UserProfile {
   id: number;
   email: string;
-  user_type: "author" | "institution";
+  user_type: "author" | "institution" | "admin";
   title?: string;
   full_name?: string;
   institute?: string;
@@ -59,7 +59,7 @@ export interface RegisterResponse {
   tokens: AuthTokens;
   user: {
     email: string;
-    user_type: "author" | "institution";
+    user_type: "author" | "institution" | "admin";
   };
 }
 

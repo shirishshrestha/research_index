@@ -77,9 +77,20 @@ const supportItems: { title: string; href: string }[] = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isAuthenticated = useAppSelector(
-    (state) => state?.auth?.isAuthenticated
+  const { isAuthenticated, user } = useAppSelector(
+    (state) => state?.auth || {}
   );
+
+  // Get role-specific dashboard route
+  const getDashboardRoute = () => {
+    if (!user?.user_type) return "/dashboard";
+    const dashboardRoutes = {
+      admin: "/admin/dashboard",
+      institution: "/institution/dashboard",
+      author: "/author/dashboard",
+    };
+    return dashboardRoutes[user.user_type] || "/dashboard";
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b">
@@ -105,10 +116,10 @@ export function Header() {
               </Link>
             ) : (
               <Link
-                href="/dashboard"
+                href={getDashboardRoute()}
                 className="hover:text-white/80 transition-colors flex gap-1.5 px-4 items-center"
               >
-                Dasboard
+                Dashboard
                 <LayoutDashboard size={17} />
               </Link>
             )}

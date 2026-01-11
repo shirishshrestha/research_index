@@ -40,7 +40,15 @@ export function useLoginMutation(form?: FormWithSetError) {
         })
       );
       toast.success("Login successful! Redirecting...");
-      router.push("/");
+
+      // Redirect to role-specific dashboard
+      const dashboardRoutes = {
+        admin: "/admin/dashboard",
+        institution: "/institution/dashboard",
+        author: "/author/dashboard",
+      };
+      const redirectTo = dashboardRoutes[data.user.user_type] || "/";
+      router.push(redirectTo);
     },
     onError: (error) => {
       const axiosError = error as AxiosError<Record<string, string[]>>;
@@ -152,8 +160,8 @@ export function useRegisterInstitutionMutation(form?: FormWithSetError) {
             tokens: data.tokens,
           })
         );
-        toast.success("Registration successful! Welcome aboard!");
-        router.push("/");
+        toast.success("Registration successful! Redirecting to login...");
+        router.push("/login");
       },
       onError: (error) => {
         const axiosError = error as AxiosError<Record<string, string[]>>;
