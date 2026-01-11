@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Merriweather, Roboto } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/lib/providers";
+import { Toaster } from "sonner";
 
 const merriweather = Merriweather({
   variable: "--font-merriweather",
@@ -33,6 +34,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );

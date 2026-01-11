@@ -2,39 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { FormInputField } from "@/components/form";
-import { Eye, EyeOff } from "lucide-react";
 import { Icon } from "@/components/shared";
-
-const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" }),
-});
+import { LoginForm } from "@/features/auth/components";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log(values);
-    // Handle login logic here
-  }
-
   return (
     <div className="max-h-screen flex">
       {/* Left Section - Decorative Image */}
@@ -59,14 +31,14 @@ export default function LoginPage() {
           <div className="space-y-3 grid grid-cols-2 gap-6.25">
             <Button
               variant="outline"
-              className=" flex items-center justify-center gap-2 mb-0 h-12 border-gray-300"
+              className=" flex items-center justify-center gap-2 mb-0 h-12 hover:bg-transparent! hover:text-primary!"
             >
               <Icon name="google" size={24} />
               Continue with Google
             </Button>
             <Button
               variant="outline"
-              className=" flex items-center justify-center mb-0 gap-2 h-12 border-gray-300"
+              className=" flex items-center justify-center mb-0 gap-2 h-12 hover:bg-transparent! hover:text-primary!"
             >
               <Icon name="apple" size={23} />
               Continue with Apple
@@ -84,58 +56,7 @@ export default function LoginPage() {
 
           <div className="space-y-3.75">
             {/* Login Form */}
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8.75"
-              >
-                <FormInputField
-                  control={form.control}
-                  name="email"
-                  type="email"
-                  label="Email"
-                  placeholder="you@domain.com"
-                  form_classname=""
-                />
-
-                <FormInputField
-                  control={form.control}
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  label="Password"
-                  placeholder="Enter your password"
-                  className="pr-10"
-                  form_classname="relative"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3.75 text-gray-500 hover:text-gray-700"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-5 h-5" />
-                    ) : (
-                      <Eye className="w-5 h-5" />
-                    )}
-                  </button>
-                  <div className="text-left mt-2">
-                    <Link
-                      href="/forgot-password"
-                      className="text-sm text-text-black! hover:underline"
-                    >
-                      Forget your password?
-                    </Link>
-                  </div>
-                </FormInputField>
-
-                <Button
-                  type="submit"
-                  className="w-fit px-12.5 py-2 bg-gradient-blue text-white hover:opacity-90"
-                >
-                  Login
-                </Button>
-              </form>
-            </Form>
+            <LoginForm />
 
             {/* Sign Up Links */}
             <div className=" space-y-1.25">

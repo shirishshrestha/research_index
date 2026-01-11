@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LogIn, Menu, Search } from "lucide-react";
+import { LayoutDashboard, LogIn, Menu, Search } from "lucide-react";
 import { useState } from "react";
 import {
   NavigationMenu,
@@ -19,6 +19,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Image from "next/image";
+import { useAppSelector } from "@/store";
 
 // Navigation data structure
 const contributorsItems: { title: string; href: string }[] = [
@@ -76,6 +77,21 @@ const supportItems: { title: string; href: string }[] = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { isAuthenticated, user } = useAppSelector(
+    (state) => state?.auth || {}
+  );
+
+  // Get role-specific dashboard route
+  const getDashboardRoute = () => {
+    if (!user?.user_type) return "/dashboard";
+    const dashboardRoutes = {
+      admin: "/admin/dashboard",
+      institution: "/institution/dashboard",
+      author: "/author/dashboard",
+    };
+    return dashboardRoutes[user.user_type] || "/dashboard";
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b">
       <div className="bg-primary ">
@@ -90,13 +106,23 @@ export function Header() {
               <Search size={17} />
             </Link>
 
-            <Link
-              href="/login"
-              className="hover:text-white/80 transition-colors flex gap-1.5 px-4 items-center"
-            >
-              Login
-              <LogIn size={17} />
-            </Link>
+            {!isAuthenticated ? (
+              <Link
+                href="/login"
+                className="hover:text-white/80 transition-colors flex gap-1.5 px-4 items-center"
+              >
+                Login
+                <LogIn size={17} />
+              </Link>
+            ) : (
+              <Link
+                href={getDashboardRoute()}
+                className="hover:text-white/80 transition-colors flex gap-1.5 px-4 items-center"
+              >
+                Dashboard
+                <LayoutDashboard size={17} />
+              </Link>
+            )}
 
             <NavigationMenu viewport={false}>
               <NavigationMenuList>
