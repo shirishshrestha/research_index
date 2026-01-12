@@ -77,10 +77,10 @@ export default function NotFound() {
               Login
             </Link>
             <Link
-              href="/publications"
+              href="/articles"
               className="rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-200"
             >
-              Publications
+              Articles
             </Link>
             <Link
               href="/topics"

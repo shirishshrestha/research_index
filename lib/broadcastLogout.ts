@@ -3,6 +3,8 @@
  * When user logs out in one tab, all other tabs should be notified
  */
 
+import { QueryClient } from "@tanstack/react-query";
+
 const CHANNEL_NAME = "auth_channel";
 const LOGOUT_MESSAGE = "logout";
 
@@ -13,7 +15,8 @@ let channel: BroadcastChannel | null = null;
  */
 export function setupLogoutBroadcast(
   onLogout: () => void,
-  isProtectedRoute: boolean
+  isProtectedRoute: boolean,
+  queryClient?: QueryClient
 ) {
   // Only setup in browser environment
   if (typeof window === "undefined" || typeof BroadcastChannel === "undefined")
@@ -28,6 +31,10 @@ export function setupLogoutBroadcast(
   if (isProtectedRoute) {
     channel.onmessage = (event) => {
       if (event.data === LOGOUT_MESSAGE) {
+        // Clear query cache when logout is broadcasted
+        if (queryClient) {
+          queryClient.clear();
+        }
         onLogout();
       }
     };
