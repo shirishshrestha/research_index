@@ -1,6 +1,12 @@
 "use client";
 
+// import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/query/options";
+// import { useQuery } from "@tanstack/react-query";
+
 export default function AuthorDashboard() {
+  // TODO: Uncomment when API is ready
+  // const { data } = useQuery(createCurrentUserQueryOptions);
+  // console.log("Author Dashboard - Current User:", data);
   return (
     <div className="mx-auto max-w-7xl">
       {/* Header */}
@@ -13,7 +19,7 @@ export default function AuthorDashboard() {
 
       {/* Dashboard Cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* My Publications */}
+        \n {/* My Publications */}
         <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/20">
             <svg
@@ -37,7 +43,6 @@ export default function AuthorDashboard() {
             View and manage your research publications
           </p>
         </div>
-
         {/* Submit Publication */}
         <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-02">
@@ -62,7 +67,6 @@ export default function AuthorDashboard() {
             Submit a new research paper or article
           </p>
         </div>
-
         {/* Profile Settings */}
         <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-accent/20">
@@ -87,7 +91,6 @@ export default function AuthorDashboard() {
             Update your author profile and information
           </p>
         </div>
-
         {/* Citations & Impact */}
         <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-02">
@@ -112,7 +115,6 @@ export default function AuthorDashboard() {
             Track your research impact and citations
           </p>
         </div>
-
         {/* Co-authors */}
         <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/20">
@@ -137,7 +139,6 @@ export default function AuthorDashboard() {
             View and connect with your research collaborators
           </p>
         </div>
-
         {/* Research Topics */}
         <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-destructive/20">

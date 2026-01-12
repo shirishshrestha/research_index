@@ -37,8 +37,23 @@ export const setupTokenRefreshInterceptor = () => {
         _retry?: boolean;
       };
 
-      // If error is 401 and we haven't tried to refresh yet
-      if (error.response?.status === 401 && !originalRequest?._retry) {
+      // Skip token refresh for login, register, and refresh endpoints
+      const skipRefreshEndpoints = [
+        "/auth/login/",
+        "/auth/register/author/",
+        "/auth/register/institution/",
+        "/auth/token/refresh/",
+      ];
+      const isSkipEndpoint = skipRefreshEndpoints.some((endpoint) =>
+        originalRequest?.url?.includes(endpoint)
+      );
+
+      // If error is 401 and we haven't tried to refresh yet and not a skip endpoint
+      if (
+        error.response?.status === 401 &&
+        !originalRequest?._retry &&
+        !isSkipEndpoint
+      ) {
         if (isRefreshing) {
           // If already refreshing, queue this request
           return new Promise((resolve, reject) => {
