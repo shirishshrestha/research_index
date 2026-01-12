@@ -22,7 +22,7 @@ export function LoginForm() {
     },
   });
 
-  const loginMutation = useLoginMutation(form);
+  const loginMutation = useLoginMutation();
 
   function onSubmit(values: LoginFormData) {
     loginMutation.mutate(values);

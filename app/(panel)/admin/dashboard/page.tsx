@@ -1,6 +1,8 @@
 "use client";
 
 export default function AdminDashboard() {
+
+  
   return (
     <div className="mx-auto max-w-7xl">
       {/* Header */}

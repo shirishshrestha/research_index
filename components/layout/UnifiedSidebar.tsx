@@ -55,14 +55,14 @@ export function UnifiedSidebar({ menuItems }: UnifiedSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <Sidebar className="p-3 shadow-new bg-background">
-      <SidebarContent className="bg-card rounded-xl border py-6 pt-0 shadow-new">
+    <Sidebar className=" shadow-new bg-background">
+      <SidebarContent className="bg-card border pt-0 shadow-new">
         {/* Logo Section */}
         <div className="flex justify-between items-center p-3 pb-0">
           <Image
             width={200}
             height={100}
-            src="/omway-logo.png"
+            src="/logo.png"
             alt="logo"
             className="w-32.5"
             loading="eager"

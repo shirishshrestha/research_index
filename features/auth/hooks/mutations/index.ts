@@ -2,6 +2,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { usePost } from "@/hooks/useApi";
 import { useAppDispatch } from "@/store/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 import type { UseFormReturn } from "react-hook-form";
 import type { AxiosError } from "axios";
 import {
@@ -27,7 +28,7 @@ type FormWithSetError = Pick<UseFormReturn<any>, "setError">;
 /**
  * Hook for login mutation
  */
-export function useLoginMutation(form?: FormWithSetError) {
+export function useLoginMutation() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -51,30 +52,25 @@ export function useLoginMutation(form?: FormWithSetError) {
       router.push(redirectTo);
     },
     onError: (error) => {
-      const axiosError = error as AxiosError<Record<string, string[]>>;
+      const axiosError = error as AxiosError<Record<string, string | string[]>>;
       const data = axiosError?.response?.data;
-      if (data && typeof data === "object" && form) {
-        let hasFieldError = false;
-        Object.entries(data).forEach(([field, messages]) => {
-          if (Array.isArray(messages)) {
-            try {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              form.setError(field as any, {
-                type: "manual",
-                message: messages.join(" "),
-              });
-              hasFieldError = true;
-            } catch {
-              console.warn(`Field ${field} not found in form`);
-            }
-          }
-        });
-        if (!hasFieldError) {
-          toast.error("Login failed. Please check your credentials.");
+
+      console.log("Login error data:", data);
+
+      // Extract error message from various possible formats
+      let errorMessage = "Login failed. Please try again.";
+
+      if (data && typeof data === "object") {
+        // Check for common error keys
+        const errorValue = data.error || data.detail || data.message;
+        if (errorValue) {
+          errorMessage = Array.isArray(errorValue)
+            ? errorValue.join(" ")
+            : errorValue;
         }
-      } else {
-        toast.error("Login failed. Please try again.");
       }
+
+      toast.error(errorMessage);
     },
   });
 }
@@ -103,33 +99,44 @@ export function useRegisterAuthorMutation(form?: FormWithSetError) {
         router.push("/login");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<Record<string, string[]>>;
+        const axiosError = error as AxiosError<
+          Record<string, string[] | string>
+        >;
         const data = axiosError?.response?.data;
 
         if (data && typeof data === "object" && form) {
           let hasFieldError = false;
+          const nonFieldErrors: string[] = [];
+
           Object.entries(data).forEach(([field, messages]) => {
-            if (Array.isArray(messages)) {
-              // Map backend field names to form field names
-              const fieldMap: Record<string, string> = {
-                full_name: "fullName",
-                confirm_password: "confirmPassword",
-              };
-              const formField = fieldMap[field] || field;
-              try {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                form.setError(formField as any, {
-                  type: "manual",
-                  message: messages.join(" "),
-                });
-                hasFieldError = true;
-              } catch {
-                // If field doesn't exist in form, show as toast
-                console.warn(`Field ${formField} not found in form`);
-              }
+            const messageArray = Array.isArray(messages)
+              ? messages
+              : [messages];
+
+            // Map backend field names to form field names
+            const fieldMap: Record<string, string> = {
+              full_name: "fullName",
+              confirm_password: "confirmPassword",
+            };
+            const formField = fieldMap[field] || field;
+
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              form.setError(formField as any, {
+                type: "manual",
+                message: messageArray.join(" "),
+              });
+              hasFieldError = true;
+            } catch {
+              // Field doesn't exist in form, collect as non-field error
+              nonFieldErrors.push(...messageArray);
             }
           });
-          if (!hasFieldError) {
+
+          // Show non-field errors as toast
+          if (nonFieldErrors.length > 0) {
+            toast.error(nonFieldErrors.join(" "));
+          } else if (!hasFieldError) {
             toast.error("Registration failed. Please try again.");
           }
         } else {
@@ -164,31 +171,43 @@ export function useRegisterInstitutionMutation(form?: FormWithSetError) {
         router.push("/login");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<Record<string, string[]>>;
+        const axiosError = error as AxiosError<
+          Record<string, string[] | string>
+        >;
         const data = axiosError?.response?.data;
         if (data && typeof data === "object" && form) {
           let hasFieldError = false;
+          const nonFieldErrors: string[] = [];
+
           Object.entries(data).forEach(([field, messages]) => {
-            if (Array.isArray(messages)) {
-              // Map backend field names to form field names
-              const fieldMap: Record<string, string> = {
-                institution_name: "institutionName",
-                confirm_password: "confirmPassword",
-              };
-              const formField = fieldMap[field] || field;
-              try {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                form.setError(formField as any, {
-                  type: "manual",
-                  message: messages.join(" "),
-                });
-                hasFieldError = true;
-              } catch {
-                console.warn(`Field ${formField} not found in form`);
-              }
+            const messageArray = Array.isArray(messages)
+              ? messages
+              : [messages];
+
+            // Map backend field names to form field names
+            const fieldMap: Record<string, string> = {
+              institution_name: "institutionName",
+              confirm_password: "confirmPassword",
+            };
+            const formField = fieldMap[field] || field;
+
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              form.setError(formField as any, {
+                type: "manual",
+                message: messageArray.join(" "),
+              });
+              hasFieldError = true;
+            } catch {
+              // Field doesn't exist in form, collect as non-field error
+              nonFieldErrors.push(...messageArray);
             }
           });
-          if (!hasFieldError) {
+
+          // Show non-field errors as toast
+          if (nonFieldErrors.length > 0) {
+            toast.error(nonFieldErrors.join(" "));
+          } else if (!hasFieldError) {
             toast.error("Registration failed. Please try again.");
           }
         } else {
@@ -205,16 +224,19 @@ export function useRegisterInstitutionMutation(form?: FormWithSetError) {
 export function useLogoutMutation() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return usePost<{ message: string }, void>(AUTH_ENDPOINTS.LOGOUT, {
     onSuccess: () => {
       dispatch(logoutAction());
+      queryClient.clear(); // Clear all cached queries
       toast.success("Logged out successfully");
       router.push("/login");
     },
     onError: () => {
       // Even if logout fails on backend, clear local state
       dispatch(logoutAction());
+      queryClient.clear(); // Clear all cached queries
       toast.success("Logged out successfully");
       router.push("/login");
     },

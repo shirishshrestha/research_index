@@ -44,7 +44,10 @@ export function AppBar() {
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              className="flex items-center px-0 focus:ring-0! gap-2 hover:bg-transparent! hover:text-primary!"
+            >
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">
                 <User className="h-4 w-4" />
               </div>

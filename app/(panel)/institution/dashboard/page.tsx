@@ -1,6 +1,12 @@
 "use client";
 
+// import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/query/options";
+// import { useQuery } from "@tanstack/react-query";
+
 export default function InstitutionDashboard() {
+  // TODO: Uncomment when API is ready
+  // const { data } = useQuery(createCurrentUserQueryOptions);
+  // console.log("Institution Dashboard - Current User:", data);
   return (
     <div className="mx-auto max-w-7xl">
       {/* Header */}
