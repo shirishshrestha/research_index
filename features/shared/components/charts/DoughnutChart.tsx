@@ -105,11 +105,12 @@ export function DoughnutChart({
   title,
   data = [],
   colors = [
-    "var(--chart-1)",
-    "var(--chart-2)",
-    "var(--chart-3)",
-    "var(--chart-4)",
-    "var(--chart-5)",
+    "var(--chart-blue)",
+    "var(--chart-pink)",
+    "var(--chart-green)",
+    "var(--chart-yellow)",
+    "var(--chart-purple)",
+    "var(--chart-gray)",
   ],
   isLoading = false,
   isError = false,
@@ -122,7 +123,7 @@ export function DoughnutChart({
   nameKey = "name",
   height = 400,
   className = "",
-  innerRadius = 60,
+  innerRadius = 50,
   outerRadius = 80,
   cx = "50%",
   cy = "50%",
@@ -139,7 +140,7 @@ export function DoughnutChart({
           className="flex items-center justify-center"
           style={{ height: `${height}px` }}
         >
-          <Skeleton className="h-[250px] w-[250px] rounded-full" />
+          <Skeleton className="h-62.5 w-62.5 rounded-full" />
         </CardContent>
       </Card>
     );

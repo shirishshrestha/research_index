@@ -108,11 +108,12 @@ export function LineChart({
   data = [],
   lines = [],
   colors = [
-    "var(--chart-1)",
-    "var(--chart-2)",
-    "var(--chart-3)",
-    "var(--chart-4)",
-    "var(--chart-5)",
+    "var(--chart-blue)",
+    "var(--chart-pink)",
+    "var(--chart-green)",
+    "var(--chart-yellow)",
+    "var(--chart-purple)",
+    "var(--chart-gray)",
   ],
   isLoading = false,
   isError = false,
@@ -139,7 +140,7 @@ export function LineChart({
           className="flex items-center justify-center"
           style={{ height: `${height}px` }}
         >
-          <Skeleton className="h-[250px] w-full" />
+          <Skeleton className="h-62.5 w-full" />
         </CardContent>
       </Card>
     );

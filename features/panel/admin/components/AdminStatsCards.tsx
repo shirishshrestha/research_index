@@ -1,0 +1,93 @@
+import { StatsCard } from "@/features/shared/components/cards";
+import {
+  Users,
+  BookOpen,
+  FileText,
+  BarChart3,
+  TrendingUp,
+  Globe,
+} from "lucide-react";
+
+export interface AdminStats {
+  total_users: number;
+  total_authors: number;
+  total_institutions: number;
+  total_publications: number;
+  published_count: number;
+  draft_count: number;
+  total_citations: number;
+  total_reads: number;
+  total_downloads: number;
+  total_journals: number;
+  total_topics: number;
+  last_updated: string;
+}
+
+export interface AdminStatsCardsProps {
+  stats: AdminStats;
+}
+
+export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
+  return (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <StatsCard
+        title="Total Users"
+        value={stats.total_users}
+        icon={Users}
+        iconColor="text-primary"
+        iconBgColor="bg-blue-02"
+        description={`${stats.total_authors} authors, ${stats.total_institutions} institutions`}
+      />
+      <StatsCard
+        title="Total Publications"
+        value={stats.total_publications}
+        icon={BookOpen}
+        iconColor="text-secondary"
+        iconBgColor="bg-secondary/20"
+        description={`${stats.published_count} published, ${stats.draft_count} drafts`}
+      />
+      <StatsCard
+        title="Total Citations"
+        value={stats.total_citations.toLocaleString()}
+        icon={FileText}
+        iconColor="text-accent"
+        iconBgColor="bg-accent/20"
+      />
+      <StatsCard
+        title="Total Reads"
+        value={stats.total_reads.toLocaleString()}
+        icon={TrendingUp}
+        iconColor="text-primary"
+        iconBgColor="bg-blue-02"
+      />
+      <StatsCard
+        title="Total Downloads"
+        value={stats.total_downloads.toLocaleString()}
+        icon={BarChart3}
+        iconColor="text-secondary"
+        iconBgColor="bg-secondary/20"
+      />
+      <StatsCard
+        title="Total Journals"
+        value={stats.total_journals}
+        icon={Globe}
+        iconColor="text-accent"
+        iconBgColor="bg-accent/20"
+      />
+      <StatsCard
+        title="Authors"
+        value={stats.total_authors}
+        icon={Users}
+        iconColor="text-primary"
+        iconBgColor="bg-blue-02"
+      />
+      <StatsCard
+        title="Topics"
+        value={stats.total_topics}
+        icon={BookOpen}
+        iconColor="text-secondary"
+        iconBgColor="bg-secondary/20"
+      />
+    </div>
+  );
+}

@@ -1,9 +1,7 @@
 "use client";
 
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { logout } from "@/features/auth/redux";
-import { useRouter } from "next/navigation";
-import { logoutFn } from "@/features/auth/api/functions";
+import { useAppSelector } from "@/store/hooks";
+import { useLogoutMutation } from "@/features/auth";
 import { broadcastLogout } from "@/lib/broadcastLogout";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LogOut, User } from "lucide-react";
@@ -19,19 +17,11 @@ import { Button } from "@/components/ui/button";
 
 export function AppBar() {
   const { user } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
-  const router = useRouter();
+  const logoutMutation = useLogoutMutation();
 
-  const handleLogout = async () => {
-    try {
-      await logoutFn();
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      broadcastLogout();
-      dispatch(logout());
-      router.push("/login");
-    }
+  const handleLogout = () => {
+    broadcastLogout(); // Broadcast to other tabs first
+    logoutMutation.mutate(); // This will clear query cache and logout
   };
 
   return (

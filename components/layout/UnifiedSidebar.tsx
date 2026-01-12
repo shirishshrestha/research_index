@@ -58,13 +58,13 @@ export function UnifiedSidebar({ menuItems }: UnifiedSidebarProps) {
     <Sidebar className=" shadow-new bg-background">
       <SidebarContent className="bg-card border pt-0 shadow-new">
         {/* Logo Section */}
-        <div className="flex justify-between items-center p-3 pb-0">
+        <div className="flex justify-center items-center w-full p-3 pb-0">
           <Image
-            width={200}
-            height={100}
+            width={250}
+            height={200}
             src="/logo.png"
             alt="logo"
-            className="w-32.5"
+            className="w-50"
             loading="eager"
           />
         </div>

@@ -31,9 +31,13 @@ type FormWithSetError = Pick<UseFormReturn<any>, "setError">;
 export function useLoginMutation() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return usePost<LoginResponse, LoginRequest>(AUTH_ENDPOINTS.LOGIN, {
     onSuccess: (data) => {
+      // Clear all queries before setting new credentials to ensure fresh data
+      queryClient.clear();
+
       dispatch(
         setCredentials({
           user: data.user,
