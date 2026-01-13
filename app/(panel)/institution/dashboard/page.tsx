@@ -4,7 +4,7 @@ import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/que
 import {
   InstitutionCharts,
   InstitutionStatsCards,
-} from "@/features/panel/institution/components";
+} from "@/features/panel/institution/dashboard/components";
 import {
   PanelContainer,
   PanelErrorCard,

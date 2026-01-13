@@ -3,7 +3,7 @@
 import {
   AdminCharts,
   AdminStatsCards,
-} from "@/features/panel/admin/components";
+} from "@/features/panel/admin/dashboard/components";
 import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/query/options";
 import {
   PanelContainer,

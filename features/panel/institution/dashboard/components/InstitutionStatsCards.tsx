@@ -7,17 +7,7 @@ import {
   Users,
   Award,
 } from "lucide-react";
-
-export interface InstitutionStats {
-  total_publications: number;
-  total_citations: number;
-  average_citations_per_paper: string;
-  total_reads: number;
-  total_downloads: number;
-  recommendations_count: number;
-  total_authors: number;
-  last_updated: string;
-}
+import { InstitutionStats } from "../types";
 
 export interface InstitutionStatsCardsProps {
   stats: InstitutionStats;

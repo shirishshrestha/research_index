@@ -1,0 +1,28 @@
+"use server";
+
+import { revalidateTag } from "next/cache";
+
+/**
+ * Server Action: Revalidate author profile cache
+ *
+ * This function only handles cache revalidation.
+ * Actual API calls are made client-side using TanStack Query + Axios.
+ *
+ * Flow:
+ * Client Component → useMutation (axios) → revalidateAuthorProfileAction → revalidateTag
+ * → router.refresh() → Server Component refetch
+ */
+export async function revalidateAuthorProfileAction(): Promise<{
+  success: boolean;
+}> {
+  try {
+    // Revalidate cache tags - triggers Server Component refetch
+    // Next.js 16 requires profile/config as second argument
+    revalidateTag("author-profile", "default");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to revalidate profile cache:", error);
+    return { success: false };
+  }
+}

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ConfirmationPopup } from "../dialog";
+import Link from "next/link";
 
 export function AppBar() {
   const { user } = useAppSelector((state) => state.auth);
@@ -59,10 +60,20 @@ export function AppBar() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
+            {user?.user_type !== "admin" && (
+              <Link
+                href={
+                  user?.user_type === "author"
+                    ? "/author/profile"
+                    : "/institution/profile"
+                }
+              >
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+              </Link>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => setLogoutOpen(true)}

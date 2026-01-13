@@ -7,18 +7,7 @@ import {
   Users,
   Award,
 } from "lucide-react";
-
-export interface AuthorStats {
-  h_index: number;
-  i10_index: number;
-  total_citations: number;
-  total_reads: number;
-  total_downloads: number;
-  recommendations_count: number;
-  total_publications: number;
-  average_citations_per_paper: string;
-  last_updated: string;
-}
+import { AuthorStats } from "../types";
 
 export interface AuthorStatsCardsProps {
   stats: AuthorStats;
