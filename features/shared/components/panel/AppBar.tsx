@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useAppSelector } from "@/store/hooks";
 import { useLogoutMutation } from "@/features/auth";
 import { broadcastLogout } from "@/lib/broadcastLogout";
@@ -14,10 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ConfirmationPopup } from "../dialog";
 
 export function AppBar() {
   const { user } = useAppSelector((state) => state.auth);
   const logoutMutation = useLogoutMutation();
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const handleLogout = () => {
     broadcastLogout(); // Broadcast to other tabs first
@@ -25,7 +28,7 @@ export function AppBar() {
   };
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background px-6 shadow-sm">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-card px-6 shadow-xs">
       <div className="flex items-center gap-2">
         <SidebarTrigger />
       </div>
@@ -62,7 +65,7 @@ export function AppBar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={handleLogout}
+              onClick={() => setLogoutOpen(true)}
               className="text-destructive"
             >
               <LogOut className="mr-2 h-4 w-4" />
@@ -71,6 +74,18 @@ export function AppBar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <ConfirmationPopup
+        open={logoutOpen}
+        onOpenChange={setLogoutOpen}
+        title="Logout"
+        description="Are you sure you want to logout from your account?"
+        confirmText="Logout"
+        variant="danger"
+        onConfirm={handleLogout}
+        isPending={!!logoutMutation.isPending}
+        isSuccess={!!logoutMutation.isSuccess}
+        loadingText="Logging out..."
+      />
     </header>
   );
 }

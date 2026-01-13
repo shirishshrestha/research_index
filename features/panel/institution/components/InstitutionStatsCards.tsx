@@ -21,9 +21,13 @@ export interface InstitutionStats {
 
 export interface InstitutionStatsCardsProps {
   stats: InstitutionStats;
+  pending?: boolean;
 }
 
-export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
+export function InstitutionStatsCards({
+  stats,
+  pending = false,
+}: InstitutionStatsCardsProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <StatsCard
@@ -32,6 +36,7 @@ export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
         icon={BookOpen}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
+        pending={pending}
       />
       <StatsCard
         title="Total Citations"
@@ -39,6 +44,7 @@ export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
         icon={FileText}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
+        pending={pending}
       />
       <StatsCard
         title="Avg Citations/Paper"
@@ -46,6 +52,7 @@ export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
         icon={Award}
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
+        pending={pending}
       />
       <StatsCard
         title="Total Authors"
@@ -54,6 +61,7 @@ export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
         description="Institution researchers"
+        pending={pending}
       />
       <StatsCard
         title="Total Reads"
@@ -61,6 +69,7 @@ export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
         icon={TrendingUp}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
+        pending={pending}
       />
       <StatsCard
         title="Total Downloads"
@@ -68,6 +77,7 @@ export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
         icon={Download}
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
+        pending={pending}
       />
       <StatsCard
         title="Recommendations"
@@ -75,6 +85,7 @@ export function InstitutionStatsCards({ stats }: InstitutionStatsCardsProps) {
         icon={Award}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
+        pending={pending}
       />
     </div>
   );

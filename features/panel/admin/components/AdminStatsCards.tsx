@@ -25,9 +25,13 @@ export interface AdminStats {
 
 export interface AdminStatsCardsProps {
   stats: AdminStats;
+  pending?: boolean;
 }
 
-export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
+export function AdminStatsCards({
+  stats,
+  pending = false,
+}: AdminStatsCardsProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <StatsCard
@@ -37,6 +41,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
         description={`${stats.total_authors} authors, ${stats.total_institutions} institutions`}
+        pending={pending}
       />
       <StatsCard
         title="Total Publications"
@@ -45,6 +50,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
         description={`${stats.published_count} published, ${stats.draft_count} drafts`}
+        pending={pending}
       />
       <StatsCard
         title="Total Citations"
@@ -52,6 +58,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         icon={FileText}
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
+        pending={pending}
       />
       <StatsCard
         title="Total Reads"
@@ -59,6 +66,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         icon={TrendingUp}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
+        pending={pending}
       />
       <StatsCard
         title="Total Downloads"
@@ -66,6 +74,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         icon={BarChart3}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
+        pending={pending}
       />
       <StatsCard
         title="Total Journals"
@@ -73,6 +82,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         icon={Globe}
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
+        pending={pending}
       />
       <StatsCard
         title="Authors"
@@ -80,6 +90,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         icon={Users}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
+        pending={pending}
       />
       <StatsCard
         title="Topics"
@@ -87,6 +98,7 @@ export function AdminStatsCards({ stats }: AdminStatsCardsProps) {
         icon={BookOpen}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
+        pending={pending}
       />
     </div>
   );

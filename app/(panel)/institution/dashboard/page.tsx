@@ -1,35 +1,27 @@
 "use client";
 
-import PanelContainer from "@/components/layout/PanelContainer";
 import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/query/options";
-import { useQuery } from "@tanstack/react-query";
 import {
-  InstitutionStatsCards,
   InstitutionCharts,
+  InstitutionStatsCards,
 } from "@/features/panel/institution/components";
+import {
+  PanelContainer,
+  PanelErrorCard,
+  PanelLoadingSkeleton,
+} from "@/features/shared";
+import { useQuery } from "@tanstack/react-query";
 
 export default function InstitutionDashboard() {
   const { data, isLoading, isError } = useQuery(createCurrentUserQueryOptions);
 
   if (isLoading) {
     return (
-      <PanelContainer>
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary">
-            Institution Dashboard
-          </h1>
-          <p className="mt-2 text-text-gray">
-            Manage your institution profile and publications
-          </p>
-        </div>
-        <div className="animate-pulse">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {[...Array(7)].map((_, i) => (
-              <div key={i} className="h-32 rounded-xl bg-card/50"></div>
-            ))}
-          </div>
-        </div>
-      </PanelContainer>
+      <PanelLoadingSkeleton
+        title="Institution Dashboard"
+        description="Manage your institution profile and publications"
+        statsCount={7}
+      />
     );
   }
 
@@ -39,19 +31,10 @@ export default function InstitutionDashboard() {
     data.profile.user_type !== "institution"
   ) {
     return (
-      <PanelContainer>
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary">
-            Institution Dashboard
-          </h1>
-          <p className="mt-2 text-text-gray">
-            Manage your institution profile and publications
-          </p>
-        </div>
-        <div className="rounded-xl bg-destructive/10 p-6 text-destructive">
-          Unable to load dashboard data. Please try refreshing the page.
-        </div>
-      </PanelContainer>
+      <PanelErrorCard
+        title="Institution Dashboard"
+        description="Manage your institution profile and publications"
+      />
     );
   }
 

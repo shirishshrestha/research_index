@@ -12,6 +12,7 @@ export interface StatsCardProps {
     value: number;
     isPositive: boolean;
   };
+  pending?: boolean;
 }
 
 export function StatsCard({
@@ -22,7 +23,23 @@ export function StatsCard({
   iconBgColor = "bg-blue-02",
   description,
   trend,
+  pending = false,
 }: StatsCardProps) {
+  if (pending) {
+    return (
+      <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border animate-pulse">
+        <div className="flex items-start justify-between">
+          <div className="flex-1 space-y-3">
+            <div className="h-4 bg-card/50 rounded w-24"></div>
+            <div className="h-8 bg-card/50 rounded w-20"></div>
+            <div className="h-3 bg-card/50 rounded w-32"></div>
+          </div>
+          <div className="h-12 w-12 bg-card/50 rounded-lg"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border transition-shadow hover:shadow-md">
       <div className="flex items-start justify-between">
