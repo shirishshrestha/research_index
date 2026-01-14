@@ -4,7 +4,7 @@ import {
   AuthorCharts,
   AuthorStatsCards,
 } from "@/features/panel/author/dashboard/components";
-import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/query/options";
+import { createCurrentUserQueryOptions } from "@/features/shared";
 import {
   PanelContainer,
   PanelErrorCard,

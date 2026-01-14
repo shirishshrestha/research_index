@@ -1,0 +1,147 @@
+"use client";
+
+import * as React from "react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Form } from "@/components/ui/form";
+import { FormInputField } from "@/components/form/FormInputField";
+import { FormTextareaField } from "@/components/form/FormTextareaField";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  useCreateTopicMutation,
+  useUpdateTopicMutation,
+} from "../hooks/mutations";
+import { topicSchema, type TopicFormData } from "../schema";
+import type { Topic } from "../types";
+
+export function TopicFormDialog({
+  topic,
+  onSuccess,
+}: {
+  topic?: Topic;
+  onSuccess?: () => void;
+}) {
+  const isEdit = Boolean(topic);
+  const [open, setOpen] = React.useState(false);
+
+  const form = useForm<TopicFormData>({
+    resolver: zodResolver(topicSchema),
+    defaultValues: {
+      name: topic?.name || "",
+      slug: topic?.slug || "",
+      description: topic?.description || "",
+      is_active: topic?.is_active !== undefined ? topic.is_active : true,
+      order: topic?.order !== undefined ? topic.order : 0,
+    },
+  });
+
+  const create = useCreateTopicMutation({
+    onSuccess: () => {
+      form.reset();
+      setOpen(false);
+      onSuccess?.();
+    },
+  });
+
+  const update = useUpdateTopicMutation(topic?.id, {
+    onSuccess: () => {
+      setOpen(false);
+      onSuccess?.();
+    },
+  });
+
+  const onSubmit = (data: TopicFormData) => {
+    if (isEdit) update.mutate(data);
+    else create.mutate(data);
+  };
+
+  const isActive = useWatch({ control: form.control, name: "is_active" });
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button>{isEdit ? "Edit" : "Create Topic"}</Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{isEdit ? "Edit Topic" : "Create Topic"}</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+            <FormInputField
+              control={form.control}
+              name="name"
+              label="Name"
+              placeholder="Enter topic name"
+            />
+
+            <FormInputField
+              control={form.control}
+              name="slug"
+              label="Slug"
+              placeholder="auto-generated-slug"
+              description="Leave empty to auto-generate from name"
+            />
+
+            <FormTextareaField
+              control={form.control}
+              name="description"
+              label="Description"
+              placeholder="Enter topic description"
+            />
+
+            <FormInputField
+              control={form.control}
+              name="order"
+              label="Display Order"
+              type="number"
+              placeholder="0"
+            />
+
+            <div className="flex items-center justify-between py-2">
+              <Label htmlFor="is_active">Active</Label>
+              <Switch
+                id="is_active"
+                checked={isActive}
+                onCheckedChange={(checked) =>
+                  form.setValue("is_active", checked)
+                }
+              />
+            </div>
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="ghost">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                disabled={create.isPending || update.isPending}
+              >
+                {create.isPending || update.isPending
+                  ? "Saving..."
+                  : isEdit
+                  ? "Save"
+                  : "Create"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export default TopicFormDialog;

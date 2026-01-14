@@ -16,7 +16,7 @@ import { InstitutionProfile } from "../types";
 import {
   institutionProfileSchema,
   InstitutionProfileFormData,
-} from "../schema";
+} from "../utils/schema";
 import { revalidateInstitutionProfileAction } from "../actions";
 import { usePatch } from "@/hooks/useApi";
 

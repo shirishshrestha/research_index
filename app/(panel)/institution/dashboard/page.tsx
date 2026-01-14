@@ -1,6 +1,6 @@
 "use client";
 
-import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/query/options";
+import { createCurrentUserQueryOptions } from "@/features/shared";
 import {
   InstitutionCharts,
   InstitutionStatsCards,
