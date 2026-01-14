@@ -7,27 +7,18 @@ import {
   Users,
   Award,
 } from "lucide-react";
-
-export interface AuthorStats {
-  h_index: number;
-  i10_index: number;
-  total_citations: number;
-  total_reads: number;
-  total_downloads: number;
-  recommendations_count: number;
-  total_publications: number;
-  average_citations_per_paper: string;
-  last_updated: string;
-}
+import { AuthorStats } from "../types";
 
 export interface AuthorStatsCardsProps {
   stats: AuthorStats;
   collaboration_count?: number;
+  pending?: boolean;
 }
 
 export function AuthorStatsCards({
   stats,
   collaboration_count = 0,
+  pending = false,
 }: AuthorStatsCardsProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -37,6 +28,7 @@ export function AuthorStatsCards({
         icon={BookOpen}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
+        pending={pending}
       />
       <StatsCard
         title="Total Citations"
@@ -44,6 +36,7 @@ export function AuthorStatsCards({
         icon={FileText}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
+        pending={pending}
       />
       <StatsCard
         title="H-Index"
@@ -52,6 +45,7 @@ export function AuthorStatsCards({
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
         description="Research impact metric"
+        pending={pending}
       />
       <StatsCard
         title="i10-Index"
@@ -60,6 +54,7 @@ export function AuthorStatsCards({
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
         description="Citations > 10"
+        pending={pending}
       />
       <StatsCard
         title="Total Reads"
@@ -67,6 +62,7 @@ export function AuthorStatsCards({
         icon={TrendingUp}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
+        pending={pending}
       />
       <StatsCard
         title="Total Downloads"
@@ -74,6 +70,7 @@ export function AuthorStatsCards({
         icon={Download}
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
+        pending={pending}
       />
       <StatsCard
         title="Avg Citations/Paper"
@@ -81,6 +78,7 @@ export function AuthorStatsCards({
         icon={FileText}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
+        pending={pending}
       />
       <StatsCard
         title="Collaborators"
@@ -89,6 +87,7 @@ export function AuthorStatsCards({
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
         description="Co-authors"
+        pending={pending}
       />
     </div>
   );

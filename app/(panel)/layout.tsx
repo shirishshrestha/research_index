@@ -1,8 +1,8 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { UnifiedSidebar } from "@/components/layout/UnifiedSidebar";
-import { AppBar } from "@/components/layout/AppBar";
+import { UnifiedSidebar } from "@/features/shared/components/panel/UnifiedSidebar";
+import { AppBar } from "@/features/shared/components/panel/AppBar";
 import { sidebarConfig } from "@/config/sidebarConfig";
 import { useAppSelector } from "@/store/hooks";
 import { useEffect } from "react";

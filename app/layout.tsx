@@ -17,9 +17,9 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Resource Index",
-  description: "A comprehensive resource indexing platform",
-  keywords: ["resources", "index", "research", "platform"],
+  title: "Research Index",
+  description: "A comprehensive research indexing platform",
+  keywords: ["research", "index", "platform"],
 };
 
 export default function RootLayout({

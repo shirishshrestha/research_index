@@ -1,5 +1,5 @@
 import { BarChart, DoughnutChart } from "@/features/shared/components/charts";
-import { AuthorStats } from "./AuthorStatsCards";
+import { AuthorStats } from "../types";
 
 export interface AuthorChartsProps {
   stats: AuthorStats;

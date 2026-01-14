@@ -1,5 +1,5 @@
 import { BarChart, PieChart } from "@/features/shared/components/charts";
-import { AdminStats } from "./AdminStatsCards";
+import { AdminStats } from "../types";
 
 export interface AdminChartsProps {
   stats: AdminStats;

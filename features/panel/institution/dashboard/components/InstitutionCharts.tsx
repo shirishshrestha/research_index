@@ -1,5 +1,5 @@
 import { BarChart, DoughnutChart } from "@/features/shared/components/charts";
-import { InstitutionStats } from "./InstitutionStatsCards";
+import { InstitutionStats } from "../types";
 
 export interface InstitutionChartsProps {
   stats: InstitutionStats;

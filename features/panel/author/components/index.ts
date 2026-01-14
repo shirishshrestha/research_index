@@ -1,4 +1,7 @@
-export { AuthorStatsCards } from "./AuthorStatsCards";
-export { AuthorCharts } from "./AuthorCharts";
-export type { AuthorStats, AuthorStatsCardsProps } from "./AuthorStatsCards";
-export type { AuthorChartsProps } from "./AuthorCharts";
+export { AuthorStatsCards } from "../dashboard/components/AuthorStatsCards";
+export { AuthorCharts } from "../dashboard/components/AuthorCharts";
+export type {
+  AuthorStats,
+  AuthorStatsCardsProps,
+} from "../dashboard/components/AuthorStatsCards";
+export type { AuthorChartsProps } from "../dashboard/components/AuthorCharts";

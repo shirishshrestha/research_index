@@ -5,7 +5,7 @@ export interface PanelContainerProps {
   className?: string;
 }
 
-export default function PanelContainer({
+export function PanelContainer({
   children,
   className = "",
 }: PanelContainerProps) {
