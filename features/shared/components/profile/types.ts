@@ -15,6 +15,7 @@ export interface ProfileTabsProps {
   tabs: ProfileTab[];
   paramKey?: string;
   moreOptions?: React.ReactNode;
+  className?: string;
   /**
    * Optional map of tabValue -> list of query params that should be cleared
    * when switching away from that tab. Example: { research: ["category"] }

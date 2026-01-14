@@ -1,6 +1,6 @@
-import { AdminStats } from "../admin/components";
-import { AuthorStats } from "../author/components";
-import { InstitutionStats } from "../institution/components";
+import { AdminStats } from "../admin";
+import { AuthorStats } from "../author";
+import { InstitutionStats } from "../institution";
 
 export interface BaseUserProfile {
   id: number;
@@ -59,11 +59,4 @@ export interface InstitutionProfile extends BaseUserProfile {
   research_areas: string;
   total_researchers: number | null;
   stats: InstitutionStats;
-}
-
-export type UserProfile = AdminProfile | AuthorProfile | InstitutionProfile;
-
-export interface MeResponse {
-  user_type: "admin" | "author" | "institution";
-  profile: UserProfile;
 }

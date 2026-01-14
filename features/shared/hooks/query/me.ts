@@ -1,9 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getProfileFn } from "../../api/functions";
+import { getCurrentUserFn } from "../../api/me";
 
 export const createCurrentUserQueryOptions = queryOptions({
   queryKey: ["me"],
-  queryFn: getProfileFn,
+  queryFn: getCurrentUserFn,
   staleTime: 5 * 60 * 1000, // 5 minutes
   gcTime: 10 * 60 * 1000, // 10 minutes
 });

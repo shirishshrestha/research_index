@@ -74,6 +74,7 @@ export interface ApiError {
     data?: {
       error?: string;
       message?: string;
+      details?: string;
     };
   };
   message?: string;

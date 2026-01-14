@@ -1,10 +1,7 @@
 "use client";
 
-import {
-  AdminCharts,
-  AdminStatsCards,
-} from "@/features/panel/admin/dashboard/components";
-import { createCurrentUserQueryOptions } from "@/features/panel/author/hooks/query/options";
+import { AdminCharts, AdminStatsCards } from "@/features/panel/admin";
+import { createCurrentUserQueryOptions } from "@/features/shared";
 import {
   PanelContainer,
   PanelErrorCard,

@@ -5,7 +5,7 @@ import { useAppSelector } from "@/store/hooks";
 import { useLogoutMutation } from "@/features/auth";
 import { broadcastLogout } from "@/lib/broadcastLogout";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Settings } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,6 +74,12 @@ export function AppBar() {
                 </DropdownMenuItem>
               </Link>
             )}
+            <Link href="/settings">
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => setLogoutOpen(true)}

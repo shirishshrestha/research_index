@@ -7,3 +7,4 @@ export type { SearchInputProps } from "./SearchInput";
 export { PageHeroSection } from "./PageHeroSection";
 export { TopicCard } from "./TopicCard";
 export type { TopicCardProps } from "./TopicCard";
+export { ErrorCard } from "./ErrorCard";

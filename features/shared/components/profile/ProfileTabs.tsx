@@ -16,6 +16,7 @@ export function ProfileTabs({
   paramKey = "tab",
   moreOptions,
   clearParamsOnTabSwitch,
+  className = "",
 }: ProfileTabsProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -45,7 +46,7 @@ export function ProfileTabs({
     <Tabs
       value={currentTab}
       onValueChange={handleTabChange}
-      className="w-full mt-7.5 pt-5 gap-0"
+      className={`w-full mt-7.5 pt-5 gap-0 ${className}`}
     >
       <div className=" border-b border-b-[#ccc] flex justify-between items-center mb-8.75">
         <TabsList className="bg-background flex gap-3 rounded-none pb-0 px-0">
