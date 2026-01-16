@@ -6,7 +6,7 @@ export interface Topic {
   icon?: string;
   is_active: boolean;
   order: number;
-  count?: number;
+  branches_count?: number;
 }
 
 export interface TopicBranch {

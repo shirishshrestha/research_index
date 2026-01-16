@@ -6,6 +6,7 @@ import { ConfirmationPopup } from "@/features/shared/components/dialog/Confirmat
 import BranchFormDialog from "./BranchFormDialog";
 import { useDeleteBranchMutation } from "../hooks/mutations";
 import type { TopicBranch } from "../types";
+import { Trash2 } from "lucide-react";
 
 interface BranchItemProps {
   topicPk: number | string;
@@ -35,8 +36,12 @@ export function BranchItem({ topicPk, branch, onUpdate }: BranchItemProps) {
         />
         <ConfirmationPopup
           triggerButton={
-            <Button variant="destructive" size="sm">
-              Delete
+            <Button
+              variant="outline"
+              className="text-destructive hover:bg-destructive hover:border-destructive"
+              size="sm"
+            >
+              <Trash2 />
             </Button>
           }
           title="Confirm delete"

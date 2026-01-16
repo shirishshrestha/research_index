@@ -24,6 +24,7 @@ import {
 } from "../hooks/mutations";
 import { topicSchema, type TopicFormData } from "../schema";
 import type { Topic } from "../types";
+import { SquarePen } from "lucide-react";
 
 export function TopicFormDialog({
   topic,
@@ -62,8 +63,15 @@ export function TopicFormDialog({
   });
 
   const onSubmit = (data: TopicFormData) => {
-    if (isEdit) update.mutate(data);
-    else create.mutate(data);
+    // Remove empty strings for optional fields - backend auto-generates slug if not provided
+    const payload = {
+      ...data,
+      slug: data.slug?.trim() || undefined,
+      description: data.description?.trim() || undefined,
+      icon: data.icon?.trim() || undefined,
+    };
+    if (isEdit) update.mutate(payload);
+    else create.mutate(payload);
   };
 
   const isActive = useWatch({ control: form.control, name: "is_active" });
@@ -71,9 +79,9 @@ export function TopicFormDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>{isEdit ? "Edit" : "Create Topic"}</Button>
+        <Button size={"sm"}>{isEdit ? <SquarePen /> : "Create Topic"}</Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit Topic" : "Create Topic"}</DialogTitle>
         </DialogHeader>

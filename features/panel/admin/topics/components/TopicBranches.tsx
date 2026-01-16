@@ -1,12 +1,12 @@
 "use client";
 
-import * as React from "react";
 import { useTopicBranchesQuery } from "../hooks/queries";
 import { BranchItem } from "./BranchItem";
 import BranchFormDialog from "./BranchFormDialog";
 import { ErrorCard } from "@/components/shared/ErrorCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Topic, TopicBranch } from "../types";
+import { GitBranchPlus } from "lucide-react";
 
 interface TopicBranchesProps {
   topic: Topic;
@@ -31,11 +31,11 @@ export function TopicBranches({ topic, onChange }: TopicBranchesProps) {
           message="We couldn't load the branches for this topic."
           onRetry={() => branches.refetch()}
         />
-      ) : !branches.data?.results || branches.data.results.length === 0 ? (
+      ) : !branches?.data || branches?.data.length === 0 ? (
         <EmptyBranchesState />
       ) : (
         <div className="grid gap-2">
-          {branches.data.results.map((b: TopicBranch) => (
+          {branches?.data.map((b: TopicBranch) => (
             <BranchItem
               key={b.id}
               topicPk={topic.id}
@@ -71,7 +71,9 @@ function BranchesLoadingSkeleton() {
 function EmptyBranchesState() {
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center border rounded-lg bg-muted/10">
-      <div className="text-3xl mb-2">🌿</div>
+      <div className="text-3xl mb-2">
+        <GitBranchPlus />
+      </div>
       <p className="text-sm text-muted-foreground">
         No branches yet. Click &quot;Add Branch&quot; to create one.
       </p>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -44,9 +44,19 @@ export const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({
   loadingText = "Processing...",
   triggerButton,
 }) => {
+  // Support both controlled and uncontrolled usage of the Dialog.
+  const [internalOpen, setInternalOpen] = useState<boolean | undefined>(open);
+
+  // Keep internal state in sync when `open` prop changes from parent.
+  useEffect(() => {
+    setInternalOpen(open);
+  }, [open]);
+
+  // Close when action succeeded (auto-close behavior).
   useEffect(() => {
     if (isSuccess && autoClose) {
       const timer = setTimeout(() => {
+        setInternalOpen(false);
         onOpenChange?.(false);
       }, 0);
       return () => clearTimeout(timer);
@@ -70,7 +80,13 @@ export const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={internalOpen}
+      onOpenChange={(val) => {
+        setInternalOpen(val);
+        onOpenChange?.(val);
+      }}
+    >
       <DialogTrigger asChild>{triggerButton}</DialogTrigger>
       <DialogContent
         showCloseButton={false}
@@ -89,7 +105,10 @@ export const ConfirmationPopup: React.FC<ConfirmationPopupProps> = ({
 
         <div className="flex justify-end gap-3">
           <Button
-            onClick={() => onOpenChange?.(false)}
+            onClick={() => {
+              setInternalOpen(false);
+              onOpenChange?.(false);
+            }}
             type="button"
             variant="outline"
             className="px-4 py-2 rounded-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed"

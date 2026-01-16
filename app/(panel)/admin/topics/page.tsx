@@ -6,9 +6,7 @@ import { PanelContainer } from "@/features/shared";
 export default function AdminTopicsPage() {
   return (
     <PanelContainer>
-      <div className="py-6">
-        <TopicList />
-      </div>
+      <TopicList />
     </PanelContainer>
   );
 }

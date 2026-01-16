@@ -1,13 +1,10 @@
 "use client";
 
 import { useGet } from "@/hooks/useApi";
-import type { PaginatedResponse, Topic, TopicBranch } from "../types";
+import type { Topic, TopicBranch } from "../types";
 
 export const useTopicsQuery = () => {
-  return useGet<PaginatedResponse<Topic>>(
-    ["topics", "list"],
-    "/publications/topics/"
-  );
+  return useGet<Topic[]>(["topics", "list"], "/publications/topics/");
 };
 
 export const useTopicQuery = (id: number | string | undefined) => {
@@ -18,7 +15,7 @@ export const useTopicQuery = (id: number | string | undefined) => {
 };
 
 export const useTopicBranchesQuery = (topicPk: number | string | undefined) =>
-  useGet<PaginatedResponse<TopicBranch>>(
+  useGet<TopicBranch[]>(
     ["topics", String(topicPk), "branches"],
     topicPk ? `/publications/topics/${topicPk}/branches/` : ""
   );
