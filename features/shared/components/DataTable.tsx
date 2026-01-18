@@ -198,7 +198,9 @@ export default function DataTable<T = Record<string, unknown>>({
   }
 
   return (
-    <div className={`w-full overflow-x-auto rounded-lg ${tableClassName}`}>
+    <div
+      className={`w-full overflow-x-auto rounded-lg border border-border ${tableClassName}`}
+    >
       <Table className={" "}>
         <TableHeader>
           <TableRow className="border-b border-border">

@@ -11,15 +11,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Form } from "@/components/ui/form";
 import { FormInputField } from "@/components/form/FormInputField";
 import { FormTextareaField } from "@/components/form/FormTextareaField";
@@ -29,7 +20,6 @@ import {
   useCreateBranchMutation,
   useUpdateBranchMutation,
 } from "../hooks/mutations";
-import { useTopicBranchesQuery } from "../hooks/queries";
 import { branchSchema, type BranchFormData } from "../schema";
 import type { TopicBranch } from "../types";
 import { Plus, SquarePen } from "lucide-react";
@@ -37,23 +27,26 @@ import { Plus, SquarePen } from "lucide-react";
 export function BranchFormDialog({
   topicPk,
   branch,
+  branchName,
+  parentBranchId,
   onSuccess,
+  children,
 }: {
   topicPk?: number | string;
   branch?: TopicBranch;
+  parentBranchId?: number | null;
+  branchName?: string;
   onSuccess?: () => void;
+  children?: React.ReactNode;
 }) {
   const isEdit = Boolean(branch);
   const [open, setOpen] = React.useState(false);
-
-  // Fetch available branches for parent selection
-  const { data: availableBranches } = useTopicBranchesQuery(topicPk);
 
   const form = useForm<BranchFormData>({
     resolver: zodResolver(branchSchema),
     defaultValues: {
       topic: branch?.topic ?? Number(topicPk),
-      parent: branch?.parent || null,
+      parent: branch?.parent || parentBranchId || null,
       name: branch?.name || "",
       slug: branch?.slug || "",
       description: branch?.description || "",
@@ -61,6 +54,21 @@ export function BranchFormDialog({
       order: branch?.order !== undefined ? branch.order : 0,
     },
   });
+
+  // Reset form when dialog opens with new parentBranchId
+  React.useEffect(() => {
+    if (open) {
+      form.reset({
+        topic: branch?.topic ?? Number(topicPk),
+        parent: branch?.parent || parentBranchId || null,
+        name: branch?.name || "",
+        slug: branch?.slug || "",
+        description: branch?.description || "",
+        is_active: branch?.is_active !== undefined ? branch.is_active : true,
+        order: branch?.order !== undefined ? branch.order : 0,
+      });
+    }
+  }, [open, branch, parentBranchId, topicPk, form]);
 
   const create = useCreateBranchMutation(topicPk, {
     onSuccess: () => {
@@ -90,25 +98,29 @@ export function BranchFormDialog({
     else create.mutate(payload);
   };
 
-  const isActive = useWatch({ control: form.control, name: "is_active" });
-  const parentValue = useWatch({ control: form.control, name: "parent" });
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={isEdit ? "outline" : "default"} size={"sm"}>
-          {isEdit ? (
-            <SquarePen />
-          ) : (
-            <>
-              <Plus /> Add Branch
-            </>
-          )}
-        </Button>
+        {children || (
+          <Button variant={isEdit ? "outline" : "default"} size={"sm"}>
+            {isEdit ? (
+              <SquarePen />
+            ) : (
+              <>
+                <Plus /> Add Branch
+              </>
+            )}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-3xl! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit Branch" : "Create Branch"}</DialogTitle>
+          <p>
+            {isEdit
+              ? `Modify the details of the branch "${branch?.name}".`
+              : `Fill in the details to create a new branch inside "${branchName}".`}
+          </p>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
@@ -126,56 +138,6 @@ export function BranchFormDialog({
               placeholder="Enter branch description"
             />
 
-            <div className="space-y-2">
-              <Label>Parent Branch (Optional)</Label>
-              <Select
-                value={parentValue != null ? String(parentValue) : "none"}
-                onValueChange={(value) => {
-                  form.setValue(
-                    "parent",
-                    value === "none" ? null : Number(value)
-                  );
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select parent branch (optional)" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">None (Root level)</SelectItem>
-                  {(availableBranches || [])
-                    .filter((b) => b.id !== branch?.id)
-                    .map((b) => (
-                      <SelectItem key={b.id} value={String(b.id)}>
-                        {b.name}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground">
-                Leave empty for root-level branch. Select a parent for nested
-                structure.
-              </p>
-            </div>
-
-            <FormInputField
-              control={form.control}
-              name="order"
-              label="Display Order"
-              type="number"
-              placeholder="0"
-            />
-
-            <div className="flex items-center justify-between py-2">
-              <Label htmlFor="is_active">Active</Label>
-              <Switch
-                id="is_active"
-                checked={isActive}
-                onCheckedChange={(checked) =>
-                  form.setValue("is_active", checked)
-                }
-              />
-            </div>
-
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="ghost">
@@ -189,8 +151,8 @@ export function BranchFormDialog({
                 {create.isPending || update.isPending
                   ? "Saving..."
                   : isEdit
-                  ? "Save"
-                  : "Create"}
+                    ? "Save"
+                    : "Create"}
               </Button>
             </DialogFooter>
           </form>

@@ -29,9 +29,11 @@ import { SquarePen } from "lucide-react";
 export function TopicFormDialog({
   topic,
   onSuccess,
+  children,
 }: {
   topic?: Topic;
   onSuccess?: () => void;
+  children?: React.ReactNode;
 }) {
   const isEdit = Boolean(topic);
   const [open, setOpen] = React.useState(false);
@@ -79,7 +81,9 @@ export function TopicFormDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size={"sm"}>{isEdit ? <SquarePen /> : "Create Topic"}</Button>
+        {children || (
+          <Button size={"sm"}>{isEdit ? <SquarePen /> : "Create Topic"}</Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-3xl! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -141,8 +145,8 @@ export function TopicFormDialog({
                 {create.isPending || update.isPending
                   ? "Saving..."
                   : isEdit
-                  ? "Save"
-                  : "Create"}
+                    ? "Save"
+                    : "Create"}
               </Button>
             </DialogFooter>
           </form>

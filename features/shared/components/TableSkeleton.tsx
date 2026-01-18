@@ -38,7 +38,7 @@ export default function TableSkeleton({
                 ))
               : Array.from({ length: columns }).map((_, index) => (
                   <TableHead key={index}>
-                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-3 w-20" />
                   </TableHead>
                 ))}
           </TableRow>
@@ -47,8 +47,8 @@ export default function TableSkeleton({
           {Array.from({ length: rows }).map((_, rowIndex) => (
             <TableRow key={rowIndex} className="border-b border-border ">
               {Array.from({ length: columns }).map((_, colIndex) => (
-                <TableCell key={colIndex} className="py-3!">
-                  <Skeleton className="h-4 w-full" />
+                <TableCell key={colIndex} className="py-4!">
+                  <Skeleton className="h-3 w-full" />
                 </TableCell>
               ))}
             </TableRow>

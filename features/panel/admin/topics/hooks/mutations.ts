@@ -61,6 +61,9 @@ export const useCreateBranchMutation = (
         queryClient.invalidateQueries({
           queryKey: ["topics", String(topicPk), "branches"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["topics"],
+        });
         options?.onSuccess?.(...args);
       },
     }
@@ -100,6 +103,9 @@ export const useDeleteBranchMutation = (
       onSuccess: (...args) => {
         queryClient.invalidateQueries({
           queryKey: ["topics", String(topicPk), "branches"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["topics"],
         });
         options?.onSuccess?.(...args);
       },

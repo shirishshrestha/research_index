@@ -8,286 +8,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Search, CheckCircle2, Info, ArrowRight } from "lucide-react";
+import { Search, CheckCircle2, Info, ArrowRight, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Topic, TopicBranch, TopicDetailViewProps } from "../types";
-
-// Mock data based on the API documentation
-const mockTopicData: Record<string, Topic> = {
-  7: {
-    id: 1,
-    name: "Technology",
-    slug: "technology",
-    description: "Research in computing, algorithms, AI, and related fields",
-    icon: "💻",
-    branches: [
-      {
-        id: 1,
-        name: "Information Technology",
-        slug: "information-technology",
-        description: "IT infrastructure and systems",
-        level: 1,
-        full_path: "Technology > Information Technology",
-        children_count: 5,
-        publications_count: 145,
-        children: [
-          {
-            id: 2,
-            name: "Computer Science",
-            slug: "computer-science",
-            description: "Computing theory and practice",
-            level: 2,
-            full_path: "Technology > Information Technology > Computer Science",
-            children_count: 3,
-            publications_count: 78,
-            parent_id: 1,
-            children: [
-              {
-                id: 3,
-                name: "Artificial Intelligence",
-                slug: "artificial-intelligence",
-                description: "AI research and applications",
-                level: 3,
-                full_path:
-                  "Technology > Information Technology > Computer Science > Artificial Intelligence",
-                children_count: 2,
-                publications_count: 45,
-                parent_id: 2,
-                children: [
-                  {
-                    id: 4,
-                    name: "Machine Learning",
-                    slug: "machine-learning",
-                    description: "ML algorithms and techniques",
-                    level: 4,
-                    full_path: "Technology > IT > CS > AI > Machine Learning",
-                    children_count: 0,
-                    publications_count: 25,
-                    parent_id: 3,
-                  },
-                  {
-                    id: 5,
-                    name: "Natural Language Processing",
-                    slug: "natural-language-processing",
-                    description: "NLP and text analysis",
-                    level: 4,
-                    full_path:
-                      "Technology > IT > CS > AI > Natural Language Processing",
-                    children_count: 0,
-                    publications_count: 20,
-                    parent_id: 3,
-                  },
-                ],
-              },
-              {
-                id: 6,
-                name: "Data Science",
-                slug: "data-science",
-                description: "Data analysis and visualization",
-                level: 3,
-                full_path:
-                  "Technology > Information Technology > Computer Science > Data Science",
-                children_count: 0,
-                publications_count: 33,
-                parent_id: 2,
-              },
-            ],
-          },
-          {
-            id: 7,
-            name: "Telecommunication",
-            slug: "telecommunication",
-            description: "Communication systems and networks",
-            level: 2,
-            full_path:
-              "Technology > Information Technology > Telecommunication",
-            children_count: 2,
-            publications_count: 42,
-            parent_id: 1,
-            children: [
-              {
-                id: 8,
-                name: "Telecommunication Theory",
-                slug: "telecommunication-theory",
-                description: "Theoretical foundations",
-                level: 3,
-                full_path: "Technology > IT > Telecommunication > Theory",
-                children_count: 0,
-                publications_count: 15,
-                parent_id: 7,
-              },
-              {
-                id: 9,
-                name: "Tele-Transmission Theory",
-                slug: "tele-transmission-theory",
-                description: "Data transmission methods",
-                level: 3,
-                full_path:
-                  "Technology > IT > Telecommunication > Tele-Transmission",
-                children_count: 0,
-                publications_count: 12,
-                parent_id: 7,
-              },
-            ],
-          },
-          {
-            id: 10,
-            name: "Image Analysis",
-            slug: "image-analysis",
-            description: "Digital image processing",
-            level: 2,
-            full_path: "Technology > Information Technology > Image Analysis",
-            children_count: 0,
-            publications_count: 25,
-            parent_id: 1,
-          },
-        ],
-      },
-      {
-        id: 11,
-        name: "Engineering Physics",
-        slug: "engineering-physics",
-        description: "Applied physics in engineering",
-        level: 1,
-        full_path: "Technology > Engineering Physics",
-        children_count: 0,
-        publications_count: 88,
-      },
-      {
-        id: 12,
-        name: "Electrical Engineering, Electronics and Photonics",
-        slug: "electrical-engineering",
-        description: "Electrical systems and photonics",
-        level: 1,
-        full_path: "Technology > Electrical Engineering",
-        children_count: 0,
-        publications_count: 112,
-      },
-    ],
-    branches_count: 12,
-    publications_count: 533,
-  },
-  5: {
-    id: 5,
-    name: "Natural Sciences",
-    slug: "natural-sciences",
-    description: "Research in physics, chemistry, biology and earth sciences",
-    icon: "🔬",
-    branches: [
-      {
-        id: 20,
-        name: "Biology",
-        slug: "biology",
-        description: "Life sciences and biological research",
-        level: 1,
-        full_path: "Natural Sciences > Biology",
-        children_count: 2,
-        publications_count: 245,
-        children: [
-          {
-            id: 21,
-            name: "Molecular Biology",
-            slug: "molecular-biology",
-            description: "Study of biological activity at molecular level",
-            level: 2,
-            full_path: "Natural Sciences > Biology > Molecular Biology",
-            children_count: 0,
-            publications_count: 120,
-            parent_id: 20,
-          },
-          {
-            id: 22,
-            name: "Ecology",
-            slug: "ecology",
-            description: "Study of organisms and their environment",
-            level: 2,
-            full_path: "Natural Sciences > Biology > Ecology",
-            children_count: 0,
-            publications_count: 125,
-            parent_id: 20,
-          },
-        ],
-      },
-      {
-        id: 23,
-        name: "Physics",
-        slug: "physics",
-        description: "Study of matter, energy and fundamental forces",
-        level: 1,
-        full_path: "Natural Sciences > Physics",
-        children_count: 0,
-        publications_count: 312,
-      },
-      {
-        id: 24,
-        name: "Chemistry",
-        slug: "chemistry",
-        description: "Study of substances and their properties",
-        level: 1,
-        full_path: "Natural Sciences > Chemistry",
-        children_count: 0,
-        publications_count: 255,
-      },
-    ],
-    branches_count: 5,
-    publications_count: 812,
-  },
-  3: {
-    id: 3,
-    name: "Social Sciences",
-    slug: "social-sciences",
-    description: "Study of society and human behavior",
-    icon: "👥",
-    branches: [
-      {
-        id: 30,
-        name: "Sociology",
-        slug: "sociology",
-        description: "Study of social behavior and society",
-        level: 1,
-        full_path: "Social Sciences > Sociology",
-        children_count: 0,
-        publications_count: 180,
-      },
-      {
-        id: 31,
-        name: "Psychology",
-        slug: "psychology",
-        description: "Study of mind and behavior",
-        level: 1,
-        full_path: "Social Sciences > Psychology",
-        children_count: 1,
-        publications_count: 220,
-        children: [
-          {
-            id: 32,
-            name: "Clinical Psychology",
-            slug: "clinical-psychology",
-            description: "Assessment and treatment of mental illness",
-            level: 2,
-            full_path: "Social Sciences > Psychology > Clinical Psychology",
-            children_count: 0,
-            publications_count: 98,
-            parent_id: 31,
-          },
-        ],
-      },
-      {
-        id: 33,
-        name: "Economics",
-        slug: "economics",
-        description: "Study of production, distribution and consumption",
-        level: 1,
-        full_path: "Social Sciences > Economics",
-        children_count: 0,
-        publications_count: 280,
-      },
-    ],
-    branches_count: 4,
-    publications_count: 680,
-  },
-};
+import { TopicBranch, TopicDetailViewProps } from "../types";
+import { useTopicTreeQuery } from "../hooks";
 
 export function TopicDetailView({ topicId }: TopicDetailViewProps) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -295,12 +20,37 @@ export function TopicDetailView({ topicId }: TopicDetailViewProps) {
     null
   );
   const [expandedBranches, setExpandedBranches] = useState<Set<number>>(
-    new Set([1])
+    new Set()
   );
   const router = useRouter();
 
-  // Get topic data (mock for now)
-  const topicData = mockTopicData[topicId];
+  // Fetch topics tree data
+  const { data: topicsTree, isLoading, error } = useTopicTreeQuery();
+
+  // Find the specific topic from the tree
+  const topicData = topicsTree?.find(
+    (topic) => topic.id.toString() === topicId
+  );
+
+  if (isLoading) {
+    return (
+      <div className="section-padding py-20 text-center">
+        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
+        <p className="text-text-gray">Loading topic details...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="section-padding py-20 text-center">
+        <h2 className="heading-3 text-text-black mb-4">Error Loading Topic</h2>
+        <p className="text-red-500">
+          Failed to load topic details. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   if (!topicData) {
     return (

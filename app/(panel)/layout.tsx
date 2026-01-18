@@ -46,7 +46,7 @@ export default function PanelLayout({
         <UnifiedSidebar menuItems={menuItems} />
         <div className="flex flex-1 flex-col">
           <AppBar />
-          <main className="flex-1 overflow-auto bg-background p-6">
+          <main className="flex-1 overflow-auto bg-background p-4 sm:p-6">
             {children}
           </main>
         </div>
