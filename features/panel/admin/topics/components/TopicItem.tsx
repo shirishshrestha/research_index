@@ -7,6 +7,7 @@ import TopicFormDialog from "./TopicFormDialog";
 import { TopicBranches } from "./TopicBranches";
 import { useDeleteTopicMutation } from "../hooks/mutations";
 import type { Topic } from "../types";
+import { Trash2 } from "lucide-react";
 
 interface TopicItemProps {
   topic: Topic;
@@ -17,6 +18,7 @@ export function TopicItem({ topic, onUpdate }: TopicItemProps) {
   const deleteTopic = useDeleteTopicMutation(topic.id, {
     onSuccess: () => {
       onUpdate();
+      deleteTopic.reset();
     },
   });
 
@@ -30,15 +32,19 @@ export function TopicItem({ topic, onUpdate }: TopicItemProps) {
         <div className="flex items-center gap-4">
           <div className="font-medium">{topic.name}</div>
           <div className="text-sm text-muted-foreground">
-            {topic.count ?? 0}
+            {topic.branches_count ?? 0}
           </div>
         </div>
         <div className="flex items-center gap-2">
           <TopicFormDialog topic={topic} onSuccess={onUpdate} />
           <ConfirmationPopup
             triggerButton={
-              <Button variant="destructive" size="sm">
-                Delete
+              <Button
+                variant="outline"
+                className="text-destructive hover:bg-destructive hover:border-destructive"
+                size="sm"
+              >
+                <Trash2 />
               </Button>
             }
             title="Confirm delete"
@@ -49,6 +55,11 @@ export function TopicItem({ topic, onUpdate }: TopicItemProps) {
             onConfirm={handleDelete}
             isPending={deleteTopic.isPending}
             isSuccess={deleteTopic.isSuccess}
+            onOpenChange={(isOpen) => {
+              if (!isOpen) {
+                deleteTopic.reset();
+              }
+            }}
           />
         </div>
       </div>

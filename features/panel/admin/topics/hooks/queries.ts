@@ -1,12 +1,17 @@
 "use client";
 
 import { useGet } from "@/hooks/useApi";
-import type { PaginatedResponse, Topic, TopicBranch } from "../types";
+import type { Topic, TopicBranch, TopicTree } from "../types";
 
 export const useTopicsQuery = () => {
-  return useGet<PaginatedResponse<Topic>>(
-    ["topics", "list"],
-    "/publications/topics/"
+  return useGet<Topic[]>(["topics", "list"], "/publications/topics/");
+};
+
+export const useTopicTreeQuery = (search?: string) => {
+  const searchParam = search ? `?search=${encodeURIComponent(search)}` : "";
+  return useGet<TopicTree>(
+    ["topics", "tree", search || "all"],
+    `/publications/topics/tree/${searchParam}`
   );
 };
 
@@ -18,7 +23,7 @@ export const useTopicQuery = (id: number | string | undefined) => {
 };
 
 export const useTopicBranchesQuery = (topicPk: number | string | undefined) =>
-  useGet<PaginatedResponse<TopicBranch>>(
+  useGet<TopicBranch[]>(
     ["topics", String(topicPk), "branches"],
     topicPk ? `/publications/topics/${topicPk}/branches/` : ""
   );

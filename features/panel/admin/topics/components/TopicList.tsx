@@ -15,7 +15,7 @@ export function TopicList() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="heading-3">Topics</h2>
+        <h2 className="heading-3 text-primary!">Topics</h2>
         <TopicFormDialog onSuccess={() => topics.refetch()} />
       </div>
 
@@ -27,11 +27,11 @@ export function TopicList() {
           message="We couldn't load the topics. Please try again."
           onRetry={() => topics.refetch()}
         />
-      ) : !topics.data?.results || topics.data.results.length === 0 ? (
+      ) : !topics.data || topics.data.length === 0 ? (
         <EmptyTopicsState />
       ) : (
         <div className="grid gap-4">
-          {topics.data.results.map((t: Topic) => (
+          {topics.data.map((t: Topic) => (
             <TopicItem key={t.id} topic={t} onUpdate={() => topics.refetch()} />
           ))}
         </div>

@@ -28,18 +28,18 @@ export const sidebarConfig: Record<string, MenuItem[]> = {
       icon: LayoutDashboard,
     },
     {
-      name: "Submissions",
-      path: "/author/submissions",
+      name: "Publications",
+      path: "/author/publications",
       icon: Inbox,
       children: [
         {
-          name: "Submissions",
-          path: "/author/submissions/drafts",
+          name: "Publications",
+          path: "/author/publications",
           icon: Files,
         },
         {
-          name: "New Submission",
-          path: "/author/new-submission",
+          name: "New Publication",
+          path: "/author/new-publication",
           icon: FilePlus2Icon,
         },
       ],
@@ -78,16 +78,6 @@ export const sidebarConfig: Record<string, MenuItem[]> = {
           icon: BookCheck,
         },
       ],
-    },
-    {
-      name: "Leaderboard",
-      path: "/admin/leaderboard",
-      icon: TrendingUp,
-    },
-    {
-      name: "Error Logs",
-      path: "/admin/error-logs",
-      icon: Bug,
     },
   ],
   INSTITUTION: [

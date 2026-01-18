@@ -25,3 +25,6 @@ export interface Topic {
   branches_count: number;
   publications_count: number;
 }
+
+// Topic Tree API response (array format)
+export type TopicTree = Topic[];

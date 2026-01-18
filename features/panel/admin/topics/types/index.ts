@@ -6,7 +6,7 @@ export interface Topic {
   icon?: string;
   is_active: boolean;
   order: number;
-  count?: number;
+  branches_count?: number;
 }
 
 export interface TopicBranch {
@@ -24,3 +24,6 @@ export interface PaginatedResponse<T> {
   results: T[];
   count?: number;
 }
+
+// Topic Tree API response
+export type TopicTree = Topic[];

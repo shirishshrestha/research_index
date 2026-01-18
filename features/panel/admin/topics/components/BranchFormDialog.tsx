@@ -11,8 +11,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Form } from "@/components/ui/form";
 import { FormInputField } from "@/components/form/FormInputField";
 import { FormTextareaField } from "@/components/form/FormTextareaField";
@@ -24,15 +22,22 @@ import {
 } from "../hooks/mutations";
 import { branchSchema, type BranchFormData } from "../schema";
 import type { TopicBranch } from "../types";
+import { Plus, SquarePen } from "lucide-react";
 
 export function BranchFormDialog({
   topicPk,
   branch,
+  branchName,
+  parentBranchId,
   onSuccess,
+  children,
 }: {
   topicPk?: number | string;
   branch?: TopicBranch;
+  parentBranchId?: number | null;
+  branchName?: string;
   onSuccess?: () => void;
+  children?: React.ReactNode;
 }) {
   const isEdit = Boolean(branch);
   const [open, setOpen] = React.useState(false);
@@ -41,7 +46,7 @@ export function BranchFormDialog({
     resolver: zodResolver(branchSchema),
     defaultValues: {
       topic: branch?.topic ?? Number(topicPk),
-      parent: branch?.parent || null,
+      parent: branch?.parent || parentBranchId || null,
       name: branch?.name || "",
       slug: branch?.slug || "",
       description: branch?.description || "",
@@ -49,6 +54,21 @@ export function BranchFormDialog({
       order: branch?.order !== undefined ? branch.order : 0,
     },
   });
+
+  // Reset form when dialog opens with new parentBranchId
+  React.useEffect(() => {
+    if (open) {
+      form.reset({
+        topic: branch?.topic ?? Number(topicPk),
+        parent: branch?.parent || parentBranchId || null,
+        name: branch?.name || "",
+        slug: branch?.slug || "",
+        description: branch?.description || "",
+        is_active: branch?.is_active !== undefined ? branch.is_active : true,
+        order: branch?.order !== undefined ? branch.order : 0,
+      });
+    }
+  }, [open, branch, parentBranchId, topicPk, form]);
 
   const create = useCreateBranchMutation(topicPk, {
     onSuccess: () => {
@@ -66,24 +86,41 @@ export function BranchFormDialog({
   });
 
   const onSubmit = (data: BranchFormData) => {
+    // Remove empty strings for optional fields - backend auto-generates slug if not provided
     const payload = {
       ...data,
       topic: Number(topicPk),
+      slug: data.slug?.trim() || undefined,
+      description: data.description?.trim() || undefined,
+      parent: data.parent ?? undefined,
     };
     if (isEdit) update.mutate(payload);
     else create.mutate(payload);
   };
 
-  const isActive = useWatch({ control: form.control, name: "is_active" });
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">{isEdit ? "Edit" : "Add Branch"}</Button>
+        {children || (
+          <Button variant={isEdit ? "outline" : "default"} size={"sm"}>
+            {isEdit ? (
+              <SquarePen />
+            ) : (
+              <>
+                <Plus /> Add Branch
+              </>
+            )}
+          </Button>
+        )}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit Branch" : "Create Branch"}</DialogTitle>
+          <p>
+            {isEdit
+              ? `Modify the details of the branch "${branch?.name}".`
+              : `Fill in the details to create a new branch inside "${branchName}".`}
+          </p>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
@@ -94,48 +131,12 @@ export function BranchFormDialog({
               placeholder="Enter branch name"
             />
 
-            <FormInputField
-              control={form.control}
-              name="slug"
-              label="Slug"
-              placeholder="auto-generated-slug"
-              description="Leave empty to auto-generate from name"
-            />
-
             <FormTextareaField
               control={form.control}
               name="description"
               label="Description"
               placeholder="Enter branch description"
             />
-
-            <FormInputField
-              control={form.control}
-              name="parent"
-              label="Parent Branch (Optional)"
-              type="number"
-              placeholder="Leave empty for root branch"
-              description="Enter parent branch ID for nested structure"
-            />
-
-            <FormInputField
-              control={form.control}
-              name="order"
-              label="Display Order"
-              type="number"
-              placeholder="0"
-            />
-
-            <div className="flex items-center justify-between py-2">
-              <Label htmlFor="is_active">Active</Label>
-              <Switch
-                id="is_active"
-                checked={isActive}
-                onCheckedChange={(checked) =>
-                  form.setValue("is_active", checked)
-                }
-              />
-            </div>
 
             <DialogFooter>
               <DialogClose asChild>
@@ -150,8 +151,8 @@ export function BranchFormDialog({
                 {create.isPending || update.isPending
                   ? "Saving..."
                   : isEdit
-                  ? "Save"
-                  : "Create"}
+                    ? "Save"
+                    : "Create"}
               </Button>
             </DialogFooter>
           </form>
