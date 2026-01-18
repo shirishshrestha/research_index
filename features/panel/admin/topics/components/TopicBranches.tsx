@@ -22,7 +22,7 @@ interface BranchNode {
 
 interface TopicBranchesProps {
   topic: Topic;
-  branches: BranchNode[];
+  branches?: BranchNode[];
   onChange?: () => void;
 }
 
