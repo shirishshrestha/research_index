@@ -1,7 +1,7 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { TopicsListView } from "@/features/general/topics";
-import { getTopicsTree } from "@/features/general/topics";
+import { getTopicsTree } from "@/features/general/topics/api/topics.server";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import FullScreenLoader from "@/components/shared/FullScreenLoader";

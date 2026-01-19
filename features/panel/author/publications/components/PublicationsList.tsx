@@ -13,8 +13,19 @@ import DataTable, {
 } from "@/features/shared/components/DataTable";
 import type { Publication } from "../types";
 
-export function PublicationsList() {
-  const { data: publications, error, isPending } = usePublicationsQuery();
+interface PublicationsListProps {
+  initialPublications?: Publication[];
+}
+
+export function PublicationsList({
+  initialPublications,
+}: PublicationsListProps) {
+  // Use server-provided data as initial data, only fetch client-side if not provided
+  const {
+    data: publications,
+    error,
+    isPending,
+  } = usePublicationsQuery(initialPublications);
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
 
   const deleteMutation = useDeletePublicationMutation(deleteId || undefined, {
