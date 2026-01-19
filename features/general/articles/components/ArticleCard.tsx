@@ -1,48 +1,80 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import { ArticleCardProps } from "../types";
 import { Icon } from "@/components/shared";
+import type { Publication } from "../types";
 
-export function ArticleCard({
-  title,
-  authors,
-  publishedAt,
-  doi,
-  badge,
-  href = "#",
-}: ArticleCardProps) {
+interface ArticleCardProps {
+  publication: Publication;
+}
+
+export function ArticleCard({ publication }: ArticleCardProps) {
+  // Format published date
+  const formattedDate = publication.published_date
+    ? new Date(publication.published_date).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "Date not available";
+
+  // Get author name(s)
+  const authorNames = publication.co_authors
+    ? `${publication.author_name}, ${publication.co_authors}`
+    : publication.author_name;
+
   return (
-    <Link href={href}>
-      <Card className="p-6.25 group  hover:shadow-md duration-300 transition-shadow shadow-none">
+    <Link href={`/articles/${publication.id}`}>
+      <Card className="p-6.25 group hover:shadow-md duration-300 transition-shadow shadow-none">
         <div className="flex flex-col gap-5">
-          <div className="flex items-start justify-between gap-4 ">
+          <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <h4 className="heading-4 mb-2 text-primary group-hover:underline">
-                {title}
+                {publication.title}
               </h4>
-              <p className="para mb-1">{authors}</p>
-              <div className="flex">
+              <p className="para mb-1 line-clamp-1">{authorNames}</p>
+              <div className="flex flex-wrap gap-1">
                 <p className="desc text-base italic! mb-1.25">
-                  Published at: {publishedAt}.&nbsp;
+                  Published: {formattedDate}
                 </p>
-                <p className="desc text-base italic!">DOI: {doi}</p>
+                {publication.journal_name && (
+                  <>
+                    <span className="desc text-base">&nbsp;·&nbsp;</span>
+                    <p className="desc text-base italic!">
+                      {publication.journal_name}
+                    </p>
+                  </>
+                )}
+                {publication.doi && (
+                  <>
+                    <span className="desc text-base">&nbsp;·&nbsp;</span>
+                    <p className="desc text-base">DOI: {publication.doi}</p>
+                  </>
+                )}
               </div>
             </div>
 
-            {/* Badge */}
-            {badge && (
-              <span className="text-base font-medium text-text-black">
-                {badge.value} Cite
+            {/* Citation Badge */}
+            {publication.stats && publication.stats.citations_count > 0 && (
+              <span className="text-base font-medium text-text-black whitespace-nowrap">
+                {publication.stats.citations_count} Cite
               </span>
             )}
           </div>
 
-          {/* Article Details */}
+          {/* Article Actions */}
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Icon name="pdf" size={24} className="" />
-              <span className="text-base font-medium text-primary">
-                View PDF
+            {publication.pdf_url && (
+              <div className="flex items-center gap-2">
+                <Icon name="pdf" size={24} />
+                <span className="text-base font-medium text-primary">
+                  View PDF
+                </span>
+              </div>
+            )}
+            <div className="flex items-center gap-2 text-text-gray">
+              <Icon name="Eye" size={20} />
+              <span className="text-sm">
+                {publication.stats?.reads_count || 0} reads
               </span>
             </div>
           </div>

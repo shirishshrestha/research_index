@@ -1,3 +1,16 @@
+// Re-export publication types from panel/author
+export type {
+  Publication,
+  PublicationType,
+  MeSHTerm,
+  Citation,
+  Reference,
+  LinkOut,
+  PublicationStats,
+  TopicBranch,
+} from "@/features/panel/author/publications/types";
+
+// Frontend-specific display types
 export interface ArticleMetric {
   value: string | number;
   label: string;
@@ -50,4 +63,13 @@ export interface ArticleSidebarProps {
     doi: string;
     pubmedId: string;
   };
+}
+
+// Filter options for public publications search
+export interface PublicationFilters {
+  type?: string;
+  topic_branch?: number;
+  author?: number;
+  search?: string;
+  page?: number;
 }

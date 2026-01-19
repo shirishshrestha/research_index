@@ -1,6 +1,7 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { ArticlesListView } from "@/features/general/articles";
+import { getPublicPublications } from "@/features/general/articles/api/articles.server";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import FullScreenLoader from "@/components/shared/FullScreenLoader";
@@ -30,9 +31,30 @@ export default function ArticlesPage() {
 
       <Container>
         <Suspense fallback={<FullScreenLoader />}>
-          <ArticlesListView />
+          <ArticlesContent />
         </Suspense>
       </Container>
     </section>
   );
+}
+
+/**
+ * Server Component that fetches articles data
+ * Uses Next.js fetch() with cache tag "public-publications"
+ * Automatically refetches when cache is revalidated
+ */
+async function ArticlesContent() {
+  try {
+    const publications = await getPublicPublications();
+    return <ArticlesListView initialPublications={publications} />;
+  } catch (error) {
+    console.error("Failed to fetch publications:", error);
+    return (
+      <div className="text-center py-20">
+        <p className="text-text-gray text-lg">
+          Unable to load articles. Please try again later.
+        </p>
+      </div>
+    );
+  }
 }
