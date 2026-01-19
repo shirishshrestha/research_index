@@ -1,8 +1,10 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
-import { TopicDetailView } from "@/features/general/topics";
+import { TopicDetailView, getTopic } from "@/features/general/topics";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import FullScreenLoader from "@/components/shared/FullScreenLoader";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: Promise<{
@@ -40,14 +42,25 @@ export default async function TopicDetailPage({ params }: Props) {
       />
 
       <Container>
-        <Suspense
-          fallback={
-            <div className="py-20 text-center">Loading topic details...</div>
-          }
-        >
-          <TopicDetailView topicId={id} />
+        <Suspense fallback={<FullScreenLoader />}>
+          <TopicDetailContent topicId={id} />
         </Suspense>
       </Container>
     </section>
   );
+}
+
+/**
+ * Server Component that fetches topic data
+ * Uses Next.js fetch() with cache tag "topics-tree"
+ * Automatically refetches when cache is revalidated
+ */
+async function TopicDetailContent({ topicId }: { topicId: string }) {
+  const topicData = await getTopic(topicId);
+
+  if (!topicData) {
+    notFound();
+  }
+
+  return <TopicDetailView topic={topicData} />;
 }

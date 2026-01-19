@@ -1,15 +1,17 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { TopicsListView } from "@/features/general/topics";
+import { getTopicsTree } from "@/features/general/topics";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import FullScreenLoader from "@/components/shared/FullScreenLoader";
 
 export const metadata: Metadata = {
   title: "Topics - Resource Index",
   description: "Browse research topics and categories",
 };
 
-export default function TopicsPage() {
+export default async function TopicsPage() {
   return (
     <section>
       <Container>
@@ -28,10 +30,21 @@ export default function TopicsPage() {
       />
 
       <Container>
-        <Suspense fallback={<div>Loading...</div>}>
-          <TopicsListView />
+        <Suspense fallback={<FullScreenLoader />}>
+          <TopicsContent />
         </Suspense>
       </Container>
     </section>
   );
+}
+
+/**
+ * Server Component that fetches topics data
+ * Uses Next.js fetch() with cache tag "topics-tree"
+ * Automatically refetches when cache is revalidated
+ */
+async function TopicsContent() {
+  const topics = await getTopicsTree();
+
+  return <TopicsListView initialTopics={topics} />;
 }
