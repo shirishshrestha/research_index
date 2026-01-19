@@ -87,8 +87,8 @@ export const sidebarConfig: Record<string, MenuItem[]> = {
       icon: LayoutDashboard,
     },
     {
-      name: "Publications",
-      path: "/institution/publications",
+      name: "Journals",
+      path: "/institution/journals",
       icon: BookOpen,
     },
     {

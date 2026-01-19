@@ -14,6 +14,7 @@ import {
   sortOptionsExtended,
   yearOptions,
 } from "@/features/shared/constants/filterOptions";
+import { useState } from "react";
 
 const mockJournals = [
   {
@@ -60,7 +61,16 @@ const mockJournals = [
   },
 ];
 
-export function JournalsListView() {
+interface JournalsListViewProps {
+  initialData?: any[];
+}
+
+export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
+  // Use initialData from server-side props or fallback to mock data
+  const [journals] = useState(
+    initialData.length > 0 ? initialData : mockJournals,
+  );
+
   return (
     <div className="pt-12.5! section-padding">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
