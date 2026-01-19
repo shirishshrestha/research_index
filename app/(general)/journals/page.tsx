@@ -9,7 +9,30 @@ export const metadata: Metadata = {
   description: "Browse academic journals",
 };
 
-export default function JournalsPage() {
+async function getJournals() {
+  // Server-side data fetching
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/publications/journals/`, {
+      cache: "no-store", // Disable caching for fresh data, use 'force-cache' for static
+      next: { revalidate: 3600 }, // Revalidate every hour
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch journals");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error("Error fetching journals:", error);
+    return [];
+  }
+}
+
+export default async function JournalsPage() {
+  const journals = await getJournals();
+
   return (
     <section>
       <Container>
@@ -29,7 +52,7 @@ export default function JournalsPage() {
 
       <Container>
         <Suspense fallback={<div>Loading...</div>}>
-          <JournalsListView />
+          <JournalsListView initialData={journals} />
         </Suspense>
       </Container>
     </section>

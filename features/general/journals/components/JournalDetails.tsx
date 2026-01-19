@@ -9,18 +9,25 @@ import {
   EditorialBoard,
   ContactTab,
 } from "./TabDetails";
-import type { JournalDetails } from "../types";
+import type { JournalDetails as JournalDetailsType } from "../types";
 
-const journal: JournalDetails = {
-  title: "Journal of Himalayan Environmental Studies",
-  institution: "Nepal Academy of Science and Technology (NAST)",
-  issn: "2789-4536",
-  doiPrefix: "10.58291",
-  license: "CC BY-NC-SA 4.0",
-  badge: { label: "ICV 2024", value: "171.50" },
-};
+interface JournalDetailsProps {
+  journal?: any; // Accept journal data from server
+}
 
-export function JournalDetails() {
+export function JournalDetails({
+  journal: serverJournal,
+}: JournalDetailsProps) {
+  // Use server data if available, otherwise use mock data
+  const journal: JournalDetailsType = serverJournal || {
+    title: "Journal of Himalayan Environmental Studies",
+    institution: "Nepal Academy of Science and Technology (NAST)",
+    issn: "2789-4536",
+    doiPrefix: "10.58291",
+    license: "CC BY-NC-SA 4.0",
+    badge: { label: "ICV 2024", value: "171.50" },
+  };
+
   return (
     <div className="section-padding pt-0!">
       {/* Journal Profile Card */}
