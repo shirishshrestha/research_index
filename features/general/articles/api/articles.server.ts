@@ -4,7 +4,62 @@
  */
 
 import { serverGet } from "@/lib/server-api";
-import type { Publication } from "@/features/panel/author/publications/types";
+import type { Publication, PublicationFilters } from "../types";
+
+/**
+ * Fetch all published publications (public endpoint)
+ * Supports filtering by type, topic_branch, author, and search
+ * @param filters - Optional filter parameters
+ */
+export async function getPublicPublications(
+  filters?: PublicationFilters,
+): Promise<Publication[]> {
+  const params = new URLSearchParams();
+
+  if (filters?.type) params.append("type", filters.type);
+  if (filters?.topic_branch)
+    params.append("topic_branch", filters.topic_branch.toString());
+  if (filters?.author) params.append("author", filters.author.toString());
+  if (filters?.search) params.append("search", filters.search);
+
+  const queryString = params.toString();
+  const endpoint = `/publications/public/${queryString ? `?${queryString}` : ""}`;
+
+  const response = await serverGet<Publication[]>(endpoint, {
+    requireAuth: false, // Public endpoint
+    tags: ["public-publications"],
+    revalidate: 300, // Revalidate every 5 minutes
+  });
+
+  return response;
+}
+
+/**
+ * Fetch publications for a specific journal (public endpoint)
+ * @param journalId - Journal ID
+ * @param filters - Optional filter parameters (type, issue, search)
+ */
+export async function getJournalPublications(
+  journalId: number,
+  filters?: { type?: string; issue?: number; search?: string },
+): Promise<Publication[]> {
+  const params = new URLSearchParams();
+
+  if (filters?.type) params.append("type", filters.type);
+  if (filters?.issue) params.append("issue", filters.issue.toString());
+  if (filters?.search) params.append("search", filters.search);
+
+  const queryString = params.toString();
+  const endpoint = `/publications/journals/${journalId}/publications/${queryString ? `?${queryString}` : ""}`;
+
+  const response = await serverGet<Publication[]>(endpoint, {
+    requireAuth: false, // Public endpoint
+    tags: ["journal-publications", `journal-${journalId}`],
+    revalidate: 300, // Revalidate every 5 minutes
+  });
+
+  return response;
+}
 
 /**
  * Fetch all published publications by topic branch (public endpoint)
@@ -21,6 +76,7 @@ export async function getPublicationsByBranch(
     {
       requireAuth: false, // Public endpoint
       tags: ["public-articles", `topic-${topicId}`, `branch-${branchId}`],
+      revalidate: 300,
     },
   );
 
@@ -29,18 +85,14 @@ export async function getPublicationsByBranch(
 
 /**
  * Fetch a single published publication by ID (public view)
- * For now, we'll use the same endpoint as author but filter by is_published
- * In production, you might want a dedicated public endpoint
  * @param id - Publication ID
  */
 export async function getPublicArticle(id: number): Promise<Publication> {
   const response = await serverGet<Publication>(`/publications/${id}/`, {
     requireAuth: false, // Try public first
     tags: ["public-articles", `article-${id}`],
+    revalidate: 300,
   });
 
   return response;
 }
-
-// TODO: When backend adds a general public publications list endpoint (with filters),
-// add that helper here. For now, we'll use topic-branch filtering.

@@ -11,34 +11,7 @@ import {
   languageOptions,
 } from "@/features/shared/constants/filterOptions";
 import { ArticleCard } from "./ArticleCard";
-
-const mockArticles = [
-  {
-    id: "1",
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    authors:
-      "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
-    publishedAt: "02 May 2025",
-    doi: "10.58291/nrip.2025.00123",
-    badge: { label: "33 Cite", value: "33" },
-  },
-  {
-    id: "2",
-    title: "Sustainable Agricultural Practices in Mountain Communities",
-    authors: "Ramesh Kumar, Sita Devi, Prakash Sharma",
-    publishedAt: "15 Apr 2025",
-    doi: "10.58291/nrip.2025.00089",
-    badge: { label: "25 Cite", value: "25" },
-  },
-  {
-    id: "3",
-    title: "Water Resource Management in the Himalayan Region",
-    authors: "Maya Thapa, Bikram Rai, Anita Gurung",
-    publishedAt: "28 Mar 2025",
-    doi: "10.58291/nrip.2025.00067",
-    badge: { label: "18 Cite", value: "18" },
-  },
-];
+import type { Publication } from "../types";
 
 const sortOptions = [
   { value: "relevance", label: "Relevance" },
@@ -49,7 +22,16 @@ const sortOptions = [
   { value: "title_desc", label: "Title (Z-A)" },
 ];
 
-export function ArticlesListView() {
+interface ArticlesListViewProps {
+  initialPublications?: Publication[];
+}
+
+export function ArticlesListView({
+  initialPublications = [],
+}: ArticlesListViewProps) {
+  const publications = initialPublications;
+  const totalResults = publications.length;
+
   return (
     <div className="pt-12.5! section-padding">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
@@ -144,39 +126,40 @@ export function ArticlesListView() {
             />
           </FilterToolbar>
 
-          {mockArticles.length > 0 && (
-            <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
-              pageSize={10}
-              showPageSizeSelector={false}
-            />
+          {/* Results Count */}
+          <div className="flex items-center justify-between">
+            <p className="text-text-gray">
+              Showing {publications.length} of {totalResults} articles
+            </p>
+          </div>
+
+          {/* Loading State */}
+          {publications.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-text-gray text-lg">
+                No articles found. Try adjusting your filters.
+              </p>
+            </div>
           )}
 
           {/* Results List */}
-          {mockArticles.map((article) => (
-            <div key={article.id} className="space-y-6.25">
-              <ArticleCard
-                title={article.title}
-                authors={article.authors}
-                publishedAt={article.publishedAt}
-                doi={article.doi}
-                badge={article.badge}
-                href={`/articles/${article.id}`}
-              />
-            </div>
-          ))}
+          {publications.length > 0 && (
+            <>
+              <div className="space-y-6.25">
+                {publications.map((publication) => (
+                  <ArticleCard key={publication.id} publication={publication} />
+                ))}
+              </div>
 
-          {/* Pagination */}
-          {mockArticles.length > 0 && (
-            <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
-              pageSize={10}
-              showPageSizeSelector={false}
-            />
+              {/* Pagination */}
+              <Pagination
+                currentPage={1}
+                totalPages={Math.ceil(totalResults / 10)}
+                totalCount={totalResults}
+                pageSize={10}
+                showPageSizeSelector={false}
+              />
+            </>
           )}
         </div>
       </div>
