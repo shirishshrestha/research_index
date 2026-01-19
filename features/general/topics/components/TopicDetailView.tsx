@@ -166,9 +166,37 @@ export function TopicDetailView({ topic: topicData }: TopicDetailViewProps) {
     );
   };
 
-  const filteredBranches = topicData.branches.filter((branch) =>
-    branch.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  // Recursively filter branches and preserve hierarchy for matches
+  const filterBranches = (
+    branches: TopicBranch[],
+    q: string,
+  ): TopicBranch[] => {
+    const term = q.trim().toLowerCase();
+    if (!term) return branches;
+
+    const out: TopicBranch[] = [];
+
+    for (const b of branches) {
+      const nameMatch = b.name.toLowerCase().includes(term);
+      const descMatch = Boolean(
+        b.description && b.description.toLowerCase().includes(term),
+      );
+      const children = b.children ? filterBranches(b.children, term) : [];
+
+      if (nameMatch || descMatch || children.length > 0) {
+        out.push({
+          ...b,
+          children,
+        });
+      }
+    }
+
+    return out;
+  };
+
+  const filteredBranches = searchQuery
+    ? filterBranches(topicData.branches, searchQuery)
+    : topicData.branches;
 
   return (
     <div className="section-padding pt-12.5!">

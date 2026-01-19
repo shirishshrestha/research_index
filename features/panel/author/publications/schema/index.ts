@@ -1,9 +1,24 @@
 import { z } from "zod";
 
-// Publication form schema
 export const publicationSchema = z.object({
+  // Required
   title: z.string().min(1, "Title is required"),
-  abstract: z.string().optional(),
+
+  // Optional strings - use optional() for proper typing
+  abstract: z.string().optional().default(""),
+  doi: z.string().optional().default(""),
+  published_date: z.string().optional().default(""),
+  journal_name: z.string().optional().default(""),
+  volume: z.string().optional().default(""),
+  issue: z.string().optional().default(""),
+  pages: z.string().optional().default(""),
+  publisher: z.string().optional().default(""),
+  co_authors: z.string().optional().default(""),
+  pubmed_id: z.string().optional().default(""),
+  arxiv_id: z.string().optional().default(""),
+  pubmed_central_id: z.string().optional().default(""),
+
+  // Enum (always defined)
   publication_type: z.enum([
     "journal_article",
     "conference_paper",
@@ -17,38 +32,38 @@ export const publicationSchema = z.object({
     "review",
     "other",
   ]),
-  pdf_file: z.any().optional(),
-  doi: z.string().optional(),
-  published_date: z.string().optional(),
-  journal_name: z.string().optional(),
-  volume: z.string().optional(),
-  issue: z.string().optional(),
-  pages: z.string().optional(),
-  publisher: z.string().optional(),
-  co_authors: z.string().optional(),
-  erratum_from: z.number().optional(),
-  pubmed_id: z.string().optional(),
-  arxiv_id: z.string().optional(),
-  pubmed_central_id: z.string().optional(),
+
+  // Files (can be null in forms)
+  pdf_file: z.any().nullable().optional(),
+
+  // Booleans must NEVER be optional in RHF
   is_published: z.boolean().default(true),
-  topic_branch: z.number().optional(),
+
+  // Numbers that may not exist
+  topic_branch: z.number().nullable().optional(),
+  erratum_from: z.number().nullable().optional(),
+
+  // Field arrays - optional with default
   mesh_terms_data: z
     .array(
       z.object({
         term: z.string().min(1, "MeSH term is required"),
         term_type: z.enum(["major", "minor"]),
-      })
+      }),
     )
-    .optional(),
+    .optional()
+    .default([]),
+
   link_outs_data: z
     .array(
       z.object({
         link_type: z.string().min(1, "Link type is required"),
-        url: z.string().url("Invalid URL").min(1, "URL is required"),
-        description: z.string().optional(),
-      })
+        url: z.string().url("Invalid URL"),
+        description: z.string().optional().default(""),
+      }),
     )
-    .optional(),
+    .optional()
+    .default([]),
 });
 
 export type PublicationFormSchema = z.infer<typeof publicationSchema>;

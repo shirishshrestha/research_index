@@ -6,11 +6,15 @@ import { PUBLICATIONS_QUERY_KEYS, PUBLICATIONS_ENDPOINTS } from "../constants";
 
 /**
  * Query hook to fetch all publications for the authenticated author
+ * @param initialData - Optional initial data from server-side rendering
  */
-export const usePublicationsQuery = () => {
+export const usePublicationsQuery = (initialData?: Publication[]) => {
   return useGet<Publication[]>(
     [...PUBLICATIONS_QUERY_KEYS.lists()],
-    PUBLICATIONS_ENDPOINTS.LIST
+    PUBLICATIONS_ENDPOINTS.LIST,
+    {
+      initialData,
+    },
   );
 };
 
@@ -23,7 +27,7 @@ export const usePublicationQuery = (id: number | string | undefined) => {
     id ? PUBLICATIONS_ENDPOINTS.DETAIL(Number(id)) : "",
     {
       enabled: !!id,
-    }
+    },
   );
 };
 
@@ -36,7 +40,7 @@ export const usePublicationStatsQuery = (id: number | string | undefined) => {
     id ? PUBLICATIONS_ENDPOINTS.STATS(Number(id)) : "",
     {
       enabled: !!id,
-    }
+    },
   );
 };
 
@@ -44,14 +48,14 @@ export const usePublicationStatsQuery = (id: number | string | undefined) => {
  * Query hook to fetch publication citations
  */
 export const usePublicationCitationsQuery = (
-  id: number | string | undefined
+  id: number | string | undefined,
 ) => {
   return useGet(
     id ? ["publications", "citations", String(id)] : [],
     id ? PUBLICATIONS_ENDPOINTS.ADD_CITATION(Number(id)) : "",
     {
       enabled: !!id,
-    }
+    },
   );
 };
 
@@ -59,13 +63,13 @@ export const usePublicationCitationsQuery = (
  * Query hook to fetch publication references
  */
 export const usePublicationReferencesQuery = (
-  id: number | string | undefined
+  id: number | string | undefined,
 ) => {
   return useGet(
     id ? ["publications", "references", String(id)] : [],
     id ? PUBLICATIONS_ENDPOINTS.ADD_REFERENCE(Number(id)) : "",
     {
       enabled: !!id,
-    }
+    },
   );
 };
