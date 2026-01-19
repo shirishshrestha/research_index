@@ -48,7 +48,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
     journal?.cover_image_url || null,
   );
 
-  const form = useForm<JournalFormSchema>({
+  const form = useForm({
     resolver: zodResolver(journalFormSchema),
     defaultValues: journal
       ? {
