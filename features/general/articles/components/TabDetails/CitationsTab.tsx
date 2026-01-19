@@ -1,4 +1,5 @@
-import { ArticleCard } from "../ArticleCard";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
 const mockArticles = [
   {
@@ -8,7 +9,7 @@ const mockArticles = [
       "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
     publishedAt: "02 May 2025",
     doi: "10.58291/nrip.2025.00123",
-    badge: { label: "33 Cite", value: "33" },
+    citations: 33,
   },
   {
     id: "2",
@@ -16,7 +17,7 @@ const mockArticles = [
     authors: "Ramesh Kumar, Sita Devi, Prakash Sharma",
     publishedAt: "15 Apr 2025",
     doi: "10.58291/nrip.2025.00089",
-    badge: { label: "25 Cite", value: "25" },
+    citations: 25,
   },
   {
     id: "3",
@@ -24,7 +25,7 @@ const mockArticles = [
     authors: "Maya Thapa, Bikram Rai, Anita Gurung",
     publishedAt: "28 Mar 2025",
     doi: "10.58291/nrip.2025.00067",
-    badge: { label: "18 Cite", value: "18" },
+    citations: 18,
   },
 ];
 
@@ -45,16 +46,28 @@ export const CitationsTab = () => {
       </aside>
       <aside className="space-y-8.75">
         {mockArticles.map((article) => (
-          <div key={article.id} className="space-y-6.25">
-            <ArticleCard
-              title={article.title}
-              authors={article.authors}
-              publishedAt={article.publishedAt}
-              doi={article.doi}
-              badge={article.badge}
-              href={`/articles/${article.id}`}
-            />
-          </div>
+          <Link key={article.id} href={`/articles/${article.id}`}>
+            <Card className="p-6 hover:shadow-md transition-shadow">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <h4 className="text-lg font-semibold text-primary mb-2 hover:underline">
+                    {article.title}
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {article.authors}
+                  </p>
+                  <div className="flex gap-2 text-sm text-gray-500">
+                    <span>Published: {article.publishedAt}</span>
+                    <span>·</span>
+                    <span>DOI: {article.doi}</span>
+                  </div>
+                </div>
+                <span className="text-sm font-medium whitespace-nowrap">
+                  {article.citations} Cite
+                </span>
+              </div>
+            </Card>
+          </Link>
         ))}
       </aside>
     </div>
