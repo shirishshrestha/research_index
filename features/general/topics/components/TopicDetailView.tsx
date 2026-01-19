@@ -8,60 +8,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Search, CheckCircle2, Info, ArrowRight, Loader2 } from "lucide-react";
+import { Search, CheckCircle2, Info, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { TopicBranch, TopicDetailViewProps } from "../types";
-import { useTopicTreeQuery } from "../hooks";
+import { TopicBranch, Topic } from "../types";
 
-export function TopicDetailView({ topicId }: TopicDetailViewProps) {
+interface TopicDetailViewProps {
+  topic: Topic;
+}
+
+export function TopicDetailView({ topic: topicData }: TopicDetailViewProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBranch, setSelectedBranch] = useState<TopicBranch | null>(
-    null
+    null,
   );
   const [expandedBranches, setExpandedBranches] = useState<Set<number>>(
-    new Set()
+    new Set(),
   );
   const router = useRouter();
-
-  // Fetch topics tree data
-  const { data: topicsTree, isLoading, error } = useTopicTreeQuery();
-
-  // Find the specific topic from the tree
-  const topicData = topicsTree?.find(
-    (topic) => topic.id.toString() === topicId
-  );
-
-  if (isLoading) {
-    return (
-      <div className="section-padding py-20 text-center">
-        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
-        <p className="text-text-gray">Loading topic details...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="section-padding py-20 text-center">
-        <h2 className="heading-3 text-text-black mb-4">Error Loading Topic</h2>
-        <p className="text-red-500">
-          Failed to load topic details. Please try again later.
-        </p>
-      </div>
-    );
-  }
-
-  if (!topicData) {
-    return (
-      <div className="section-padding py-20 text-center">
-        <h2 className="heading-3 text-text-black mb-4">Topic Not Found</h2>
-        <p className="text-text-gray">
-          The requested topic could not be found.
-        </p>
-      </div>
-    );
-  }
 
   const toggleBranch = (branchId: number) => {
     const newExpanded = new Set(expandedBranches);
@@ -81,7 +45,7 @@ export function TopicDetailView({ topicId }: TopicDetailViewProps) {
     if (selectedBranch) {
       // Navigate to publications page filtered by this branch
       router.push(
-        `/articles?topic=${topicData.id}&branch=${selectedBranch.id}`
+        `/articles?topic=${topicData.id}&branch=${selectedBranch.id}`,
       );
     } else {
       // Navigate to publications page filtered by main topic
@@ -203,7 +167,7 @@ export function TopicDetailView({ topicId }: TopicDetailViewProps) {
   };
 
   const filteredBranches = topicData.branches.filter((branch) =>
-    branch.name.toLowerCase().includes(searchQuery.toLowerCase())
+    branch.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (

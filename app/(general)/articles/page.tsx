@@ -3,6 +3,7 @@ import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { ArticlesListView } from "@/features/general/articles";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import FullScreenLoader from "@/components/shared/FullScreenLoader";
 
 export const metadata: Metadata = {
   title: "Articles - Resource Index",
@@ -28,7 +29,7 @@ export default function ArticlesPage() {
       />
 
       <Container>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<FullScreenLoader />}>
           <ArticlesListView />
         </Suspense>
       </Container>

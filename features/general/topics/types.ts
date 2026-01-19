@@ -1,7 +1,3 @@
-export interface TopicDetailViewProps {
-  topicId: string;
-}
-
 export interface TopicBranch {
   id: number;
   name: string;

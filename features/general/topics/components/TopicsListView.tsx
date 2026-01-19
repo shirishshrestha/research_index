@@ -5,20 +5,23 @@ import { useTopicTreeQuery } from "../hooks";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import type { TopicTree } from "../types";
 
-export function TopicsListView() {
+interface TopicsListViewProps {
+  initialTopics: TopicTree;
+}
+
+export function TopicsListView({ initialTopics }: TopicsListViewProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const { data: topics, isLoading, error } = useTopicTreeQuery(searchTerm);
 
-  if (error) {
-    return (
-      <div className="text-center py-20">
-        <p className="text-red-500 text-lg">
-          Failed to load topics. Please try again later.
-        </p>
-      </div>
-    );
-  }
+  // Only fetch when searching (client-side filtering for now)
+  // Server component handles initial load
+  const { data: searchedTopics, isLoading } = useTopicTreeQuery(searchTerm, {
+    enabled: searchTerm.length > 0,
+  });
+
+  // Use searched topics if available, otherwise use initial
+  const topics = searchTerm ? searchedTopics : initialTopics;
 
   return (
     <div className="pt-12.5! section-padding">
