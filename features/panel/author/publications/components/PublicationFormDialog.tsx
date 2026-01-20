@@ -190,9 +190,12 @@ export function PublicationFormDialog({
       formData.append("link_outs_data", JSON.stringify(data.link_outs_data));
     }
 
-    // Cast FormData as backend accepts multipart/form-data
-    if (isEdit) update.mutate(formData as never);
-    else create.mutate(formData as never);
+    // Send FormData directly - axios will auto-detect and set Content-Type: multipart/form-data
+    if (isEdit) {
+      update.mutate(formData);
+    } else {
+      create.mutate(formData);
+    }
   };
 
   const isPublished = useWatch({ control: form.control, name: "is_published" });

@@ -30,11 +30,17 @@ axiosInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+
+    // If data is FormData, remove Content-Type header so axios sets it automatically with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    }
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor is set up in tokenRefresh.ts via setupTokenRefreshInterceptor()
@@ -52,7 +58,7 @@ export const api = {
   async post<T>(
     endpoint: string,
     data?: unknown,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T> {
     const response = await axiosInstance.post<T>(endpoint, data, config);
     return response.data;
@@ -61,7 +67,7 @@ export const api = {
   async put<T>(
     endpoint: string,
     data?: unknown,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T> {
     const response = await axiosInstance.put<T>(endpoint, data, config);
     return response.data;
@@ -70,7 +76,7 @@ export const api = {
   async patch<T>(
     endpoint: string,
     data?: unknown,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<T> {
     const response = await axiosInstance.patch<T>(endpoint, data, config);
     return response.data;

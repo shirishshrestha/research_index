@@ -117,6 +117,7 @@ export function ArticlesListView({
             <FilterToolbar.Search
               placeholder="Search articles..."
               paramName="search"
+              label="Search"
             />
             <FilterToolbar.Select
               label="Sort by"

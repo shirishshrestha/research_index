@@ -45,7 +45,7 @@ function isMenuItemActive(item: MenuItem, pathname: string): boolean {
   const childMatch =
     item.children?.some(
       (child) =>
-        pathname === child.path || pathname.startsWith(child.path + "/")
+        pathname === child.path || pathname.startsWith(child.path + "/"),
     ) || false;
 
   return directMatch || childMatch;
@@ -58,7 +58,10 @@ export function UnifiedSidebar({ menuItems }: UnifiedSidebarProps) {
     <Sidebar className=" shadow-new bg-background">
       <SidebarContent className="bg-card border pt-0 shadow-new">
         {/* Logo Section */}
-        <div className="flex justify-center items-center w-full p-3 pb-0">
+        <Link
+          href="/"
+          className="flex justify-center items-center w-full p-3 pb-0"
+        >
           <Image
             width={250}
             height={200}
@@ -67,7 +70,7 @@ export function UnifiedSidebar({ menuItems }: UnifiedSidebarProps) {
             className="w-50"
             loading="eager"
           />
-        </div>
+        </Link>
 
         {/* Menu Section */}
         <SidebarGroup>

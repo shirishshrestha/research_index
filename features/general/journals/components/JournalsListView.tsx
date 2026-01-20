@@ -207,6 +207,7 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
             <FilterToolbar.Search
               placeholder="Search journals..."
               paramName="search"
+              label="Search"
             />
             <FilterToolbar.Select
               label="Sort by"
@@ -215,36 +216,70 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
               placeholder="Relevance"
             />
           </FilterToolbar>
-          {mockJournals.length > 0 && (
+          {journals.length > 0 && (
             <Pagination
               currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
+              totalPages={Math.ceil(journals.length / 10)}
+              totalCount={journals.length}
               pageSize={10}
               showPageSizeSelector={false}
             />
           )}
 
           {/* Results List */}
-          {mockJournals.map((journal) => (
+          {journals.map((journal) => (
             <div key={journal.id} className="space-y-6.25">
               <JournalCard
                 title={journal.title}
-                institution={journal.institution}
-                imageUrl={journal.imageUrl}
-                badge={journal.badge}
-                metrics={journal.metrics}
+                institution={
+                  "institution_name" in journal
+                    ? journal.institution_name
+                    : journal.institution
+                }
+                imageUrl={
+                  "cover_image_url" in journal
+                    ? journal.cover_image_url
+                    : journal.imageUrl
+                }
+                badge={
+                  "stats" in journal && journal.stats?.impact_factor
+                    ? {
+                        label: "IF 2024",
+                        value: journal.stats.impact_factor.toString(),
+                      }
+                    : journal.badge
+                }
+                metrics={
+                  "stats" in journal && journal.stats
+                    ? [
+                        {
+                          value:
+                            journal.stats.impact_factor?.toString() || "N/A",
+                          label: "Impact factor",
+                        },
+                        {
+                          value:
+                            journal.stats.total_publications?.toString() || "0",
+                          label: "Total Publications",
+                        },
+                        {
+                          value: journal.stats.total_issues?.toString() || "0",
+                          label: "Total Issues",
+                        },
+                      ]
+                    : journal.metrics || []
+                }
                 href={`/journals/${journal.id}`}
               />
             </div>
           ))}
 
           {/* Pagination */}
-          {mockJournals.length > 0 && (
+          {journals.length > 0 && (
             <Pagination
               currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
+              totalPages={Math.ceil(journals.length / 10)}
+              totalCount={journals.length}
               pageSize={10}
               showPageSizeSelector={false}
             />

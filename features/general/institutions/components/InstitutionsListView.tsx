@@ -6,90 +6,100 @@ import {
   ListCard,
   Pagination,
 } from "@/features/shared/components";
+import type { Institution } from "../types";
+import { useState } from "react";
 
-const mockInstitutions = [
-  {
-    id: "1",
-    name: "KAHS",
-    position: "Karnali Academy of Health Sciences (KAHS)",
-    affiliation: "Karnali Province",
-    verifiedAffiliation: "Verified email at kahs.org.np ",
-  },
-  {
-    id: "2",
-    name: "KAHS",
-    position: "Karnali Academy of Health Sciences (KAHS)",
-    affiliation: "Karnali Province",
-    verifiedAffiliation: "Verified email at kahs.org.np ",
-  },
-  {
-    id: "3",
-    name: "KAHS",
-    position: "Karnali Academy of Health Sciences (KAHS)",
-    affiliation: "Karnali Province",
-    verifiedAffiliation: "Verified email at kahs.org.np ",
-  },
-  {
-    id: "4",
-    name: "KAHS",
-    position: "Karnali Academy of Health Sciences (KAHS)",
-    affiliation: "Karnali Province",
-    verifiedAffiliation: "Verified email at kahs.org.np ",
-  },
-  {
-    id: "5",
-    name: "KAHS",
-    position: "Karnali Academy of Health Sciences (KAHS)",
-    affiliation: "Karnali Province",
-    verifiedAffiliation: "Verified email at kahs.org.np ",
-  },
-];
+interface InstitutionsListViewProps {
+  initialData?: Institution[];
+}
 
-const publicationCountOptions = [
-  { value: "1-10", label: "1 - 10" },
-  { value: "11-30", label: "11 - 30" },
-  { value: "31-50", label: "31 - 50" },
-  { value: "51-100", label: "51 - 100" },
-  { value: "100+", label: "More than 140" },
-];
+export function InstitutionsListView({
+  initialData = [],
+}: InstitutionsListViewProps) {
+  const [institutions] = useState<Institution[]>(initialData);
 
-const affiliationOptions = [
-  { value: "tu", label: "Tribhuvan University (TU)" },
-  { value: "ku", label: "Kathmandu University (KU)" },
-  { value: "pu", label: "Pokhara University (PU)" },
-  { value: "nast", label: "Nepal Academy of Science and Technology (NAST)" },
-  { value: "purbanchal", label: "Purbanchal University (APU)" },
-];
+  const mockInstitutions = [
+    {
+      id: "1",
+      name: "KAHS",
+      position: "Karnali Academy of Health Sciences (KAHS)",
+      affiliation: "Karnali Province",
+      verifiedAffiliation: "Verified email at kahs.org.np ",
+    },
+    {
+      id: "2",
+      name: "KAHS",
+      position: "Karnali Academy of Health Sciences (KAHS)",
+      affiliation: "Karnali Province",
+      verifiedAffiliation: "Verified email at kahs.org.np ",
+    },
+    {
+      id: "3",
+      name: "KAHS",
+      position: "Karnali Academy of Health Sciences (KAHS)",
+      affiliation: "Karnali Province",
+      verifiedAffiliation: "Verified email at kahs.org.np ",
+    },
+    {
+      id: "4",
+      name: "KAHS",
+      position: "Karnali Academy of Health Sciences (KAHS)",
+      affiliation: "Karnali Province",
+      verifiedAffiliation: "Verified email at kahs.org.np ",
+    },
+    {
+      id: "5",
+      name: "KAHS",
+      position: "Karnali Academy of Health Sciences (KAHS)",
+      affiliation: "Karnali Province",
+      verifiedAffiliation: "Verified email at kahs.org.np ",
+    },
+  ];
 
-const researchFocusOptions = [
-  { value: "applied", label: "Applied Research" },
-  { value: "basic", label: "Basic Research" },
-  { value: "interdisciplinary", label: "Interdisciplinary" },
-];
+  const publicationCountOptions = [
+    { value: "1-10", label: "1 - 10" },
+    { value: "11-30", label: "11 - 30" },
+    { value: "31-50", label: "31 - 50" },
+    { value: "51-100", label: "51 - 100" },
+    { value: "100+", label: "More than 140" },
+  ];
 
-const fieldOptions = [
-  { value: "agriculture", label: "Agriculture" },
-  { value: "economics", label: "Economics" },
-  { value: "education", label: "Education" },
-  { value: "environment", label: "Environment" },
-  { value: "humanities", label: "Humanities" },
-];
+  const affiliationOptions = [
+    { value: "tu", label: "Tribhuvan University (TU)" },
+    { value: "ku", label: "Kathmandu University (KU)" },
+    { value: "pu", label: "Pokhara University (PU)" },
+    { value: "nast", label: "Nepal Academy of Science and Technology (NAST)" },
+    { value: "purbanchal", label: "Purbanchal University (APU)" },
+  ];
 
-const countryOptions = [
-  { value: "nepal", label: "Nepal" },
-  { value: "india", label: "India" },
-  { value: "usa", label: "USA" },
-  { value: "uk", label: "UK" },
-];
+  const researchFocusOptions = [
+    { value: "applied", label: "Applied Research" },
+    { value: "basic", label: "Basic Research" },
+    { value: "interdisciplinary", label: "Interdisciplinary" },
+  ];
 
-const sortOptions = [
-  { value: "relevance", label: "Relevance" },
-  { value: "name-asc", label: "Name (A-Z)" },
-  { value: "name-desc", label: "Name (Z-A)" },
-  { value: "publications", label: "Most Publications" },
-];
+  const fieldOptions = [
+    { value: "agriculture", label: "Agriculture" },
+    { value: "economics", label: "Economics" },
+    { value: "education", label: "Education" },
+    { value: "environment", label: "Environment" },
+    { value: "humanities", label: "Humanities" },
+  ];
 
-export function InstitutionsListView() {
+  const countryOptions = [
+    { value: "nepal", label: "Nepal" },
+    { value: "india", label: "India" },
+    { value: "usa", label: "USA" },
+    { value: "uk", label: "UK" },
+  ];
+
+  const sortOptions = [
+    { value: "relevance", label: "Relevance" },
+    { value: "name-asc", label: "Name (A-Z)" },
+    { value: "name-desc", label: "Name (Z-A)" },
+    { value: "publications", label: "Most Publications" },
+  ];
+
   return (
     <div className="pt-12.5! section-padding">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
@@ -194,6 +204,7 @@ export function InstitutionsListView() {
           <FilterToolbar containerClass="flex-row! bg-white p-4 rounded-lg shadow-xs">
             <FilterToolbar.Search
               placeholder="Search institutions..."
+              label="Search"
               paramName="search"
             />
             <FilterToolbar.Select
@@ -203,11 +214,14 @@ export function InstitutionsListView() {
               placeholder="Relevance"
             />
           </FilterToolbar>
-          {mockInstitutions.length > 0 && (
+          {(institutions.length > 0 ? institutions : mockInstitutions).length >
+            0 && (
             <Pagination
               currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
+              totalPages={Math.ceil(
+                (institutions.length > 0 ? institutions.length : 400) / 10,
+              )}
+              totalCount={institutions.length > 0 ? institutions.length : 400}
               pageSize={10}
               showPageSizeSelector={false}
             />
@@ -215,22 +229,59 @@ export function InstitutionsListView() {
 
           {/* Results List */}
           <div className="space-y-4">
-            {mockInstitutions.map((institution) => (
-              <ListCard
-                key={institution.id}
-                {...institution}
-                fallbackImageUrl="/fallback-logo.png"
-                href="/institutions/1"
-              />
-            ))}
+            {(institutions.length > 0 ? institutions : mockInstitutions).map(
+              (institution) => (
+                <ListCard
+                  key={institution.id}
+                  id={String(institution.id)}
+                  name={
+                    "institution_name" in institution
+                      ? institution.institution_name
+                      : institution.name
+                  }
+                  position={
+                    "institution_type" in institution
+                      ? institution.institution_type?.trim() || "Institution"
+                      : institution.position
+                  }
+                  verifiedAffiliation={
+                    "city" in institution && "country" in institution
+                      ? (() => {
+                          const city = institution.city?.trim();
+                          const country = institution.country?.trim();
+                          const website = institution.website?.trim();
+                          const location = [city, country]
+                            .filter(Boolean)
+                            .join(", ");
+                          const parts = [location, website].filter(Boolean);
+                          return parts.length > 0
+                            ? parts.join(" • ")
+                            : "Location not specified";
+                        })()
+                      : institution.verifiedAffiliation ||
+                        institution.affiliation
+                  }
+                  imageUrl={
+                    "logo_url" in institution
+                      ? institution.logo_url || undefined
+                      : undefined
+                  }
+                  fallbackImageUrl="/fallback-logo.png"
+                  href={`/institutions/${institution.id}`}
+                />
+              ),
+            )}
           </div>
 
           {/* Pagination */}
-          {mockInstitutions.length > 0 && (
+          {(institutions.length > 0 ? institutions : mockInstitutions).length >
+            0 && (
             <Pagination
               currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
+              totalPages={Math.ceil(
+                (institutions.length > 0 ? institutions.length : 400) / 10,
+              )}
+              totalCount={institutions.length > 0 ? institutions.length : 400}
               pageSize={10}
               showPageSizeSelector={false}
             />

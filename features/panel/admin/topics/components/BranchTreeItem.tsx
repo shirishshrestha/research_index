@@ -60,7 +60,7 @@ export function BranchTreeItem({
       <div
         className={cn(
           "flex items-center  justify-between p-3 rounded-md hover:bg-accent/10! transition-colors group bg-card!",
-          level === 0 ? "bg-muted/20" : ""
+          level === 0 ? "bg-muted/20" : "",
         )}
         style={{ paddingLeft: `${indentPx + 12}px` }}
       >
@@ -138,15 +138,18 @@ export function BranchTreeItem({
   return (
     <div className="w-full bg-card" style={{ paddingLeft: `${indentPx}px` }}>
       <Accordion type="single" collapsible defaultValue="open">
-        <AccordionItem value="open" className="border-0">
+        <AccordionItem value="open" className="border-0 rounded-xl">
           <div
             className={cn(
               "flex items-center justify-between rounded-md hover:bg-accent/10 transition-colors group",
-              level === 0 ? "bg-muted/20" : ""
+              level === 0 ? "bg-muted/20" : "",
             )}
           >
             <AccordionTrigger className="flex-1 w-full py-3 px-3 hover:no-underline ">
               <div className="flex items-center gap-2 w-full">
+                <div className="h-6 w-6 flex items-center justify-center">
+                  <GitBranch className="h-3 w-3 text-muted-foreground" />
+                </div>
                 <span className="font-medium text-sm">{branch.name}</span>
                 {branch.description && (
                   <span className="text-xs text-muted-foreground">
