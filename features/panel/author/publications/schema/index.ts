@@ -39,9 +39,15 @@ export const publicationSchema = z.object({
   // Booleans must NEVER be optional in RHF
   is_published: z.boolean().default(true),
 
-  // Numbers that may not exist
-  topic_branch: z.number().nullable().optional(),
-  erratum_from: z.number().nullable().optional(),
+  // Numbers that may not exist - nullable with default null (not optional)
+  topic_branch: z
+    .preprocess(
+      (val) => (val === null || val === "" ? null : Number(val)),
+      z.number().nullable(),
+    )
+    .nullable()
+    .default(null),
+  erratum_from: z.number().nullable().default(null),
 
   // Field arrays - optional with default
   mesh_terms_data: z

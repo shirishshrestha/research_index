@@ -5,10 +5,17 @@ import {
 } from "@/features/shared/components/profile";
 import { ChevronDown } from "lucide-react";
 import { InstitutionProfileTab, MembersTab, ResearchTab } from "./TabDetails";
+import type { InstitutionDetail } from "../types";
 
-export function InstitutionDetails() {
-  // Mock data for demonstration
-  const institution = {
+interface InstitutionDetailsProps {
+  institution?: InstitutionDetail;
+}
+
+export function InstitutionDetails({
+  institution: serverInstitution,
+}: InstitutionDetailsProps) {
+  // Mock data for demonstration (fallback if no server data)
+  const mockInstitution = {
     name: "KAHS",
     position: "Karnali Academy of Health Sciences (KAHS)",
     affiliation: "Karnali Province",
@@ -25,6 +32,38 @@ export function InstitutionDetails() {
       "Biomedical Research",
     ],
   };
+
+  // Use server data if available, map to component format
+  const institution = serverInstitution
+    ? {
+        name: serverInstitution.institution_name || "Institution Name",
+        position: serverInstitution.institution_type?.trim() || "Institution",
+        affiliation: (() => {
+          const city = serverInstitution.city?.trim();
+          const country = serverInstitution.country?.trim();
+          const parts = [city, country].filter(Boolean);
+          return parts.length > 0 ? parts.join(", ") : "Location not specified";
+        })(),
+        verifiedEmail: serverInstitution.website?.trim() || "",
+        hIndex: serverInstitution.stats?.h_index || 0,
+        iIndex: serverInstitution.stats?.i10_index || 0,
+        citations: serverInstitution.stats?.total_citations || 0,
+        about:
+          serverInstitution.description?.trim() || "No description available.",
+        disciplines: (() => {
+          const areas = serverInstitution.research_areas;
+          if (typeof areas === "string") {
+            return areas.trim()
+              ? areas
+                  .split(",")
+                  .map((a) => a.trim())
+                  .filter(Boolean)
+              : [];
+          }
+          return Array.isArray(areas) ? areas.filter(Boolean) : [];
+        })(),
+      }
+    : mockInstitution;
 
   return (
     <div className="section-padding pt-0!">

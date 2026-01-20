@@ -7,6 +7,7 @@ export interface Topic {
   is_active: boolean;
   order: number;
   branches_count?: number;
+  publications_count?: number;
 }
 
 export interface TopicBranch {

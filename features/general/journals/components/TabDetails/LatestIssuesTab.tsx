@@ -168,6 +168,7 @@ export function LatestIssuesTab() {
             <FilterToolbar.Search
               placeholder="Search articles...."
               paramName="search"
+              label="Search"
             />
           </FilterToolbar>
 

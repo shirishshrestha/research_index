@@ -34,25 +34,14 @@ export function AdminTopicsTable() {
       cellClassName: "max-w-md truncate",
     },
     {
-      key: "is_active",
-      header: "Status",
-      align: "center",
-      render: (row) =>
-        row.is_active ? (
-          <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
-            Active
-          </span>
-        ) : (
-          <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600">
-            Inactive
-          </span>
-        ),
+      key: "branches_count",
+      header: "Branches",
+      render: (row) => row.branches_count,
     },
     {
-      key: "order",
-      header: "Order",
-      align: "center",
-      accessor: (row) => row.order,
+      key: "publications_count",
+      header: "Publications",
+      accessor: (row) => row.publications_count,
     },
     {
       key: "actions",
@@ -71,7 +60,7 @@ export function AdminTopicsTable() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
-        <FilterToolbar>
+        <FilterToolbar className="flex-1">
           <FilterToolbar.Search
             paramName="search"
             placeholder="Search topics..."

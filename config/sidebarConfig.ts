@@ -31,18 +31,6 @@ export const sidebarConfig: Record<string, MenuItem[]> = {
       name: "Publications",
       path: "/author/publications",
       icon: Inbox,
-      children: [
-        {
-          name: "Publications",
-          path: "/author/publications",
-          icon: Files,
-        },
-        {
-          name: "New Publication",
-          path: "/author/new-publication",
-          icon: FilePlus2Icon,
-        },
-      ],
     },
   ],
 
