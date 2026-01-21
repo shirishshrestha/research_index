@@ -11,6 +11,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "@/features/auth/redux/authSlice";
+import questionnaireReducer from "./slices/questionnaireSlice";
 
 // Configure persist for auth only
 const authPersistConfig = {
@@ -21,6 +22,7 @@ const authPersistConfig = {
 
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
+  questionnaire: questionnaireReducer,
 });
 
 export const store = configureStore({

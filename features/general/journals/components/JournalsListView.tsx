@@ -3,6 +3,7 @@
 import { Icon } from "@/components/shared";
 import { FilterToolbar, Pagination } from "@/features/shared/components";
 import { JournalCard } from "./JournalCard";
+import type { Journal } from "../api/journals.server";
 import {
   accessTypeOptions,
   categoryOptions,
@@ -62,7 +63,7 @@ const mockJournals = [
 ];
 
 interface JournalsListViewProps {
-  initialData?: any[];
+  initialData?: Journal[];
 }
 
 export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
@@ -238,8 +239,10 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
                 }
                 imageUrl={
                   "cover_image_url" in journal
-                    ? journal.cover_image_url
-                    : journal.imageUrl
+                    ? (journal.cover_image_url ?? undefined)
+                    : "imageUrl" in journal
+                      ? journal.imageUrl
+                      : undefined
                 }
                 badge={
                   "stats" in journal && journal.stats?.impact_factor
@@ -247,7 +250,9 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
                         label: "IF 2024",
                         value: journal.stats.impact_factor.toString(),
                       }
-                    : journal.badge
+                    : "badge" in journal
+                      ? journal.badge
+                      : undefined
                 }
                 metrics={
                   "stats" in journal && journal.stats
@@ -267,7 +272,9 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
                           label: "Total Issues",
                         },
                       ]
-                    : journal.metrics || []
+                    : "metrics" in journal
+                      ? journal.metrics
+                      : []
                 }
                 href={`/journals/${journal.id}`}
               />
