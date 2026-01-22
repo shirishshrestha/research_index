@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Users } from "lucide-react";
 import DataTable, {
   type DataTableColumn,
@@ -11,10 +12,50 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
 
 interface JournalEditorialBoardProps {
-  members: EditorialBoardMember[];
+  members?: EditorialBoardMember[];
+  isPending?: boolean;
 }
 
-export function JournalEditorialBoard({ members }: JournalEditorialBoardProps) {
+export function JournalEditorialBoard({
+  members,
+  isPending,
+}: JournalEditorialBoardProps) {
+  if (isPending) {
+    return (
+      <Card className="gap-3">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2 heading-4 text-primary!">
+              <Users className="h-5 w-5" />
+              Editorial Board
+            </span>
+            <Skeleton className="h-6 w-20" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 p-3 border rounded-lg"
+              >
+                <Skeleton className="h-10 w-10 rounded-full" />
+                <div className="flex-1">
+                  <Skeleton className="h-4 w-32 mb-2" />
+                  <Skeleton className="h-3 w-48" />
+                </div>
+                <Skeleton className="h-6 w-20" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!members) {
+    return null;
+  }
   const columns: DataTableColumn<EditorialBoardMember>[] = [
     {
       key: "member",

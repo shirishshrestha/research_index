@@ -29,11 +29,11 @@ export function StatsCard({
       <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border animate-pulse">
         <div className="flex items-start justify-between">
           <div className="flex-1 space-y-3">
-            <div className="h-4 bg-card/50 rounded w-24"></div>
-            <div className="h-8 bg-card/50 rounded w-20"></div>
-            <div className="h-3 bg-card/50 rounded w-32"></div>
+            <div className="h-4 bg-text-gray/50 rounded w-24"></div>
+            <div className="h-8 bg-text-gray/50 rounded w-20"></div>
+            <div className="h-3 bg-text-gray/50 rounded w-32"></div>
           </div>
-          <div className="h-12 w-12 bg-card/50 rounded-lg"></div>
+          <div className="h-12 w-12 bg-text-gray/50 rounded-lg"></div>
         </div>
       </div>
     );

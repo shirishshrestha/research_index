@@ -1,12 +1,38 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
 import type { Journal } from "../types";
 
 interface JournalContactProps {
-  journal: Journal;
+  journal?: Journal;
+  isPending?: boolean;
 }
 
-export function JournalContact({ journal }: JournalContactProps) {
+export function JournalContact({ journal, isPending }: JournalContactProps) {
+  if (isPending) {
+    return (
+      <Card className="gap-3">
+        <CardHeader>
+          <CardTitle>Contact Information</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-start gap-3">
+              <Skeleton className="h-4 w-4 mt-0.5" />
+              <div className="flex-1">
+                <Skeleton className="h-4 w-16 mb-1" />
+                <Skeleton className="h-4 w-48" />
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!journal) {
+    return null;
+  }
   const hasContactInfo =
     journal.contact_email ||
     journal.contact_phone ||

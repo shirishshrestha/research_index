@@ -3,9 +3,10 @@ import { AuthorStats } from "../types";
 
 export interface AuthorChartsProps {
   stats: AuthorStats;
+  isPending?: boolean;
 }
 
-export function AuthorCharts({ stats }: AuthorChartsProps) {
+export function AuthorCharts({ stats, isPending = false }: AuthorChartsProps) {
   // Impact metrics data
   const impactMetricsData = [
     { name: "H-Index", value: stats.h_index || 0 },
@@ -41,6 +42,7 @@ export function AuthorCharts({ stats }: AuthorChartsProps) {
         dataKey="value"
         xAxisKey="name"
         height={300}
+        isLoading={isPending}
       />
 
       {/* Engagement Distribution */}
@@ -51,6 +53,7 @@ export function AuthorCharts({ stats }: AuthorChartsProps) {
         dataKey="value"
         nameKey="name"
         height={300}
+        isLoading={isPending}
       />
 
       <div className="lg:col-span-2">
@@ -61,6 +64,7 @@ export function AuthorCharts({ stats }: AuthorChartsProps) {
           dataKey="value"
           xAxisKey="name"
           height={300}
+          isLoading={isPending}
         />
       </div>
     </div>

@@ -2,11 +2,7 @@
 
 import { use } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  PanelContainer,
-  PanelLoadingSkeleton,
-  PanelErrorCard,
-} from "@/features/shared";
+import { PanelContainer, PanelErrorCard } from "@/features/shared";
 import { getJournal } from "@/features/panel/institution/journals/api";
 import {
   JournalHeader,
@@ -27,25 +23,14 @@ export default function JournalDetailPage({
 
   const {
     data: journal,
-    isLoading,
+    isPending,
     isError,
   } = useQuery({
     queryKey: ["journal", journalId],
     queryFn: () => getJournal(journalId),
   });
 
-  if (isLoading) {
-    return (
-      <PanelContainer>
-        <PanelLoadingSkeleton
-          title="Loading Journal"
-          description="Please wait while we load the journal details"
-        />
-      </PanelContainer>
-    );
-  }
-
-  if (isError || !journal) {
+  if (isError) {
     return (
       <PanelContainer>
         <PanelErrorCard
@@ -59,25 +44,28 @@ export default function JournalDetailPage({
   return (
     <PanelContainer>
       <JournalBreadcrumb
-        journalId={journal.id}
-        journalTitle={journal.title}
+        journalId={journal?.id}
+        journalTitle={journal?.title}
         currentPage="detail"
       />
 
       <div className="space-y-6">
-        <JournalHeader journal={journal} />
+        <JournalHeader journal={journal} isPending={isPending} />
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Left Column - Basic Info & Editorial Board */}
           <div className="space-y-6 lg:col-span-2">
-            <JournalBasicInfo journal={journal} />
-            <JournalEditorialBoard members={journal.editorial_board} />
+            <JournalBasicInfo journal={journal} isPending={isPending} />
+            <JournalEditorialBoard
+              members={journal?.editorial_board}
+              isPending={isPending}
+            />
           </div>
 
           {/* Right Column - Statistics & Contact */}
           <div className="space-y-6">
-            <JournalStatistics journal={journal} />
-            <JournalContact journal={journal} />
+            <JournalStatistics journal={journal} isPending={isPending} />
+            <JournalContact journal={journal} isPending={isPending} />
           </div>
         </div>
       </div>

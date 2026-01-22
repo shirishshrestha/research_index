@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   BarChart3,
   TrendingUp,
@@ -10,10 +11,54 @@ import {
 import type { Journal } from "../types";
 
 interface JournalStatisticsProps {
-  journal: Journal;
+  journal?: Journal;
+  isPending?: boolean;
 }
 
-export function JournalStatistics({ journal }: JournalStatisticsProps) {
+export function JournalStatistics({
+  journal,
+  isPending,
+}: JournalStatisticsProps) {
+  if (isPending) {
+    return (
+      <div className="space-y-4">
+        {/* Highlight Stats Skeleton */}
+        <div className="grid grid-cols-2 gap-4">
+          <Card className="bg-linear-to-br from-blue-50 to-blue-100/50 border-blue-200">
+            <CardContent className="">
+              <Skeleton className="h-24" />
+            </CardContent>
+          </Card>
+          <Card className="bg-linear-to-br from-purple-50 to-purple-100/50 border-purple-200">
+            <CardContent className="">
+              <Skeleton className="h-24" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Detailed Stats Skeleton */}
+        <Card className="gap-3">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <BarChart3 className="h-4 w-4" />
+              Detailed Metrics
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} className="h-20 rounded-lg" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!journal) {
+    return null;
+  }
   if (!journal.stats) {
     return (
       <Card>

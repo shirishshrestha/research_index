@@ -1,15 +1,55 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Edit, FileText, BookOpen } from "lucide-react";
 import Link from "next/link";
 import type { Journal } from "../types";
 
 interface JournalHeaderProps {
-  journal: Journal;
+  journal?: Journal;
+  isPending?: boolean;
 }
 
-export function JournalHeader({ journal }: JournalHeaderProps) {
+export function JournalHeader({ journal, isPending }: JournalHeaderProps) {
+  if (isPending || !journal) {
+    return (
+      <Card className="overflow-hidden bg-transparent shadow-none pb-0 border-0">
+        <div className="relative">
+          <div className="relative">
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
+              {/* Journal Logo/Avatar Skeleton */}
+              <div className="flex-shrink-0">
+                <Skeleton className="h-32 w-32 rounded-xl" />
+              </div>
+
+              {/* Title and Info Skeleton */}
+              <div className="flex-1 space-y-3 pt-2">
+                <div>
+                  <Skeleton className="h-8 w-3/4 mb-2" />
+                  <Skeleton className="h-5 w-1/2" />
+                </div>
+
+                {/* Status Badges Skeleton */}
+                <div className="flex flex-wrap gap-2">
+                  <Skeleton className="h-6 w-16" />
+                  <Skeleton className="h-6 w-24" />
+                  <Skeleton className="h-6 w-28" />
+                  <Skeleton className="h-6 w-32" />
+                </div>
+              </div>
+
+              {/* Action Buttons Skeleton */}
+              <div className="flex gap-2 pt-2">
+                <Skeleton className="h-9 w-32" />
+                <Skeleton className="h-9 w-20" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
   return (
     <Card className="overflow-hidden bg-transparent shadow-none pb-0 border-0">
       <div className="relative">
