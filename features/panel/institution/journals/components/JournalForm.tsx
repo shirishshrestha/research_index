@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -12,10 +11,13 @@ import {
   FormTextareaField,
   FormSelectField,
 } from "@/components/form";
-import { Save, X, Upload, Image as ImageIcon } from "lucide-react";
+import { Save, X, Image as ImageIcon } from "lucide-react";
 import { journalFormSchema, type JournalFormSchema } from "../utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createJournal, updateJournal } from "../api";
+import {
+  useCreateJournalMutation,
+  useUpdateJournalMutation,
+  prepareJournalFormData,
+} from "../hooks";
 import type { Journal, JournalFormData } from "../types";
 import {
   Card,
@@ -43,7 +45,6 @@ interface JournalFormProps {
 
 export function JournalForm({ journal, mode }: JournalFormProps) {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
     journal?.cover_image_url || null,
   );
@@ -103,29 +104,15 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
         },
   });
 
-  const createMutation = useMutation({
-    mutationFn: createJournal,
+  const createMutation = useCreateJournalMutation({
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["journals"] });
-      toast.success("Journal created successfully");
       router.push(`/institution/journals/${data.journal.id}`);
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to create journal");
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: (data: Partial<JournalFormSchema>) =>
-      updateJournal(journal!.id, data as Partial<JournalFormData>),
+  const updateMutation = useUpdateJournalMutation(journal?.id, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["journals"] });
-      queryClient.invalidateQueries({ queryKey: ["journal", journal!.id] });
-      toast.success("Journal updated successfully");
       router.push(`/institution/journals/${journal!.id}`);
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to update journal");
     },
   });
 
@@ -151,10 +138,11 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
   };
 
   const onSubmit = (data: JournalFormSchema) => {
+    const formData = prepareJournalFormData(data as JournalFormData);
     if (mode === "create") {
-      createMutation.mutate(data as JournalFormData);
+      createMutation.mutate(formData);
     } else {
-      updateMutation.mutate(data);
+      updateMutation.mutate(formData);
     }
   };
 

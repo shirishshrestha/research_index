@@ -26,9 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteJournal } from "../api";
-import { toast } from "sonner";
+import { useDeleteJournalMutation } from "../hooks";
 
 interface JournalCardProps {
   journal: JournalListItem;
@@ -36,18 +34,8 @@ interface JournalCardProps {
 
 export function JournalCard({ journal }: JournalCardProps) {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
-  const deleteMutation = useMutation({
-    mutationFn: () => deleteJournal(journal.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["journals"] });
-      toast.success("Journal deleted successfully");
-    },
-    onError: () => {
-      toast.error("Failed to delete journal");
-    },
-  });
+  const deleteMutation = useDeleteJournalMutation(journal.id);
 
   const handleDelete = () => {
     if (

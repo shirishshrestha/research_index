@@ -175,17 +175,18 @@ export function PublicationsList({
         pendingRows={5}
         tableClassName="bg-card flex items-center justify-center"
       />
-
-      <ConfirmationPopup
-        open={deleteId !== null}
-        onOpenChange={(open) => !open && setDeleteId(null)}
-        onConfirm={handleDelete}
-        title="Delete Publication"
-        description="Are you sure you want to delete this publication? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
-        isPending={deleteMutation.isPending}
-      />
+      <div onClick={(e) => e.stopPropagation()}>
+        <ConfirmationPopup
+          open={deleteId !== null}
+          onOpenChange={(open) => !open && setDeleteId(null)}
+          onConfirm={handleDelete}
+          title="Delete Publication"
+          description="Are you sure you want to delete this publication? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          isPending={deleteMutation.isPending}
+        />
+      </div>
     </div>
   );
 }

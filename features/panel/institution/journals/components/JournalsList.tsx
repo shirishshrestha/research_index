@@ -1,7 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { getJournals } from "../api";
 import { Plus, Eye, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,25 +10,19 @@ import type { JournalListItem } from "../types";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FilterToolbar } from "@/features/shared/components/search/FilterToolbar";
+import { useJournalsQuery } from "../hooks";
 
 export function JournalsList() {
   const router = useRouter();
 
-  const {
-    data: journals,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["journals"],
-    queryFn: getJournals,
-  });
+  const { data: journals, isPending: isLoading, isError } = useJournalsQuery();
 
   const columns: DataTableColumn<JournalListItem>[] = [
     {
       key: "cover",
       header: "",
       render: (row) => (
-        <div className="w-12 h-12 rounded overflow-hidden bg-muted flex-shrink-0">
+        <div className="w-12 h-12 rounded overflow-hidden bg-muted shrink-0">
           {row.cover_image_url ? (
             <img
               src={row.cover_image_url}

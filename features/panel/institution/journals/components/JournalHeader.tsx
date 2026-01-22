@@ -19,7 +19,7 @@ export function JournalHeader({ journal, isPending }: JournalHeaderProps) {
           <div className="relative">
             <div className="flex flex-col sm:flex-row gap-4 items-start">
               {/* Journal Logo/Avatar Skeleton */}
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <Skeleton className="h-32 w-32 rounded-xl" />
               </div>
 
@@ -121,6 +121,12 @@ export function JournalHeader({ journal, isPending }: JournalHeaderProps) {
 
             {/* Action Buttons */}
             <div className="flex gap-2 pt-2">
+              <Link href={`/institution/journals/${journal.id}/issues`}>
+                <Button variant="outline" size="sm">
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  Issues
+                </Button>
+              </Link>
               <Link href={`/institution/journals/${journal.id}/questionnaire`}>
                 <Button variant="outline" size="sm">
                   <FileText className="mr-2 h-4 w-4" />
