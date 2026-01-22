@@ -1,6 +1,7 @@
 "use client";
 
-import { ArticleCard } from "@/features/general/articles/components";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
 import {
   FilterToolbar,
   Pagination,
@@ -25,7 +26,7 @@ const mockArticles = [
       "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
     publishedAt: "02 May 2025",
     doi: "10.58291/nrjp.2025.00123",
-    badge: { label: "Cite", value: 33 },
+    citations: 33,
     href: "/articles/1",
   },
   {
@@ -34,7 +35,7 @@ const mockArticles = [
     authors: "Dr. Sita Sharma, Dr. Bikash Thapa, Dr. Ram Prasad Yadav",
     publishedAt: "18 April 2025",
     doi: "10.58291/nrjp.2025.00128",
-    badge: { label: "Cite", value: 41 },
+    citations: 41,
     href: "/articles/2",
   },
   {
@@ -43,7 +44,7 @@ const mockArticles = [
     authors: "Dr. Bikash Thapa, Dr. Sita Sharma",
     publishedAt: "25 March 2025",
     doi: "10.58291/nrjp.2025.00129",
-    badge: { label: "Cite", value: 37 },
+    citations: 37,
     href: "/articles/3",
   },
   {
@@ -52,7 +53,7 @@ const mockArticles = [
     authors: "Dr. Ram Prasad Yadav, Dr. Sita Sharma, Dr. Bikash Thapa",
     publishedAt: "12 February 2025",
     doi: "10.58291/nrjp.2025.00130",
-    badge: { label: "Cite", value: 29 },
+    citations: 29,
     href: "/articles/4",
   },
   {
@@ -61,7 +62,7 @@ const mockArticles = [
     authors: "Dr. Sita Sharma, Glenn S. Orton",
     publishedAt: "08 January 2025",
     doi: "10.58291/nrjp.2025.00131",
-    badge: { label: "Cite", value: 24 },
+    citations: 24,
     href: "/articles/5",
   },
 ];
@@ -79,6 +80,7 @@ export const ResearchTab = () => {
           <FilterToolbar.Search
             placeholder="Search authors..."
             paramName="search"
+            label="Search"
           />
           <FilterToolbar.Select
             label="Sort by"
@@ -98,7 +100,21 @@ export const ResearchTab = () => {
         )}
         <div className="flex flex-col gap-6.25">
           {mockArticles.map((article) => (
-            <ArticleCard key={article.id} {...article} />
+            <Link key={article.id} href={article.href}>
+              <Card className="p-6 hover:shadow-md transition-shadow">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {article.title}
+                </h3>
+                <p className="text-sm text-gray-600 mb-2">{article.authors}</p>
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <span>{article.publishedAt}</span>
+                  <span>•</span>
+                  <span>{article.doi}</span>
+                  <span>•</span>
+                  <span>{article.citations} Citations</span>
+                </div>
+              </Card>
+            </Link>
           ))}
         </div>
         {mockArticles.length > 0 && (

@@ -24,7 +24,7 @@ export function AuthorStatsCards({
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <StatsCard
         title="Total Publications"
-        value={stats.total_publications}
+        value={pending ? 0 : stats.total_publications}
         icon={BookOpen}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
@@ -32,7 +32,7 @@ export function AuthorStatsCards({
       />
       <StatsCard
         title="Total Citations"
-        value={stats.total_citations.toLocaleString()}
+        value={pending ? 0 : stats.total_citations}
         icon={FileText}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
@@ -40,7 +40,7 @@ export function AuthorStatsCards({
       />
       <StatsCard
         title="H-Index"
-        value={stats.h_index}
+        value={pending ? 0 : stats.h_index}
         icon={Award}
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
@@ -49,7 +49,7 @@ export function AuthorStatsCards({
       />
       <StatsCard
         title="i10-Index"
-        value={stats.i10_index}
+        value={pending ? 0 : stats.i10_index}
         icon={Award}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"
@@ -58,7 +58,7 @@ export function AuthorStatsCards({
       />
       <StatsCard
         title="Total Reads"
-        value={stats.total_reads.toLocaleString()}
+        value={pending ? 0 : stats.total_reads.toLocaleString()}
         icon={TrendingUp}
         iconColor="text-secondary"
         iconBgColor="bg-secondary/20"
@@ -66,7 +66,7 @@ export function AuthorStatsCards({
       />
       <StatsCard
         title="Total Downloads"
-        value={stats.total_downloads.toLocaleString()}
+        value={pending ? 0 : stats.total_downloads.toLocaleString()}
         icon={Download}
         iconColor="text-accent"
         iconBgColor="bg-accent/20"
@@ -74,7 +74,9 @@ export function AuthorStatsCards({
       />
       <StatsCard
         title="Avg Citations/Paper"
-        value={parseFloat(stats.average_citations_per_paper).toFixed(2)}
+        value={
+          pending ? 0 : parseFloat(stats.average_citations_per_paper).toFixed(2)
+        }
         icon={FileText}
         iconColor="text-primary"
         iconBgColor="bg-blue-02"

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/shared";
 import { FilterToolbar, Pagination } from "@/features/shared/components";
 import {
@@ -10,7 +12,6 @@ import {
   languageOptions,
 } from "@/features/shared/constants/filterOptions";
 import { Button } from "@/components/ui/button";
-import { ArticleCard } from "@/features/general/articles";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Article {
@@ -167,6 +168,7 @@ export function LatestIssuesTab() {
             <FilterToolbar.Search
               placeholder="Search articles...."
               paramName="search"
+              label="Search"
             />
           </FilterToolbar>
 
@@ -184,7 +186,23 @@ export function LatestIssuesTab() {
           {/* Results List */}
           {mockArticles.map((article) => (
             <div key={article.id} className="space-y-6.25">
-              <ArticleCard {...article} />
+              <Link href={`/articles/${article.id}`}>
+                <Card className="p-6 hover:shadow-md transition-shadow">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {article.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {article.authors}
+                  </p>
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                    <span>{article.publishedAt}</span>
+                    <span>•</span>
+                    <span>{article.doi}</span>
+                    <span>•</span>
+                    <span>{article.citations} Citations</span>
+                  </div>
+                </Card>
+              </Link>
             </div>
           ))}
 

@@ -3,21 +3,11 @@ import { JournalDetails } from "@/features/general/journals/components";
 import { Container, PageHeroSection } from "@/components/shared";
 import { Breadcrumb, commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { notFound } from "next/navigation";
+import { getPublicJournal } from "@/features/general/journals/api/journals.server";
 
 async function getJournal(id: string) {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
   try {
-    const res = await fetch(`${API_BASE_URL}/publications/journals/${id}/`, {
-      cache: "no-store",
-      next: { revalidate: 3600 },
-    });
-
-    if (!res.ok) {
-      return null;
-    }
-
-    return res.json();
+    return await getPublicJournal(id);
   } catch (error) {
     console.error("Error fetching journal:", error);
     return null;

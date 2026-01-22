@@ -44,7 +44,7 @@ const useFilterToolbarContext = () => {
   const ctx = React.useContext(FilterToolbarContext);
   if (!ctx) {
     throw new Error(
-      "FilterToolbar components must be used inside <FilterToolbar />"
+      "FilterToolbar components must be used inside <FilterToolbar />",
     );
   }
 };
@@ -66,7 +66,7 @@ export function FilterToolbar({
 }
 
 FilterToolbar.Search = function FilterToolbarSearch({
-  label = "Search",
+  label,
   placeholder = "Search...",
   value,
   onChange,
@@ -80,7 +80,7 @@ FilterToolbar.Search = function FilterToolbarSearch({
   const searchParams = useSearchParams();
 
   const [localValue, setLocalValue] = React.useState(
-    value ?? searchParams.get(paramName) ?? ""
+    value ?? searchParams.get(paramName) ?? "",
   );
 
   const [debounced] = useDebounce(localValue, debounceMs);
@@ -102,9 +102,11 @@ FilterToolbar.Search = function FilterToolbarSearch({
 
   return (
     <div className={cn("flex-1", className)}>
-      <label className="mb-2 block text-lg font-medium leading-6 text-text-black">
-        {label}
-      </label>
+      {label && (
+        <label className="mb-2 block text-lg font-medium leading-6 text-text-black">
+          {label}
+        </label>
+      )}
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -334,7 +336,7 @@ FilterToolbar.SearchableRadioGroup =
     const filtered = React.useMemo(() => {
       if (!query) return options;
       return options.filter((o: RadioOption) =>
-        o.label.toLowerCase().includes(query.toLowerCase())
+        o.label.toLowerCase().includes(query.toLowerCase()),
       );
     }, [query, options]);
 
@@ -457,13 +459,13 @@ FilterToolbar.SliderGroup = function FilterToolbarSliderGroup({
 
   // Track local slider values for smooth UI updates
   const [localValues, setLocalValues] = React.useState<Record<string, number>>(
-    {}
+    {},
   );
 
   const handleSliderCommit = (
     paramName: string,
     value: number[],
-    sliderConfig: SliderOption
+    sliderConfig: SliderOption,
   ) => {
     const params = new URLSearchParams(searchParams.toString());
     const newValue = value[0];

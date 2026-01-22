@@ -44,11 +44,18 @@ export default function ArticlesPage() {
  * Automatically refetches when cache is revalidated
  */
 async function ArticlesContent() {
+  let publications;
+  let error = null;
+
   try {
-    const publications = await getPublicPublications();
-    return <ArticlesListView initialPublications={publications} />;
-  } catch (error) {
-    console.error("Failed to fetch publications:", error);
+    publications = await getPublicPublications();
+  } catch (err) {
+    console.error("Failed to fetch publications:", err);
+    error = err;
+  }
+
+  // Handle error case
+  if (error || !publications) {
     return (
       <div className="text-center py-20">
         <p className="text-text-gray text-lg">
@@ -57,4 +64,7 @@ async function ArticlesContent() {
       </div>
     );
   }
+
+  // Render success case
+  return <ArticlesListView initialPublications={publications} />;
 }

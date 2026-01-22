@@ -5,6 +5,8 @@ import type { Publication, PublicationFormData } from "../types";
 import { useQueryClient, type UseMutationOptions } from "@tanstack/react-query";
 import { PUBLICATIONS_QUERY_KEYS, PUBLICATIONS_ENDPOINTS } from "../constants";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandling";
 import {
   revalidateAllPublications,
   revalidatePublication,
@@ -14,12 +16,16 @@ import {
  * Mutation hook to create a new publication
  */
 export const useCreatePublicationMutation = (
-  options?: UseMutationOptions<Publication, Error, PublicationFormData>,
+  options?: UseMutationOptions<
+    Publication,
+    Error,
+    FormData | PublicationFormData
+  >,
 ) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  return usePost<Publication, PublicationFormData>(
+  return usePost<Publication, FormData | PublicationFormData>(
     PUBLICATIONS_ENDPOINTS.LIST,
     {
       ...options,
@@ -35,7 +41,12 @@ export const useCreatePublicationMutation = (
         // 3. Refresh server components
         router.refresh();
 
+        toast.success("Publication created successfully");
         options?.onSuccess?.(...args);
+      },
+      onError: (error, ...args) => {
+        toast.error(extractErrorMessage(error, "Failed to create publication"));
+        options?.onError?.(error, ...args);
       },
     },
   );
@@ -49,13 +60,13 @@ export const useUpdatePublicationMutation = (
   options?: UseMutationOptions<
     Publication,
     Error,
-    Partial<PublicationFormData>
+    FormData | Partial<PublicationFormData>
   >,
 ) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  return usePatch<Publication, Partial<PublicationFormData>>(
+  return usePatch<Publication, FormData | Partial<PublicationFormData>>(
     id ? PUBLICATIONS_ENDPOINTS.UPDATE(Number(id)) : "",
     {
       ...options,
@@ -75,7 +86,12 @@ export const useUpdatePublicationMutation = (
         // 3. Refresh server components
         router.refresh();
 
+        toast.success("Publication updated successfully");
         options?.onSuccess?.(...args);
+      },
+      onError: (error, ...args) => {
+        toast.error(extractErrorMessage(error, "Failed to update publication"));
+        options?.onError?.(error, ...args);
       },
     },
   );
@@ -107,7 +123,12 @@ export const useDeletePublicationMutation = (
         // 3. Refresh server components
         router.refresh();
 
+        toast.success("Publication deleted successfully");
         options?.onSuccess?.(...args);
+      },
+      onError: (error, ...args) => {
+        toast.error(extractErrorMessage(error, "Failed to delete publication"));
+        options?.onError?.(error, ...args);
       },
     },
   );

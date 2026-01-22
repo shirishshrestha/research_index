@@ -16,7 +16,7 @@ import { Save, X, Upload, Image as ImageIcon } from "lucide-react";
 import { journalFormSchema, type JournalFormSchema } from "../utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createJournal, updateJournal } from "../api";
-import type { Journal } from "../types";
+import type { Journal, JournalFormData } from "../types";
 import {
   Card,
   CardContent,
@@ -47,8 +47,9 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
     journal?.cover_image_url || null,
   );
+  const fileInputRef = useState<HTMLInputElement | null>(null);
 
-  const form = useForm<JournalFormSchema>({
+  const form = useForm({
     resolver: zodResolver(journalFormSchema),
     defaultValues: journal
       ? {
@@ -116,7 +117,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
 
   const updateMutation = useMutation({
     mutationFn: (data: Partial<JournalFormSchema>) =>
-      updateJournal(journal!.id, data as any),
+      updateJournal(journal!.id, data as Partial<JournalFormData>),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["journals"] });
       queryClient.invalidateQueries({ queryKey: ["journal", journal!.id] });
@@ -143,11 +144,15 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
   const removeCoverImage = () => {
     form.setValue("cover_image", undefined);
     setCoverImagePreview(null);
+    // Clear the file input field
+    if (fileInputRef[0]) {
+      fileInputRef[0].value = "";
+    }
   };
 
   const onSubmit = (data: JournalFormSchema) => {
     if (mode === "create") {
-      createMutation.mutate(data as any);
+      createMutation.mutate(data as JournalFormData);
     } else {
       updateMutation.mutate(data);
     }
@@ -260,6 +265,9 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
                     )}
                     <div className="flex-1">
                       <Input
+                        ref={(el) => {
+                          fileInputRef[1](el);
+                        }}
                         type="file"
                         accept="image/*"
                         onChange={handleCoverImageChange}

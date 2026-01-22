@@ -22,7 +22,7 @@ interface FormSelectFieldProps<TFieldValues extends FieldValues = FieldValues> {
   label?: string;
   description?: string;
   form_classname?: string;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string | number }[];
   disabled?: boolean;
 }
 
@@ -42,7 +42,7 @@ interface FormSelectFieldProps<TFieldValues extends FieldValues = FieldValues> {
  * @returns A form select field component with label, description, validation message, and options.
  */
 export const FormSelectField = <
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 >({
   control,
   name,

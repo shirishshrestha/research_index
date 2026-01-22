@@ -147,6 +147,7 @@ export function AuthorsListView() {
             <FilterToolbar.Search
               placeholder="Search authors..."
               paramName="search"
+              label="Search"
             />
             <FilterToolbar.Select
               label="Sort by"

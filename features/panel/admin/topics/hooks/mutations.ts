@@ -5,6 +5,8 @@ import type { Topic, TopicBranch } from "../types";
 import { useQueryClient, type UseMutationOptions } from "@tanstack/react-query";
 import { revalidateTopicsAction } from "@/features/general/topics/server-actions/actions";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandling";
 
 export const useCreateTopicMutation = (
   options?: UseMutationOptions<Topic, Error, Partial<Topic>>,
@@ -24,7 +26,12 @@ export const useCreateTopicMutation = (
       // Trigger server component refetch
       router.refresh();
 
+      toast.success("Topic created successfully");
       options?.onSuccess?.(...args);
+    },
+    onError: (error, ...args) => {
+      toast.error(extractErrorMessage(error, "Failed to create topic"));
+      options?.onError?.(error, ...args);
     },
   });
 };
@@ -50,7 +57,12 @@ export const useUpdateTopicMutation = (
         // Trigger server component refetch
         router.refresh();
 
+        toast.success("Topic updated successfully");
         options?.onSuccess?.(...args);
+      },
+      onError: (error, ...args) => {
+        toast.error(extractErrorMessage(error, "Failed to update topic"));
+        options?.onError?.(error, ...args);
       },
     },
   );
@@ -75,7 +87,12 @@ export const useDeleteTopicMutation = (
       // Trigger server component refetch
       router.refresh();
 
+      toast.success("Topic deleted successfully");
       options?.onSuccess?.(...args);
+    },
+    onError: (error, ...args) => {
+      toast.error(extractErrorMessage(error, "Failed to delete topic"));
+      options?.onError?.(error, ...args);
     },
   });
 };
@@ -105,7 +122,12 @@ export const useCreateBranchMutation = (
         // Trigger server component refetch
         router.refresh();
 
+        toast.success("Branch created successfully");
         options?.onSuccess?.(...args);
+      },
+      onError: (error, ...args) => {
+        toast.error(extractErrorMessage(error, "Failed to create branch"));
+        options?.onError?.(error, ...args);
       },
     },
   );
@@ -137,7 +159,12 @@ export const useUpdateBranchMutation = (
         // Trigger server component refetch
         router.refresh();
 
+        toast.success("Branch updated successfully");
         options?.onSuccess?.(...args);
+      },
+      onError: (error, ...args) => {
+        toast.error(extractErrorMessage(error, "Failed to update branch"));
+        options?.onError?.(error, ...args);
       },
     },
   );
@@ -169,7 +196,12 @@ export const useDeleteBranchMutation = (
         // Trigger server component refetch
         router.refresh();
 
+        toast.success("Branch deleted successfully");
         options?.onSuccess?.(...args);
+      },
+      onError: (error, ...args) => {
+        toast.error(extractErrorMessage(error, "Failed to delete branch"));
+        options?.onError?.(error, ...args);
       },
     },
   );

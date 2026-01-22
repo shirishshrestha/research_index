@@ -2,6 +2,7 @@ import { z } from "zod";
 
 // File validation helper
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ISSN_REGEX = /^[0-9]{4}-[0-9]{3}[0-9X]$/;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -12,8 +13,18 @@ const ACCEPTED_IMAGE_TYPES = [
 export const journalFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(300),
   short_title: z.string().max(100),
-  issn: z.string().max(20),
-  e_issn: z.string().max(20),
+
+  issn: z
+    .string()
+    .min(9, "ISSN must be 9 characters: XXXX-XXXX")
+    .max(9, "ISSN must be 9 characters: XXXX-XXXX")
+    .regex(ISSN_REGEX, "Invalid ISSN format (e.g., 1234-567X)"),
+
+  e_issn: z
+    .string()
+    .min(9, "E-ISSN must be 9 characters: XXXX-XXXX")
+    .max(9, "E-ISSN must be 9 characters: XXXX-XXXX")
+    .regex(ISSN_REGEX, "Invalid E-ISSN format (e.g., 1234-567X)"),
   description: z.string().min(1, "Description is required"),
   scope: z.string(),
   cover_image: z
@@ -41,11 +52,14 @@ export const journalFormSchema = z.object({
     "biannual",
     "annual",
   ]),
-  established_year: z
-    .number()
-    .min(1900)
-    .max(new Date().getFullYear())
-    .optional(),
+  established_year: z.preprocess((val) => {
+    if (typeof val === "string") {
+      const trimmed = val.trim();
+      return trimmed === "" ? null : Number(trimmed);
+    }
+    if (typeof val === "number") return val;
+    return null; // default for undefined or other types
+  }, z.number().min(1900, "Year must be greater than 1900").max(new Date().getFullYear(), `Year cannot be in the future`).nullable()),
   language: z.string().min(1),
   about_journal: z.string(),
   ethics_policies: z.string(),

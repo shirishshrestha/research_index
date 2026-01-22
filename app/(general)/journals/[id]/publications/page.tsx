@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 import FullScreenLoader from "@/components/shared/FullScreenLoader";
 import { notFound } from "next/navigation";
+import { getPublicJournal } from "@/features/general/journals/api/journals.server";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -13,19 +14,8 @@ interface PageProps {
 }
 
 async function getJournal(id: string) {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
   try {
-    const res = await fetch(`${API_BASE_URL}/publications/journals/${id}/`, {
-      cache: "no-store",
-      next: { revalidate: 3600 },
-    });
-
-    if (!res.ok) {
-      return null;
-    }
-
-    return res.json();
+    return await getPublicJournal(id);
   } catch (error) {
     console.error("Error fetching journal:", error);
     return null;

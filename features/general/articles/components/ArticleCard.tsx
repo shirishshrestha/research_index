@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/shared";
 import type { Publication } from "../types";
+import { Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ArticleCardProps {
   publication: Publication;
@@ -28,9 +30,18 @@ export function ArticleCard({ publication }: ArticleCardProps) {
         <div className="flex flex-col gap-5">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <h4 className="heading-4 mb-2 text-primary group-hover:underline">
-                {publication.title}
-              </h4>
+              <div className="flex justify-between">
+                {" "}
+                <h4 className="heading-4 mb-2 text-primary group-hover:underline">
+                  {publication.title}
+                </h4>
+                <div className="flex items-center gap-2 text-text-gray">
+                  <Eye size={18} />
+                  <span className="text-base">
+                    {publication.stats?.reads_count || 0} reads
+                  </span>
+                </div>
+              </div>
               <p className="para mb-1 line-clamp-1">{authorNames}</p>
               <div className="flex flex-wrap gap-1">
                 <p className="desc text-base italic! mb-1.25">
@@ -64,19 +75,17 @@ export function ArticleCard({ publication }: ArticleCardProps) {
           {/* Article Actions */}
           <div className="flex items-center gap-4">
             {publication.pdf_url && (
-              <div className="flex items-center gap-2">
+              <Button
+                variant={"ghost"}
+                className="flex px-2 hover:bg-transparent hover:border! hover:border-border border-transparent items-center gap-2"
+                onClick={() => window.open(publication.pdf_url, "_blank")}
+              >
                 <Icon name="pdf" size={24} />
                 <span className="text-base font-medium text-primary">
                   View PDF
                 </span>
-              </div>
+              </Button>
             )}
-            <div className="flex items-center gap-2 text-text-gray">
-              <Icon name="Eye" size={20} />
-              <span className="text-sm">
-                {publication.stats?.reads_count || 0} reads
-              </span>
-            </div>
           </div>
         </div>
       </Card>

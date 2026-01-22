@@ -28,7 +28,7 @@ type FormWithSetError = Pick<UseFormReturn<any>, "setError">;
 /**
  * Hook for login mutation
  */
-export function useLoginMutation() {
+export function useLoginMutation(form: { reset: () => void }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -37,12 +37,13 @@ export function useLoginMutation() {
     onSuccess: (data) => {
       // Clear all queries before setting new credentials to ensure fresh data
       queryClient.clear();
+      form.reset();
 
       dispatch(
         setCredentials({
           user: data.user,
           tokens: data.tokens,
-        })
+        }),
       );
       toast.success("Login successful! Redirecting...");
 
@@ -97,7 +98,7 @@ export function useRegisterAuthorMutation(form?: FormWithSetError) {
               id: 0,
             },
             tokens: data.tokens,
-          })
+          }),
         );
         toast.success("Registration successful! Redirecting to login...");
         router.push("/login");
@@ -147,7 +148,7 @@ export function useRegisterAuthorMutation(form?: FormWithSetError) {
           toast.error("Registration failed. Please try again.");
         }
       },
-    }
+    },
   );
 }
 
@@ -161,7 +162,7 @@ export function useRegisterInstitutionMutation(form?: FormWithSetError) {
   return usePost<RegisterResponse, InstitutionRegisterRequest>(
     AUTH_ENDPOINTS.REGISTER_INSTITUTION,
     {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         dispatch(
           setCredentials({
             user: {
@@ -169,8 +170,14 @@ export function useRegisterInstitutionMutation(form?: FormWithSetError) {
               id: 0,
             },
             tokens: data.tokens,
-          })
+          }),
         );
+
+        // Revalidate institutions cache after successful registration
+        const { revalidateInstitutionsAction } =
+          await import("@/features/general/institutions/server-actions/actions");
+        await revalidateInstitutionsAction();
+
         toast.success("Registration successful! Redirecting to login...");
         router.push("/login");
       },
@@ -218,7 +225,7 @@ export function useRegisterInstitutionMutation(form?: FormWithSetError) {
           toast.error("Registration failed. Please try again.");
         }
       },
-    }
+    },
   );
 }
 

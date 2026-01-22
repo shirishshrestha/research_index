@@ -67,6 +67,7 @@ export const MembersTab = () => {
           <FilterToolbar.Search
             placeholder="Search members..."
             paramName="search"
+            label="Search"
           />
           <FilterToolbar.Select
             label="Sort by"

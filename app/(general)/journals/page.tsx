@@ -3,6 +3,7 @@ import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { JournalsListView } from "@/features/general/journals";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { getPublicJournals } from "@/features/general/journals/api/journals.server";
 
 export const metadata: Metadata = {
   title: "Journals - Resource Index",
@@ -10,20 +11,8 @@ export const metadata: Metadata = {
 };
 
 async function getJournals() {
-  // Server-side data fetching
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
   try {
-    const res = await fetch(`${API_BASE_URL}/publications/journals/`, {
-      cache: "no-store", // Disable caching for fresh data, use 'force-cache' for static
-      next: { revalidate: 3600 }, // Revalidate every hour
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch journals");
-    }
-
-    return res.json();
+    return await getPublicJournals();
   } catch (error) {
     console.error("Error fetching journals:", error);
     return [];
