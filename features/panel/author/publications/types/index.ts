@@ -96,7 +96,10 @@ export interface Publication {
   pdf_url: string;
   doi: string;
   published_date: string;
+  journal: number;
+  journal_id: number;
   journal_name: string;
+  journal_issn: string;
   volume: string;
   issue: string;
   pages: string;
@@ -129,7 +132,7 @@ export interface PublicationFormData {
   pdf_file?: File | string;
   doi?: string;
   published_date?: string;
-  journal_name?: string;
+  journal: number;
   volume?: string;
   issue?: string;
   pages?: string;

@@ -81,7 +81,7 @@ export function PublicationFormDialog({
       publication_type: publication?.publication_type ?? "journal_article",
       doi: publication?.doi ?? "",
       published_date: publication?.published_date ?? "",
-      journal_name: publication?.journal_name ?? "",
+      journal: publication?.journal ?? 0,
       volume: publication?.volume ?? "",
       issue: publication?.issue ?? "",
       pages: publication?.pages ?? "",
@@ -154,8 +154,7 @@ export function PublicationFormDialog({
     if (data.doi?.trim()) formData.append("doi", data.doi.trim());
     if (data.published_date)
       formData.append("published_date", data.published_date);
-    if (data.journal_name?.trim())
-      formData.append("journal_name", data.journal_name.trim());
+    formData.append("journal", String(data.journal));
     if (data.volume?.trim()) formData.append("volume", data.volume.trim());
     if (data.issue?.trim()) formData.append("issue", data.issue.trim());
     if (data.pages?.trim()) formData.append("pages", data.pages.trim());
@@ -280,9 +279,10 @@ export function PublicationFormDialog({
 
               <FormInputField
                 control={form.control}
-                name="journal_name"
-                label="Journal/Conference Name"
-                placeholder="Journal of Example Research"
+                name="journal"
+                label="Journal ID"
+                type="number"
+                placeholder="Enter journal ID"
               />
 
               <div className="grid grid-cols-3 gap-4">
