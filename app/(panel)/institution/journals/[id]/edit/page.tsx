@@ -8,7 +8,10 @@ import {
   PanelErrorCard,
 } from "@/features/shared";
 import { getJournal } from "@/features/panel/institution/journals/api";
-import { JournalForm } from "@/features/panel/institution/journals";
+import {
+  JournalForm,
+  JournalBreadcrumb,
+} from "@/features/panel/institution/journals";
 
 export default function EditJournalPage({
   params,
@@ -51,6 +54,11 @@ export default function EditJournalPage({
 
   return (
     <PanelContainer>
+      <JournalBreadcrumb
+        journalId={journal.id}
+        journalTitle={journal.title}
+        currentPage="edit"
+      />
       <JournalForm mode="edit" journal={journal} />
     </PanelContainer>
   );

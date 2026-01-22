@@ -2,27 +2,17 @@
 
 import { AdminCharts, AdminStatsCards } from "@/features/panel/admin";
 import { createCurrentUserQueryOptions } from "@/features/shared";
-import {
-  PanelContainer,
-  PanelErrorCard,
-  PanelLoadingSkeleton,
-} from "@/features/shared";
+import { PanelContainer, PanelErrorCard } from "@/features/shared";
 import { useQuery } from "@tanstack/react-query";
 
 export default function AdminDashboard() {
-  const { data, isLoading, isError } = useQuery(createCurrentUserQueryOptions);
+  const { data, isPending, isError } = useQuery(createCurrentUserQueryOptions);
 
-  if (isLoading) {
-    return (
-      <PanelLoadingSkeleton
-        title="Admin Dashboard"
-        description="Manage system users, content, and settings"
-        statsCount={8}
-      />
-    );
-  }
-
-  if (isError || !data?.profile?.stats || data.profile.user_type !== "admin") {
+  if (
+    isError ||
+    (!isPending &&
+      (!data?.profile?.stats || data.profile.user_type !== "admin"))
+  ) {
     return (
       <PanelErrorCard
         title="Admin Dashboard"
@@ -32,7 +22,7 @@ export default function AdminDashboard() {
   }
 
   // Type narrowing - now TypeScript knows profile is AdminProfile
-  const adminProfile = data.profile;
+  const adminProfile = data?.profile;
 
   return (
     <PanelContainer>
@@ -45,10 +35,16 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <AdminStatsCards stats={adminProfile.stats} />
+      <AdminStatsCards
+        stats={adminProfile?.stats || ({} as any)}
+        pending={isPending}
+      />
 
       {/* Charts */}
-      <AdminCharts stats={adminProfile.stats} />
+      <AdminCharts
+        stats={adminProfile?.stats || ({} as any)}
+        isPending={isPending}
+      />
     </PanelContainer>
   );
 }

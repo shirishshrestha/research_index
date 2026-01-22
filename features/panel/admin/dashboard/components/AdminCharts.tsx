@@ -3,9 +3,10 @@ import { AdminStats } from "../types";
 
 export interface AdminChartsProps {
   stats: AdminStats;
+  isPending?: boolean;
 }
 
-export function AdminCharts({ stats }: AdminChartsProps) {
+export function AdminCharts({ stats, isPending = false }: AdminChartsProps) {
   // User distribution data
   const userDistributionData = [
     { name: "Authors", value: stats.total_authors || 0 },
@@ -34,6 +35,7 @@ export function AdminCharts({ stats }: AdminChartsProps) {
         dataKey="value"
         nameKey="name"
         height={300}
+        isLoading={isPending}
       />
 
       {/* Publications Status */}
@@ -43,6 +45,7 @@ export function AdminCharts({ stats }: AdminChartsProps) {
         dataKey="value"
         nameKey="name"
         height={300}
+        isLoading={isPending}
       />
 
       {/* Engagement Metrics */}
@@ -53,6 +56,7 @@ export function AdminCharts({ stats }: AdminChartsProps) {
           dataKey="value"
           xAxisKey="name"
           height={300}
+          isLoading={isPending}
         />
       </div>
     </div>

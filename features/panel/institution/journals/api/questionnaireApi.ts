@@ -42,7 +42,7 @@ export const getJournalQuestionnaire = async (
  */
 export const createQuestionnaire = async (
   journalId: number,
-  data: QuestionnaireFormData,
+  data: Partial<QuestionnaireFormData>,
 ): Promise<QuestionnaireCreateResponse> => {
   return api.post<QuestionnaireCreateResponse>(
     `${JOURNAL_QUESTIONNAIRE_ENDPOINT}${journalId}/questionnaire/`,

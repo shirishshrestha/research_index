@@ -5,30 +5,16 @@ import {
   InstitutionCharts,
   InstitutionStatsCards,
 } from "@/features/panel/institution/dashboard/components";
-import {
-  PanelContainer,
-  PanelErrorCard,
-  PanelLoadingSkeleton,
-} from "@/features/shared";
+import { PanelContainer, PanelErrorCard } from "@/features/shared";
 import { useQuery } from "@tanstack/react-query";
 
 export default function InstitutionDashboard() {
-  const { data, isLoading, isError } = useQuery(createCurrentUserQueryOptions);
-
-  if (isLoading) {
-    return (
-      <PanelLoadingSkeleton
-        title="Institution Dashboard"
-        description="Manage your institution profile and publications"
-        statsCount={7}
-      />
-    );
-  }
+  const { data, isPending, isError } = useQuery(createCurrentUserQueryOptions);
 
   if (
     isError ||
-    !data?.profile?.stats ||
-    data.profile.user_type !== "institution"
+    (!isPending &&
+      (!data?.profile?.stats || data.profile.user_type !== "institution"))
   ) {
     return (
       <PanelErrorCard
@@ -39,7 +25,7 @@ export default function InstitutionDashboard() {
   }
 
   // Type narrowing - now TypeScript knows profile is InstitutionProfile
-  const institutionProfile = data.profile;
+  const institutionProfile = data?.profile;
 
   return (
     <PanelContainer>
@@ -50,15 +36,23 @@ export default function InstitutionDashboard() {
         </h1>
         <p className="mt-2 text-text-gray">
           Welcome back,{" "}
-          {institutionProfile.institution_name || institutionProfile.email}
+          {(institutionProfile && "institution_name" in institutionProfile
+            ? institutionProfile.institution_name
+            : institutionProfile?.email) || ""}
         </p>
       </div>
 
       {/* Stats Cards */}
-      <InstitutionStatsCards stats={institutionProfile.stats} />
+      <InstitutionStatsCards
+        stats={institutionProfile?.stats || ({} as any)}
+        pending={isPending}
+      />
 
       {/* Charts */}
-      <InstitutionCharts stats={institutionProfile.stats} />
+      <InstitutionCharts
+        stats={institutionProfile?.stats || ({} as any)}
+        isPending={isPending}
+      />
     </PanelContainer>
   );
 }

@@ -3,9 +3,13 @@ import { InstitutionStats } from "../types";
 
 export interface InstitutionChartsProps {
   stats: InstitutionStats;
+  isPending?: boolean;
 }
 
-export function InstitutionCharts({ stats }: InstitutionChartsProps) {
+export function InstitutionCharts({
+  stats,
+  isPending = false,
+}: InstitutionChartsProps) {
   // Research output data
   const researchOutputData = [
     { name: "Publications", value: stats.total_publications || 0 },
@@ -42,6 +46,7 @@ export function InstitutionCharts({ stats }: InstitutionChartsProps) {
         dataKey="value"
         xAxisKey="name"
         height={300}
+        isLoading={isPending}
       />
 
       {/* Engagement Distribution */}
@@ -51,6 +56,7 @@ export function InstitutionCharts({ stats }: InstitutionChartsProps) {
         dataKey="value"
         nameKey="name"
         height={300}
+        isLoading={isPending}
         centerContent={
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">
@@ -73,6 +79,7 @@ export function InstitutionCharts({ stats }: InstitutionChartsProps) {
           dataKey="value"
           xAxisKey="name"
           height={250}
+          isLoading={isPending}
         />
       </div>
     </div>

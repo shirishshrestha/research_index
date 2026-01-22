@@ -35,12 +35,22 @@ export function extractErrorMessage(
           : String(errorValue);
       }
 
-      // Extract first field error
-      const firstFieldError = Object.values(data).find((val) => val);
-      if (firstFieldError) {
-        return Array.isArray(firstFieldError)
-          ? firstFieldError.join(" ")
-          : String(firstFieldError);
+      // Extract all field errors and format them nicely
+      const fieldErrors: string[] = [];
+      Object.entries(data).forEach(([field, value]) => {
+        if (value) {
+          const fieldName = field
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase());
+          const errorMsg = Array.isArray(value)
+            ? value.join(", ")
+            : String(value);
+          fieldErrors.push(`${fieldName}: ${errorMsg}`);
+        }
+      });
+
+      if (fieldErrors.length > 0) {
+        return fieldErrors.join("; ");
       }
     }
   }
