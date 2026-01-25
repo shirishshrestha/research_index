@@ -1,6 +1,9 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
-import { AuthorsListView } from "@/features/general/authors";
+import {
+  AuthorsListView,
+  AuthorsListSkeleton,
+} from "@/features/general/authors";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -29,7 +32,7 @@ export default function AuthorsPage() {
       />
 
       <Container>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<AuthorsListSkeleton />}>
           <AuthorsListView />
         </Suspense>
       </Container>

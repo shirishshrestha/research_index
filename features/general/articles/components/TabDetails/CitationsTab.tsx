@@ -44,10 +44,10 @@ export const CitationsTab = () => {
           </p>
         </div>
       </aside>
-      <aside className="space-y-8.75">
+      <aside className="space-y-8.75 flex flex-col ">
         {mockArticles.map((article) => (
           <Link key={article.id} href={`/articles/${article.id}`}>
-            <Card className="p-6 hover:shadow-md transition-shadow">
+            <Card className="p-6 hover:shadow-md transition-shadow  ">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <h4 className="text-lg font-semibold text-primary mb-2 hover:underline">

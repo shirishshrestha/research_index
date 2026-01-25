@@ -217,15 +217,6 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
               placeholder="Relevance"
             />
           </FilterToolbar>
-          {journals.length > 0 && (
-            <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(journals.length / 10)}
-              totalCount={journals.length}
-              pageSize={10}
-              showPageSizeSelector={false}
-            />
-          )}
 
           {/* Results List */}
           {journals.map((journal) => (

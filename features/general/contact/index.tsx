@@ -24,7 +24,7 @@ export function ContactPage() {
             Get in touch with us for support, collaboration, and inquiries.
           </p>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_530px] gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px] xl:grid-cols-[1fr_530px] gap-8 lg:gap-12">
             {/* Left: Contact Form */}
             <Card className="p-0 shadow-none border-none bg-background">
               <ContactForm />

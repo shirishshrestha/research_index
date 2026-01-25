@@ -20,6 +20,26 @@ export interface TopicBranch {
   updated_at: string;
 }
 
+export interface Journal {
+  id: number;
+  title: string;
+  short_title: string;
+  issn: string;
+  e_issn: string;
+  description: string;
+}
+
+export interface Issue {
+  id: number;
+  journal_id: number;
+  volume: number;
+  issue_number: number;
+  title: string;
+  publication_date: string;
+  status: string;
+  status_display: string;
+}
+
 export interface MeSHTerm {
   id: number;
   term: string;
@@ -101,7 +121,7 @@ export interface Publication {
   journal_name: string;
   journal_issn: string;
   volume: string;
-  issue: string;
+  issue: number; // Changed from issue string to issue ID
   pages: string;
   publisher: string;
   co_authors: string;
@@ -134,7 +154,6 @@ export interface PublicationFormData {
   published_date?: string;
   journal: number;
   volume?: string;
-  issue?: string;
   pages?: string;
   publisher?: string;
   co_authors?: string;

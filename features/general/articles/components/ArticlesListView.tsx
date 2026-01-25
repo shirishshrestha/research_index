@@ -146,7 +146,7 @@ export function ArticlesListView({
           {/* Results List */}
           {publications.length > 0 && (
             <>
-              <div className="space-y-6.25">
+              <div className="space-y-6.25 flex flex-col">
                 {publications.map((publication) => (
                   <ArticleCard key={publication.id} publication={publication} />
                 ))}

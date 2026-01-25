@@ -16,7 +16,11 @@ const nextConfig: NextConfig = {
         pathname: "/media/**",
       },
     ],
+    dangerouslyAllowSVG: true,
+    // Allow localhost/private IPs for development
+    unoptimized: process.env.NODE_ENV === "development",
   },
+  // Explicitly allow localhost in development
 };
 
 export default nextConfig;

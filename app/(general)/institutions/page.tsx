@@ -1,6 +1,9 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
-import { InstitutionsListView } from "@/features/general/institutions";
+import {
+  InstitutionsListView,
+  InstitutionsListSkeleton,
+} from "@/features/general/institutions";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { getPublicInstitutions } from "@/features/general/institutions/api/institutions.server";
@@ -40,7 +43,7 @@ export default async function InstitutionsPage() {
       />
 
       <Container>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<InstitutionsListSkeleton />}>
           <InstitutionsListView initialData={institutions} />
         </Suspense>
       </Container>

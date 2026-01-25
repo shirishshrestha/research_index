@@ -1,6 +1,9 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
-import { JournalsListView } from "@/features/general/journals";
+import {
+  JournalsListView,
+  JournalsListSkeleton,
+} from "@/features/general/journals";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { getPublicJournals } from "@/features/general/journals/api/journals.server";
@@ -40,7 +43,7 @@ export default async function JournalsPage() {
       />
 
       <Container>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<JournalsListSkeleton />}>
           <JournalsListView initialData={journals} />
         </Suspense>
       </Container>

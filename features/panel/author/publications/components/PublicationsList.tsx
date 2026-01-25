@@ -48,9 +48,9 @@ export function PublicationsList({
       render: (row) => (
         <div className="flex flex-col gap-1">
           <span className="font-medium">{row.title}</span>
-          {row.journal_name && (
+          {row.journal_title && (
             <span className="text-xs text-muted-foreground">
-              {row.journal_name}
+              {row.journal_title}
               {row.volume && ` · Vol. ${row.volume}`}
               {row.issue && ` (${row.issue})`}
             </span>
@@ -175,17 +175,18 @@ export function PublicationsList({
         pendingRows={5}
         tableClassName="bg-card flex items-center justify-center"
       />
-
-      <ConfirmationPopup
-        open={deleteId !== null}
-        onOpenChange={(open) => !open && setDeleteId(null)}
-        onConfirm={handleDelete}
-        title="Delete Publication"
-        description="Are you sure you want to delete this publication? This action cannot be undone."
-        confirmText="Delete"
-        cancelText="Cancel"
-        isPending={deleteMutation.isPending}
-      />
+      <div onClick={(e) => e.stopPropagation()}>
+        <ConfirmationPopup
+          open={deleteId !== null}
+          onOpenChange={(open) => !open && setDeleteId(null)}
+          onConfirm={handleDelete}
+          title="Delete Publication"
+          description="Are you sure you want to delete this publication? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          isPending={deleteMutation.isPending}
+        />
+      </div>
     </div>
   );
 }

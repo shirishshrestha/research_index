@@ -21,7 +21,7 @@ export function QuestionnaireHeader({
 
   return (
     <Card className="mb-6 overflow-hidden border-primary/20">
-      <div className="bg-gradient-to-r from-primary/5 via-primary/3 to-transparent">
+      <div className="bg-linear-to-r from-primary/5 via-primary/3 to-transparent">
         <CardHeader>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex items-start gap-3">
@@ -29,7 +29,7 @@ export function QuestionnaireHeader({
                 <FileText className="h-7 w-7 text-white" />
               </div>
               <div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                <CardTitle className="text-3xl font-bold bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                   Journal Questionnaire
                 </CardTitle>
                 <CardDescription className="mt-1 text-base">
