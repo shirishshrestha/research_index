@@ -27,6 +27,9 @@ export interface ProfileStatsProps {
   hIndex: number;
   iIndex: number;
   citations: number;
+  publications?: number;
+  reads?: number;
+  downloads?: number;
   className?: string;
 }
 
@@ -55,4 +58,13 @@ export interface ProfileCardProps {
   isInstitution?: boolean;
   isFollowing?: boolean;
   onFollow?: () => void;
+  profilePicture?: string;
+  bio?: string;
+  socialLinks?: {
+    orcid?: string;
+    googleScholar?: string;
+    researchgate?: string;
+    linkedin?: string;
+    website?: string;
+  };
 }

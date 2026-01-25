@@ -5,41 +5,39 @@ import {
 } from "@/features/shared/components/profile";
 import { ChevronDown } from "lucide-react";
 import { AuthorProfileTab, FollowingTab, ResearchTab } from "./TabDetails";
+import type { AuthorDetail } from "../types";
 
-export function AuthorDetails() {
-  // Mock data for demonstration
-  const author = {
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics",
-    affiliation: "KIST Medical College, Nepal",
-    verifiedEmail: "kist.edu.np",
-    hIndex: 40,
-    iIndex: 0,
-    citations: 7465,
-    about: `I am an Associate Professor of Biostatistics at KIST Medical College, Nepal. My work focuses on applying statistical modeling and data analysis to medical and epidemiological research. I am passionate about advancing evidence-based studies and supporting interdisciplinary collaborations that integrate quantitative methods into clinical sciences.`,
-    disciplines: [
-      "Biostatistics",
-      "Epidemiology",
-      "Public Health Research",
-      "Data Analysis",
-      "Research Methodology",
-    ],
-  };
+interface AuthorDetailsProps {
+  author: AuthorDetail;
+}
 
+export function AuthorDetails({ author }: AuthorDetailsProps) {
   return (
     <div className="section-padding pt-0!">
       <div className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 xl:gap-20">
           <ProfileCard
-            name={author.name}
-            position={author.position}
-            affiliation={author.affiliation}
-            verifiedEmail={author.verifiedEmail}
+            name={`${author.title} ${author.full_name}`}
+            position={author.designation}
+            affiliation={author.institute}
+            verifiedEmail={author.website || undefined}
+            profilePicture={author.profile_picture_url || undefined}
+            bio={author.bio}
+            socialLinks={{
+              orcid: author.orcid || undefined,
+              googleScholar: author.google_scholar || undefined,
+              researchgate: author.researchgate || undefined,
+              linkedin: author.linkedin || undefined,
+              website: author.website || undefined,
+            }}
           />
           <ProfileStats
-            hIndex={author.hIndex}
-            iIndex={author.iIndex}
-            citations={author.citations}
+            hIndex={author.stats?.h_index || 0}
+            iIndex={author.stats?.i10_index || 0}
+            citations={author.stats?.total_citations || 0}
+            publications={author.publications_count}
+            reads={author.stats?.total_reads}
+            downloads={author.stats?.total_downloads}
           />
         </div>
       </div>
@@ -50,12 +48,29 @@ export function AuthorDetails() {
             {
               label: "Profile",
               value: "profile",
-              content: <AuthorProfileTab author={author} />,
+              content: (
+                <AuthorProfileTab
+                  author={{
+                    name: `${author.title} ${author.full_name}`,
+                    position: author.designation,
+                    affiliation: author.institute,
+                    verifiedEmail: "",
+                    hIndex: author.stats?.h_index || 0,
+                    iIndex: author.stats?.i10_index || 0,
+                    citations: author.stats?.total_citations || 0,
+                    about: author.bio,
+                    disciplines: author.research_interests
+                      .split(",")
+                      .map((d) => d.trim())
+                      .filter(Boolean),
+                  }}
+                />
+              ),
             },
             {
               label: "Research",
               value: "research",
-              content: <ResearchTab />,
+              content: <ResearchTab authorId={author.id} />,
             },
             {
               label: "Reviews",

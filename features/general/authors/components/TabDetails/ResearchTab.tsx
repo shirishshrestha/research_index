@@ -67,7 +67,12 @@ const mockArticles = [
   },
 ];
 
-export const ResearchTab = () => {
+interface ResearchTabProps {
+  authorId?: number;
+}
+
+export const ResearchTab = ({ authorId }: ResearchTabProps) => {
+  // TODO: Fetch actual publications data based on authorId
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
       {/* Left Sidebar - Categories */}

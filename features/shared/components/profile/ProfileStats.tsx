@@ -5,6 +5,9 @@ export function ProfileStats({
   hIndex,
   iIndex,
   citations,
+  publications,
+  reads,
+  downloads,
   className = "",
 }: ProfileStatsProps) {
   const stats = [
@@ -20,6 +23,29 @@ export function ProfileStats({
       description: "Total citations",
     },
   ];
+
+  // Add optional stats if provided
+  if (publications !== undefined) {
+    stats.push({
+      label: "Publications",
+      value: publications.toLocaleString(),
+      description: "Total publications",
+    });
+  }
+  if (reads !== undefined) {
+    stats.push({
+      label: "Reads",
+      value: reads.toLocaleString(),
+      description: "Total reads",
+    });
+  }
+  if (downloads !== undefined) {
+    stats.push({
+      label: "Downloads",
+      value: downloads.toLocaleString(),
+      description: "Total downloads",
+    });
+  }
 
   return (
     <div

@@ -6,84 +6,54 @@ import {
   ListCard,
   Pagination,
 } from "@/features/shared/components";
+import type { Author } from "../types";
+import { useState } from "react";
 
-const mockAuthors = [
-  {
-    id: "1",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
-  },
-  {
-    id: "2",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
-  },
-  {
-    id: "3",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
-  },
-  {
-    id: "4",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
-  },
-  {
-    id: "5",
-    name: "Dr. Ram Prasad Yadav",
-    position: "Associate Professor of Biostatistics, KRI Medical College",
-    affiliation: "Kathmandu University (KU)",
-    verifiedAffiliation: "Verified central.kathmandu.p",
-  },
-];
+interface AuthorsListViewProps {
+  initialData?: Author[];
+}
 
-const publicationCountOptions = [
-  { value: "1-10", label: "1 - 10" },
-  { value: "11-30", label: "11 - 30" },
-  { value: "31-50", label: "31 - 50" },
-  { value: "51-100", label: "51 - 100" },
-  { value: "100+", label: "More than 140" },
-];
+export function AuthorsListView({ initialData = [] }: AuthorsListViewProps) {
+  const [authors] = useState<Author[]>(initialData);
 
-const affiliationOptions = [
-  { value: "tu", label: "Tribhuvan University (TU)" },
-  { value: "ku", label: "Kathmandu University (KU)" },
-  { value: "pu", label: "Pokhara University (PU)" },
-  { value: "nast", label: "Nepal Academy of Science and Technology (NAST)" },
-  { value: "purbanchal", label: "Purbanchal University (APU)" },
-];
+  const publicationCountOptions = [
+    { value: "1-10", label: "1 - 10" },
+    { value: "11-30", label: "11 - 30" },
+    { value: "31-50", label: "31 - 50" },
+    { value: "51-100", label: "51 - 100" },
+    { value: "100+", label: "More than 140" },
+  ];
 
-const fieldOptions = [
-  { value: "agriculture", label: "Agriculture" },
-  { value: "economics", label: "Economics" },
-  { value: "education", label: "Education" },
-  { value: "environment", label: "Environment" },
-  { value: "humanities", label: "Humanities" },
-];
+  const affiliationOptions = [
+    { value: "tu", label: "Tribhuvan University (TU)" },
+    { value: "ku", label: "Kathmandu University (KU)" },
+    { value: "pu", label: "Pokhara University (PU)" },
+    { value: "nast", label: "Nepal Academy of Science and Technology (NAST)" },
+    { value: "purbanchal", label: "Purbanchal University (APU)" },
+  ];
 
-const countryOptions = [
-  { value: "nepal", label: "Nepal" },
-  { value: "india", label: "India" },
-  { value: "usa", label: "USA" },
-  { value: "uk", label: "UK" },
-];
+  const fieldOptions = [
+    { value: "agriculture", label: "Agriculture" },
+    { value: "economics", label: "Economics" },
+    { value: "education", label: "Education" },
+    { value: "environment", label: "Environment" },
+    { value: "humanities", label: "Humanities" },
+  ];
 
-const sortOptions = [
-  { value: "relevance", label: "Relevance" },
-  { value: "name-asc", label: "Name (A-Z)" },
-  { value: "name-desc", label: "Name (Z-A)" },
-  { value: "publications", label: "Most Publications" },
-];
+  const countryOptions = [
+    { value: "nepal", label: "Nepal" },
+    { value: "india", label: "India" },
+    { value: "usa", label: "USA" },
+    { value: "uk", label: "UK" },
+  ];
 
-export function AuthorsListView() {
+  const sortOptions = [
+    { value: "relevance", label: "Relevance" },
+    { value: "name-asc", label: "Name (A-Z)" },
+    { value: "name-desc", label: "Name (Z-A)" },
+    { value: "publications", label: "Most Publications" },
+  ];
+
   return (
     <div className="pt-12.5! section-padding">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
@@ -156,29 +126,49 @@ export function AuthorsListView() {
               placeholder="Relevance"
             />
           </FilterToolbar>
-          {mockAuthors.length > 0 && (
+          {authors.length > 0 && (
             <Pagination
               currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
+              totalPages={Math.ceil(authors.length / 10)}
+              totalCount={authors.length}
               pageSize={10}
               showPageSizeSelector={false}
             />
           )}
 
           {/* Results List */}
-          <div className="space-y-4">
-            {mockAuthors.map((author) => (
-              <ListCard key={author.id} {...author} href="/authors/1" />
-            ))}
-          </div>
+          {authors.length > 0 ? (
+            <div className="space-y-4">
+              {authors.map((author) => (
+                <ListCard
+                  key={author.id}
+                  id={String(author.id)}
+                  name={`${author.title} ${author.full_name}`}
+                  position={`${author.designation} • ${author.institute}`}
+                  verifiedAffiliation={
+                    author.orcid
+                      ? `ORCID: ${author.orcid}`
+                      : author.degree
+                        ? author.degree
+                        : ""
+                  }
+                  imageUrl={author.profile_picture_url || undefined}
+                  href={`/authors/${author.id}`}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <p className="text-text-gray text-lg">No authors found</p>
+            </div>
+          )}
 
           {/* Pagination */}
-          {mockAuthors.length > 0 && (
+          {authors.length > 0 && (
             <Pagination
               currentPage={1}
-              totalPages={Math.ceil(400 / 10)}
-              totalCount={400}
+              totalPages={Math.ceil(authors.length / 10)}
+              totalCount={authors.length}
               pageSize={10}
               showPageSizeSelector={false}
             />
