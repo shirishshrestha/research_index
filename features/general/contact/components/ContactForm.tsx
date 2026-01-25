@@ -10,8 +10,8 @@ import {
   FormTextareaField,
   FormSelectField,
 } from "@/components/form";
-import { useState } from "react";
 import { contactSchema } from "../utils/formSchema";
+import { useSubmitContactMutation } from "../hooks";
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
@@ -24,8 +24,6 @@ const enquiryTypes = [
 ];
 
 export const ContactForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
@@ -39,19 +37,14 @@ export const ContactForm = () => {
     },
   });
 
-  const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true);
-    try {
-      // TODO: Implement actual form submission
-      console.log("Form data:", data);
-      alert("Thank you for contacting us! We'll get back to you soon.");
+  const submitMutation = useSubmitContactMutation({
+    onSuccess: () => {
       form.reset();
-    } catch (error) {
-      console.error("Form submission error:", error);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    },
+  });
+
+  const onSubmit = (data: ContactFormData) => {
+    submitMutation.mutate(data);
   };
 
   return (
@@ -125,9 +118,9 @@ export const ContactForm = () => {
         <Button
           type="submit"
           className="bg-primary hover:bg-primary/90 w-full sm:w-auto px-8"
-          disabled={isSubmitting}
+          disabled={submitMutation.isPending}
         >
-          {isSubmitting ? "Submitting..." : "Submit"}
+          {submitMutation.isPending ? "Submitting..." : "Submit"}
         </Button>
       </form>
     </Form>

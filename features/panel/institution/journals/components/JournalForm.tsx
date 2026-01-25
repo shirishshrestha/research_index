@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import {
@@ -48,7 +48,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
     journal?.cover_image_url || null,
   );
-  const fileInputRef = useState<HTMLInputElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const form = useForm({
     resolver: zodResolver(journalFormSchema),
@@ -132,8 +132,8 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
     form.setValue("cover_image", undefined);
     setCoverImagePreview(null);
     // Clear the file input field
-    if (fileInputRef[0]) {
-      fileInputRef[0].value = "";
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -253,9 +253,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
                     )}
                     <div className="flex-1">
                       <Input
-                        ref={(el) => {
-                          fileInputRef[1](el);
-                        }}
+                        ref={fileInputRef}
                         type="file"
                         accept="image/*"
                         onChange={handleCoverImageChange}

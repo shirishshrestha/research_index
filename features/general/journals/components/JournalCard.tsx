@@ -13,7 +13,7 @@ export function JournalCard({
 }: JournalCardProps) {
   return (
     <Link href={href}>
-      <Card className="p-6.25 group hover:border-0 hover:border-b-3 duration-50 transition-all hover:border-b-primary shadow-none">
+      <Card className="p-6.25 group transition-shadow  shadow-xs hover:shadow-md">
         <div className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-4 mb-2">
             <div>

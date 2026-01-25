@@ -20,6 +20,26 @@ export interface TopicBranch {
   updated_at: string;
 }
 
+export interface Journal {
+  id: number;
+  title: string;
+  short_title: string;
+  issn: string;
+  e_issn: string;
+  description: string;
+}
+
+export interface Issue {
+  id: number;
+  journal_id: number;
+  volume: number;
+  issue_number: number;
+  title: string;
+  publication_date: string;
+  status: string;
+  status_display: string;
+}
+
 export interface MeSHTerm {
   id: number;
   term: string;
@@ -96,9 +116,12 @@ export interface Publication {
   pdf_url: string;
   doi: string;
   published_date: string;
-  journal_name: string;
+  journal: number; // Changed from journal_name to journal ID
+  journal_id: number;
+  journal_title: string;
+  journal_issn: string;
   volume: string;
-  issue: string;
+  issue: number; // Changed from issue string to issue ID
   pages: string;
   publisher: string;
   co_authors: string;
@@ -129,9 +152,9 @@ export interface PublicationFormData {
   pdf_file?: File | string;
   doi?: string;
   published_date?: string;
-  journal_name?: string;
+  journal?: number; // Changed from journal_name to journal ID
+  issue?: number; // Changed from issue string to issue ID
   volume?: string;
-  issue?: string;
   pages?: string;
   publisher?: string;
   co_authors?: string;

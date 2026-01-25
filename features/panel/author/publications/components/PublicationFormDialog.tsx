@@ -22,7 +22,9 @@ import { useForm, useWatch, useFieldArray } from "react-hook-form";
 import {
   useCreatePublicationMutation,
   useUpdatePublicationMutation,
-} from "../hooks/mutations";
+  usePublicJournalsQuery,
+  useJournalIssuesQuery,
+} from "../hooks";
 import { publicationSchema, type PublicationFormSchema } from "../schema";
 import type { Publication } from "../types";
 import {
@@ -37,6 +39,14 @@ import type {
   TopicBranch as TopicBranchType,
 } from "@/features/general/topics/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  MultiSelect,
+  MultiSelectTrigger,
+  MultiSelectValue,
+  MultiSelectContent,
+  MultiSelectGroup,
+  MultiSelectItem,
+} from "@/components/ui/multi-select";
 
 // Helper to flatten nested branches recursively
 interface BranchNode {
@@ -70,7 +80,12 @@ export function PublicationFormDialog({
   const [open, setOpen] = React.useState(false);
   const [pdfFile, setPdfFile] = React.useState<File | null>(null);
 
-  const { data: topicsTree } = useTopicTreeQuery();
+  const { data: topicsTree } = useTopicTreeQuery(undefined, { enabled: open });
+  const { data: journals, isPending: journalsLoading } = usePublicJournalsQuery(
+    {
+      enabled: open,
+    },
+  );
 
   const form = useForm({
     resolver: zodResolver(publicationSchema),
@@ -81,9 +96,8 @@ export function PublicationFormDialog({
       publication_type: publication?.publication_type ?? "journal_article",
       doi: publication?.doi ?? "",
       published_date: publication?.published_date ?? "",
-      journal_name: publication?.journal_name ?? "",
-      volume: publication?.volume ?? "",
-      issue: publication?.issue ?? "",
+      journal: publication?.journal ?? null,
+      issue: publication?.issue ?? null,
       pages: publication?.pages ?? "",
       publisher: publication?.publisher ?? "",
       co_authors: publication?.co_authors ?? "",
@@ -106,6 +120,16 @@ export function PublicationFormDialog({
         })) ?? [],
     },
   });
+
+  // Watch journal selection to fetch issues
+  const selectedJournalId = useWatch({
+    control: form.control,
+    name: "journal",
+  });
+  // Fetch issues for the selected journal (works for both create and edit modes)
+  const { data: issues, isPending: issuesLoading } = useJournalIssuesQuery(
+    selectedJournalId ? Number(selectedJournalId) : undefined,
+  );
 
   const {
     fields: meshTermsFields,
@@ -154,10 +178,16 @@ export function PublicationFormDialog({
     if (data.doi?.trim()) formData.append("doi", data.doi.trim());
     if (data.published_date)
       formData.append("published_date", data.published_date);
-    if (data.journal_name?.trim())
-      formData.append("journal_name", data.journal_name.trim());
-    if (data.volume?.trim()) formData.append("volume", data.volume.trim());
-    if (data.issue?.trim()) formData.append("issue", data.issue.trim());
+    if (data.journal) formData.append("journal", String(data.journal));
+    if (data.issue) {
+      formData.append("issue", String(data.issue));
+      // Find the selected issue to get volume and issue_number
+      const selectedIssue = issues?.find((i) => i.id === Number(data.issue));
+      if (selectedIssue) {
+        formData.append("volume", String(selectedIssue.volume));
+        formData.append("issue_number", String(selectedIssue.issue_number));
+      }
+    }
     if (data.pages?.trim()) formData.append("pages", data.pages.trim());
     if (data.publisher?.trim())
       formData.append("publisher", data.publisher.trim());
@@ -278,35 +308,137 @@ export function PublicationFormDialog({
                 />
               </div>
 
+              {/* Journal Selection */}
+              <div className="flex flex-col gap-2">
+                <Label>Journal</Label>
+                <MultiSelect
+                  single
+                  values={
+                    form.watch("journal") ? [String(form.watch("journal"))] : []
+                  }
+                  onValuesChange={(values) => {
+                    const journalId = values[0] ? Number(values[0]) : null;
+                    form.setValue("journal", journalId);
+                    // Reset issue when journal changes
+                    form.setValue("issue", null);
+                  }}
+                >
+                  <MultiSelectTrigger className="w-full">
+                    <MultiSelectValue placeholder="Select a journal" />
+                  </MultiSelectTrigger>
+                  <MultiSelectContent
+                    search={{ placeholder: "Search journals..." }}
+                  >
+                    <MultiSelectGroup>
+                      {journalsLoading && (
+                        <div className="p-2 text-sm text-muted-foreground">
+                          Loading journals...
+                        </div>
+                      )}
+                      {!journalsLoading &&
+                        journals &&
+                        journals.map((journal) => (
+                          <MultiSelectItem
+                            key={journal.id}
+                            value={String(journal.id)}
+                            badgeLabel={journal.short_title || journal.title}
+                          >
+                            <div>
+                              <div className="font-medium">{journal.title}</div>
+                              {journal.short_title && (
+                                <div className="text-xs text-muted-foreground">
+                                  {journal.short_title}
+                                </div>
+                              )}
+                            </div>
+                          </MultiSelectItem>
+                        ))}
+                    </MultiSelectGroup>
+                  </MultiSelectContent>
+                </MultiSelect>
+                {form.formState.errors.journal && (
+                  <p className="text-sm text-red-500">
+                    {form.formState.errors.journal.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Issue Selection - only show if journal is selected */}
+              {selectedJournalId ? (
+                <div className="flex flex-col gap-2">
+                  <Label>Issue (Optional)</Label>
+                  <MultiSelect
+                    single
+                    values={
+                      form.watch("issue") ? [String(form.watch("issue"))] : []
+                    }
+                    onValuesChange={(values) => {
+                      const issueId = values[0] ? Number(values[0]) : null;
+                      form.setValue("issue", issueId);
+                    }}
+                  >
+                    <MultiSelectTrigger className="w-full">
+                      <MultiSelectValue placeholder="Select an issue (optional)" />
+                    </MultiSelectTrigger>
+                    <MultiSelectContent
+                      search={{ placeholder: "Search issues..." }}
+                    >
+                      <MultiSelectGroup>
+                        {issuesLoading && (
+                          <div className="p-2 text-sm text-muted-foreground">
+                            Loading issues...
+                          </div>
+                        )}
+                        {!issuesLoading && issues && issues.length === 0 && (
+                          <div className="p-2 text-sm text-muted-foreground">
+                            No issues available
+                          </div>
+                        )}
+                        {!issuesLoading &&
+                          issues &&
+                          issues.map((issue) => (
+                            <MultiSelectItem
+                              key={issue.id}
+                              value={String(issue.id)}
+                              badgeLabel={`Vol ${issue.volume}, Issue ${issue.issue_number}`}
+                            >
+                              <div>
+                                <div className="font-medium">
+                                  Volume {issue.volume}, Issue{" "}
+                                  {issue.issue_number}
+                                </div>
+                                <div className="flex items-center ">
+                                  {issue.title && (
+                                    <div className="text-xs text-muted-foreground">
+                                      {issue.title} ●{"  "}
+                                    </div>
+                                  )}
+                                  <div className="text-xs text-muted-foreground">
+                                    {new Date(
+                                      issue.publication_date,
+                                    ).toLocaleDateString()}
+                                  </div>
+                                </div>
+                              </div>
+                            </MultiSelectItem>
+                          ))}
+                      </MultiSelectGroup>
+                    </MultiSelectContent>
+                  </MultiSelect>
+                  {form.formState.errors.issue && (
+                    <p className="text-sm text-red-500">
+                      {form.formState.errors.issue.message}
+                    </p>
+                  )}
+                </div>
+              ) : null}
+
               <FormInputField
                 control={form.control}
-                name="journal_name"
-                label="Journal/Conference Name"
-                placeholder="Journal of Example Research"
+                name="pages"
+                label="Pages"
+                placeholder="123-145"
               />
-
-              <div className="grid grid-cols-3 gap-4">
-                <FormInputField
-                  control={form.control}
-                  name="volume"
-                  label="Volume"
-                  placeholder="10"
-                />
-
-                <FormInputField
-                  control={form.control}
-                  name="issue"
-                  label="Issue"
-                  placeholder="2"
-                />
-
-                <FormInputField
-                  control={form.control}
-                  name="pages"
-                  label="Pages"
-                  placeholder="123-145"
-                />
-              </div>
 
               <FormInputField
                 control={form.control}

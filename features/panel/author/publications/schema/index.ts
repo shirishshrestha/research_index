@@ -8,9 +8,6 @@ export const publicationSchema = z.object({
   abstract: z.string().optional().default(""),
   doi: z.string().optional().default(""),
   published_date: z.string().optional().default(""),
-  journal_name: z.string().optional().default(""),
-  volume: z.string().optional().default(""),
-  issue: z.string().optional().default(""),
   pages: z.string().optional().default(""),
   publisher: z.string().optional().default(""),
   co_authors: z.string().optional().default(""),
@@ -38,6 +35,22 @@ export const publicationSchema = z.object({
 
   // Booleans must NEVER be optional in RHF
   is_published: z.boolean().default(true),
+
+  // Journal and Issue selection (changed from journal_name string to IDs)
+  journal: z
+    .preprocess(
+      (val) => (val === null || val === "" ? null : Number(val)),
+      z.number().nullable(),
+    )
+    .nullable()
+    .default(null),
+  issue: z
+    .preprocess(
+      (val) => (val === null || val === "" ? null : Number(val)),
+      z.number().nullable(),
+    )
+    .nullable()
+    .default(null),
 
   // Numbers that may not exist - nullable with default null (not optional)
   topic_branch: z

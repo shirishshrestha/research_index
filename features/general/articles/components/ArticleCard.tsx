@@ -47,11 +47,11 @@ export function ArticleCard({ publication }: ArticleCardProps) {
                 <p className="desc text-base italic! mb-1.25">
                   Published: {formattedDate}
                 </p>
-                {publication.journal_name && (
+                {publication.journal_title && (
                   <>
                     <span className="desc text-base">&nbsp;·&nbsp;</span>
                     <p className="desc text-base italic!">
-                      {publication.journal_name}
+                      {publication.journal_title}
                     </p>
                   </>
                 )}

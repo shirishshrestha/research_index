@@ -1,10 +1,12 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
-import { ArticlesListView } from "@/features/general/articles";
+import {
+  ArticlesListView,
+  ArticlesListSkeleton,
+} from "@/features/general/articles";
 import { getPublicPublications } from "@/features/general/articles/api/articles.server";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import FullScreenLoader from "@/components/shared/FullScreenLoader";
 
 export const metadata: Metadata = {
   title: "Articles - Resource Index",
@@ -30,7 +32,7 @@ export default function ArticlesPage() {
       />
 
       <Container>
-        <Suspense fallback={<FullScreenLoader />}>
+        <Suspense fallback={<ArticlesListSkeleton />}>
           <ArticlesContent />
         </Suspense>
       </Container>

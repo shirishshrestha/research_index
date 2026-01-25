@@ -48,9 +48,9 @@ export function PublicationsList({
       render: (row) => (
         <div className="flex flex-col gap-1">
           <span className="font-medium">{row.title}</span>
-          {row.journal_name && (
+          {row.journal_title && (
             <span className="text-xs text-muted-foreground">
-              {row.journal_name}
+              {row.journal_title}
               {row.volume && ` · Vol. ${row.volume}`}
               {row.issue && ` (${row.issue})`}
             </span>

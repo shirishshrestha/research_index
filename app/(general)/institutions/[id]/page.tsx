@@ -4,6 +4,8 @@ import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import { InstitutionDetails } from "@/features/general/institutions";
 import { getPublicInstitution } from "@/features/general/institutions/api/institutions.server";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import FullScreenLoader from "@/components/shared/FullScreenLoader";
 
 async function getInstitution(id: string) {
   try {
@@ -62,7 +64,9 @@ export default async function InstitutionPage({
       </Container>
 
       <Container>
-        <InstitutionDetails institution={institution} />
+        <Suspense fallback={<FullScreenLoader />}>
+          <InstitutionDetails institution={institution} />
+        </Suspense>
       </Container>
     </section>
   );
