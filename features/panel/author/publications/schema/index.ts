@@ -3,14 +3,11 @@ import { z } from "zod";
 export const publicationSchema = z.object({
   // Required
   title: z.string().min(1, "Title is required"),
-  journal: z.number().min(1, "Journal is required"),
 
   // Optional strings - use optional() for proper typing
   abstract: z.string().optional().default(""),
   doi: z.string().optional().default(""),
   published_date: z.string().optional().default(""),
-  volume: z.string().optional().default(""),
-  issue: z.string().optional().default(""),
   pages: z.string().optional().default(""),
   publisher: z.string().optional().default(""),
   co_authors: z.string().optional().default(""),
