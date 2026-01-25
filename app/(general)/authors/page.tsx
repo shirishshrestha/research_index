@@ -4,6 +4,8 @@ import {
   AuthorsListView,
   AuthorsListSkeleton,
 } from "@/features/general/authors";
+import { getPublicAuthors } from "@/features/general/authors/api/authors.server";
+import type { Author } from "@/features/general/authors/types";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -12,6 +14,18 @@ export const metadata: Metadata = {
   description:
     "Explore our growing list of authors contributing to Nepal's research excellence across diverse disciplines.",
 };
+
+async function AuthorsContent() {
+  let authors: Author[];
+  try {
+    authors = await getPublicAuthors();
+  } catch (error) {
+    console.error("Error fetching authors:", error);
+    authors = [];
+  }
+
+  return <AuthorsListView initialData={authors} />;
+}
 
 export default function AuthorsPage() {
   return (
@@ -33,7 +47,7 @@ export default function AuthorsPage() {
 
       <Container>
         <Suspense fallback={<AuthorsListSkeleton />}>
-          <AuthorsListView />
+          <AuthorsContent />
         </Suspense>
       </Container>
     </section>

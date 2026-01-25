@@ -15,6 +15,7 @@ export function ProfileCard({
   isInstitution = false,
   isFollowing = false,
   onFollow,
+  profilePicture,
 }: ProfileCardProps) {
   const [following, setFollowing] = useState(isFollowing);
   const [loading, setLoading] = useState(false);
@@ -35,9 +36,9 @@ export function ProfileCard({
     <Card className="p-0! border-0 bg-background shadow-none">
       <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
         <div className=" rounded-md w-32.25 h-32.25 ">
-          {avatarUrl ? (
+          {profilePicture || avatarUrl ? (
             <Image
-              src={avatarUrl}
+              src={profilePicture || avatarUrl || ""}
               alt={name}
               width={112}
               height={112}
