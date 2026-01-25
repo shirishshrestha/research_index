@@ -116,9 +116,9 @@ export interface Publication {
   pdf_url: string;
   doi: string;
   published_date: string;
-  journal: number; // Changed from journal_name to journal ID
+  journal: number;
   journal_id: number;
-  journal_title: string;
+  journal_name: string;
   journal_issn: string;
   volume: string;
   issue: number; // Changed from issue string to issue ID
@@ -152,8 +152,7 @@ export interface PublicationFormData {
   pdf_file?: File | string;
   doi?: string;
   published_date?: string;
-  journal?: number; // Changed from journal_name to journal ID
-  issue?: number; // Changed from issue string to issue ID
+  journal: number;
   volume?: string;
   pages?: string;
   publisher?: string;

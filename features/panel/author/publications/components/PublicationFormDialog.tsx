@@ -96,8 +96,9 @@ export function PublicationFormDialog({
       publication_type: publication?.publication_type ?? "journal_article",
       doi: publication?.doi ?? "",
       published_date: publication?.published_date ?? "",
-      journal: publication?.journal ?? null,
-      issue: publication?.issue ?? null,
+      journal: publication?.journal ?? 0,
+      volume: publication?.volume ?? "",
+      issue: publication?.issue ?? "",
       pages: publication?.pages ?? "",
       publisher: publication?.publisher ?? "",
       co_authors: publication?.co_authors ?? "",
@@ -178,16 +179,9 @@ export function PublicationFormDialog({
     if (data.doi?.trim()) formData.append("doi", data.doi.trim());
     if (data.published_date)
       formData.append("published_date", data.published_date);
-    if (data.journal) formData.append("journal", String(data.journal));
-    if (data.issue) {
-      formData.append("issue", String(data.issue));
-      // Find the selected issue to get volume and issue_number
-      const selectedIssue = issues?.find((i) => i.id === Number(data.issue));
-      if (selectedIssue) {
-        formData.append("volume", String(selectedIssue.volume));
-        formData.append("issue_number", String(selectedIssue.issue_number));
-      }
-    }
+    formData.append("journal", String(data.journal));
+    if (data.volume?.trim()) formData.append("volume", data.volume.trim());
+    if (data.issue?.trim()) formData.append("issue", data.issue.trim());
     if (data.pages?.trim()) formData.append("pages", data.pages.trim());
     if (data.publisher?.trim())
       formData.append("publisher", data.publisher.trim());
@@ -435,9 +429,10 @@ export function PublicationFormDialog({
 
               <FormInputField
                 control={form.control}
-                name="pages"
-                label="Pages"
-                placeholder="123-145"
+                name="journal"
+                label="Journal ID"
+                type="number"
+                placeholder="Enter journal ID"
               />
 
               <FormInputField
