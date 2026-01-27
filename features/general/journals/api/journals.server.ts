@@ -42,6 +42,43 @@ export interface EditorialBoardMember {
   is_active: boolean;
 }
 
+export interface Issue {
+  id: number;
+  journal_title: string;
+  volume: number;
+  issue_number: number;
+  title: string;
+  description: string;
+  cover_image_url: string | null;
+  publication_date: string;
+  status: "draft" | "published" | "archived";
+  status_display: string;
+  is_special_issue: boolean;
+  articles_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IssueArticle {
+  id: number;
+  publication_id: number;
+  publication_title: string;
+  page_start: number | null;
+  page_end: number | null;
+  order: number;
+}
+
+export interface IssueDetail extends Issue {
+  journal_id: number;
+  cover_image: string | null;
+  submission_deadline: string | null;
+  doi: string;
+  pages_range: string;
+  editorial_note: string;
+  guest_editors: string;
+  articles: IssueArticle[];
+}
+
 export interface JournalDetail extends Journal {
   institution_id: number;
   scope: string;
@@ -128,6 +165,63 @@ export async function getJournalPublications(
     `/publications/journals/${journalId}/publications/`,
     {
       tags: ["journals", `journal-${journalId}`, "publications"],
+      revalidate: 3600, // Revalidate every hour
+    },
+  );
+
+  return response;
+}
+
+export interface IssueFilters {
+  year?: number;
+  volume?: number;
+  status?: "draft" | "published" | "archived";
+}
+
+/**
+ * Fetch all issues for a specific journal (public endpoint)
+ * @param journalId - Journal ID
+ * @param filters - Optional filters for year, volume, and status
+ */
+export async function getPublicJournalIssues(
+  journalId: number | string,
+  filters?: IssueFilters,
+): Promise<Issue[]> {
+  const params = new URLSearchParams();
+
+  if (filters?.year) {
+    params.append("year", String(filters.year));
+  }
+  if (filters?.volume) {
+    params.append("volume", String(filters.volume));
+  }
+  if (filters?.status) {
+    params.append("status", filters.status);
+  }
+
+  const endpoint = `/publications/journals/public/${journalId}/issues/${params.toString() ? `?${params.toString()}` : ""}`;
+
+  const response = await serverGet<Issue[]>(endpoint, {
+    tags: ["journals", `journal-${journalId}`, "issues"],
+    revalidate: 3600, // Revalidate every hour
+  });
+
+  return response;
+}
+
+/**
+ * Fetch a single issue by ID (public endpoint)
+ * @param journalId - Journal ID
+ * @param issueId - Issue ID
+ */
+export async function getPublicJournalIssue(
+  journalId: number | string,
+  issueId: number | string,
+): Promise<IssueDetail> {
+  const response = await serverGet<IssueDetail>(
+    `/publications/journals/public/${journalId}/issues/${issueId}/`,
+    {
+      tags: ["journals", `journal-${journalId}`, "issues", `issue-${issueId}`],
       revalidate: 3600, // Revalidate every hour
     },
   );
