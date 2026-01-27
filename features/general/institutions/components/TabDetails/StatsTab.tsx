@@ -34,6 +34,35 @@ export const StatsTab = ({ institutionStats }: StatsTabProps) => {
     { name: "2024", value: 55, color: "#3b82f6" },
   ];
 
+  // Calculate total for percentages
+  const totalPublications = publicationsByYearData.reduce(
+    (sum, item) => sum + item.value,
+    0,
+  );
+
+  // Publications stats component
+  const PublicationsStats = () => (
+    <div className="w-full space-y-2">
+      {publicationsByYearData.map((item, index) => (
+        <div key={index} className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-sm text-text-gray">{item.name}</span>
+          </div>
+          <span className="text-sm font-medium">
+            {totalPublications > 0
+              ? ((item.value / totalPublications) * 100).toFixed(2)
+              : 0}
+            %
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+
   // Research areas distribution
   const researchAreasData = [
     { name: "Medicine", value: 35, color: "#1e3a8a" },
@@ -120,6 +149,7 @@ export const StatsTab = ({ institutionStats }: StatsTabProps) => {
           dataKey="value"
           xAxisKey="name"
           showGrid={true}
+          StatValuesComp={PublicationsStats}
         />
 
         {/* Doughnut Chart - Research Areas Distribution */}
