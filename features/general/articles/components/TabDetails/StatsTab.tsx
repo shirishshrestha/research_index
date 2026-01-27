@@ -35,6 +35,32 @@ export const StatsTab = ({ article }: StatsTabProps) => {
     },
   ];
 
+  // Calculate total for percentages
+  const totalMetrics = metricsData.reduce((sum, item) => sum + item.value, 0);
+
+  // Metrics stats component
+  const MetricsStats = () => (
+    <div className="w-full space-y-2">
+      {metricsData.map((item, index) => (
+        <div key={index} className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-sm text-text-gray">{item.name}</span>
+          </div>
+          <span className="text-sm font-medium">
+            {totalMetrics > 0
+              ? ((item.value / totalMetrics) * 100).toFixed(2)
+              : 0}
+            %
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+
   // Metrics distribution for doughnut chart
   const metricsDistribution = [
     {
@@ -103,6 +129,7 @@ export const StatsTab = ({ article }: StatsTabProps) => {
           dataKey="value"
           xAxisKey="name"
           showGrid={true}
+          StatValuesComp={MetricsStats}
         />
 
         {/* Doughnut Chart - Metrics Distribution */}

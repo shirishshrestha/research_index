@@ -18,19 +18,49 @@ interface StatsTabProps {
 export const StatsTab = ({ authorStats }: StatsTabProps) => {
   // Score Breakdown Data
   const scoreBreakdownData = [
-    { name: "Citations", value: 6356, color: "#1e3a8a" },
-    { name: "Recommendations", value: 127, color: "#3b82f6" },
-    { name: "Full-Text Reads", value: 608, color: "#93c5fd" },
-    { name: "Other Reads", value: 2247, color: "#7dd3c0" },
+    {
+      name: "Citations",
+      value: authorStats?.total_citations || 0,
+      color: "#1e3a8a",
+    },
+    { name: "Recommendations", value: 0, color: "#3b82f6" },
+    { name: "Reads", value: authorStats?.total_reads || 0, color: "#93c5fd" },
+    {
+      name: "Downloads",
+      value: authorStats?.total_downloads || 0,
+      color: "#7dd3c0",
+    },
   ];
 
-  // Comparison Data for Doughnut Chart
-  const comparisonData = [
-    { name: "Citations", value: 93.11, color: "#1e3a8a" },
-    { name: "Recommendations", value: 0.93, color: "#3b82f6" },
-    { name: "Full-Text Reads", value: 2.67, color: "#93c5fd" },
-    { name: "Other Reads", value: 3.29, color: "#7dd3c0" },
-  ];
+  // Calculate total for percentages
+  const total = scoreBreakdownData.reduce((sum, item) => sum + item.value, 0);
+
+  // Comparison Data for Doughnut Chart with percentages
+  const comparisonData = scoreBreakdownData.map((item) => ({
+    name: item.name,
+    value: total > 0 ? parseFloat(((item.value / total) * 100).toFixed(2)) : 0,
+    color: item.color,
+  }));
+
+  // Stats values component
+  const ScoreBreakdownStats = () => (
+    <div className="w-full space-y-2">
+      {scoreBreakdownData.map((item, index) => (
+        <div key={index} className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: item.color }}
+            />
+            <span className="text-sm text-text-gray">{item.name}</span>
+          </div>
+          <span className="text-sm font-medium">
+            {comparisonData[index]?.value.toFixed(2)}%
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="space-y-8">
@@ -83,6 +113,7 @@ export const StatsTab = ({ authorStats }: StatsTabProps) => {
           dataKey="value"
           xAxisKey="name"
           showGrid={true}
+          StatValuesComp={ScoreBreakdownStats}
         />
 
         {/* Doughnut Chart - Comparison */}

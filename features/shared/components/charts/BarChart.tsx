@@ -36,7 +36,13 @@ if (typeof global !== "undefined" && typeof global.DOMMatrix === "undefined") {
   // @ts-expect-error - Suppress type mismatch for SSR polyfill
   global.DOMMatrix = PolyfillDOMMatrix;
 }
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   BarChart as RechartsBarChart,
@@ -94,6 +100,7 @@ interface BarChartProps {
   height?: number;
   className?: string;
   radius?: [number, number, number, number];
+  StatValuesComp?: React.ComponentType;
 }
 
 export function BarChart({
@@ -119,6 +126,7 @@ export function BarChart({
   height = 300,
   className = "",
   radius = [8, 8, 0, 0],
+  StatValuesComp
 }: BarChartProps) {
   // Loading state
   if (isLoading) {
@@ -210,6 +218,11 @@ export function BarChart({
           </RechartsBarChart>
         </ResponsiveContainer>
       </CardContent>
+      {StatValuesComp && (
+        <CardFooter>
+          <StatValuesComp />
+        </CardFooter>
+      )}
     </Card>
   );
 }
