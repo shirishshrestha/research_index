@@ -11,7 +11,7 @@ export async function revalidateJournalsAction(): Promise<{
   error?: string;
 }> {
   try {
-    revalidateTag("journals", "default");
+    revalidateTag("journals", "max");
 
     return { revalidated: true };
   } catch (error) {
@@ -31,8 +31,8 @@ export async function revalidateJournalAction(id: number | string): Promise<{
   error?: string;
 }> {
   try {
-    revalidateTag(`journal-${id}`, "default");
-    revalidateTag("journals", "default");
+    revalidateTag(`journal-${id}`, "max");
+    revalidateTag("journals", "max");
 
     return { revalidated: true };
   } catch (error) {

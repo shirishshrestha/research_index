@@ -50,9 +50,6 @@ export const JournalProfileCard = ({
             </p>
             <p className="desc">License: {journal.license}</p>
           </div>
-          <Button size="sm" variant={"outline"} className="follow-button">
-            Follow
-          </Button>
         </div>
       </div>
     </Card>

@@ -13,6 +13,11 @@ import { JOURNALS_QUERY_KEYS, JOURNALS_ENDPOINTS } from "../constants";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/utils/errorHandling";
+import {
+  revalidateJournalsCache,
+  revalidateJournalCache,
+  revalidateJournalPublicationsCache,
+} from "../server-actions/actions";
 
 /**
  * Prepare FormData for journal creation/update
@@ -56,6 +61,7 @@ export const useCreateJournalMutation = (
         queryClient.invalidateQueries({
           queryKey: JOURNALS_QUERY_KEYS.lists(),
         });
+        await revalidateJournalsCache();
         router.refresh();
         toast.success("Journal created successfully");
         options?.onSuccess?.(...args);
@@ -93,6 +99,7 @@ export const useUpdateJournalMutation = (
         queryClient.invalidateQueries({
           queryKey: JOURNALS_QUERY_KEYS.detail(Number(id)),
         });
+        await revalidateJournalCache(Number(id));
         router.refresh();
         toast.success("Journal updated successfully");
         options?.onSuccess?.(...args);
@@ -124,6 +131,9 @@ export const useDeleteJournalMutation = (
         queryClient.invalidateQueries({
           queryKey: JOURNALS_QUERY_KEYS.lists(),
         });
+
+        // Revalidate server-side cache
+        await revalidateJournalsCache();
 
         // Refresh server components
         router.refresh();
@@ -162,6 +172,10 @@ export const useUpdateJournalStatsMutation = (
       queryClient.invalidateQueries({
         queryKey: JOURNALS_QUERY_KEYS.stats(Number(id)),
       });
+
+      // Revalidate server-side cache
+      await revalidateJournalCache(Number(id));
+      await revalidateJournalPublicationsCache();
 
       toast.success("Journal stats updated successfully");
       options?.onSuccess?.(...args);

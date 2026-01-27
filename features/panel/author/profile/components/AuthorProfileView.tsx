@@ -132,7 +132,9 @@ export function AuthorProfileView({ profile }: AuthorProfileViewProps) {
             Research Interests
           </label>
           <p className="text-text-gray">
-            {profile.research_interests || "Not specified"}
+            {profile.research_interests
+              .map((interest: string) => interest)
+              .join(", ") || "Not specified"}
           </p>
         </div>
       </div>

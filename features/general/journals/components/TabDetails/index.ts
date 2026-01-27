@@ -3,6 +3,7 @@ export { LatestIssuesTab } from "./LatestIssuesTab";
 export { AllIssuesTab } from "./AllIssuesTab";
 export { LinkedDatasetsTab } from "./LinkedDatasetsTab";
 export { ContactTab } from "./ContactTab";
+export { StatsTab } from "./StatsTab";
 export { journalData } from "./data";
 export type { JournalContent } from "./data";
 export { EditorialBoard } from "./EditorialBoard";

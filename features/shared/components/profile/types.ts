@@ -58,6 +58,8 @@ export interface ProfileCardProps {
   isInstitution?: boolean;
   isFollowing?: boolean;
   onFollow?: () => void;
+  showFollowButton?: boolean;
+  followLoading?: boolean;
   profilePicture?: string;
   bio?: string;
   socialLinks?: {

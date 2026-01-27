@@ -8,6 +8,7 @@ import {
   LinkedDatasetsTab,
   EditorialBoard,
   ContactTab,
+  StatsTab,
 } from "./TabDetails";
 import type { JournalDetails as JournalDetailsType } from "../types";
 
@@ -85,11 +86,21 @@ export function JournalDetails({
             label: "Stats",
             value: "stats",
             content: (
-              <div className="text-center py-16">
-                <p className="text-text-gray">
-                  Journal statistics will be displayed here
-                </p>
-              </div>
+              <StatsTab
+                journalStats={{
+                  total_articles: serverJournal?.stats?.total_articles || 0,
+                  total_citations: serverJournal?.stats?.total_citations || 0,
+                  total_issues: serverJournal?.stats?.total_issues || 0,
+                  impact_factor: serverJournal?.stats?.impact_factor || "0.000",
+                  cite_score: serverJournal?.stats?.cite_score || "0.000",
+                  h_index: serverJournal?.stats?.h_index || 0,
+                  acceptance_rate:
+                    serverJournal?.stats?.acceptance_rate || "0.00",
+                  average_review_time:
+                    serverJournal?.stats?.average_review_time || 0,
+                  recommendations: serverJournal?.stats?.recommendations || 0,
+                }}
+              />
             ),
           },
           {

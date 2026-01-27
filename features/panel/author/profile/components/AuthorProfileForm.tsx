@@ -10,6 +10,7 @@ import {
   FormInputField,
   FormTextareaField,
   FormSelectField,
+  FormTagInputField,
 } from "@/components/form";
 import { Save, X } from "lucide-react";
 import { usePatch } from "@/hooks/useApi";
@@ -44,7 +45,7 @@ export function AuthorProfileForm({
 }: AuthorProfileFormProps) {
   const router = useRouter();
 
-  const form = useForm<AuthorProfileFormData>({
+  const form = useForm({
     resolver: zodResolver(authorProfileSchema),
     defaultValues: {
       title:
@@ -55,7 +56,14 @@ export function AuthorProfileForm({
       degree: profile.degree || "",
       gender: (profile.gender as "" | "Male" | "Female" | "Other") || "",
       bio: profile.bio || "",
-      research_interests: profile.research_interests || "",
+      research_interests: Array.isArray(profile.research_interests)
+        ? profile.research_interests
+        : profile.research_interests
+          ? (profile.research_interests as string)
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [],
       orcid: profile.orcid || "",
       google_scholar: profile.google_scholar || "",
       researchgate: profile.researchgate || "",
@@ -84,7 +92,7 @@ export function AuthorProfileForm({
       onError: (error: Error) => {
         toast.error(error.message || "Failed to update profile");
       },
-    }
+    },
   );
 
   const onSubmit = (data: AuthorProfileFormData) => {
@@ -181,15 +189,13 @@ export function AuthorProfileForm({
               showCounter
             />
 
-            <FormTextareaField
+            <FormTagInputField
               control={form.control}
               name="research_interests"
               label="Research Interests"
-              placeholder="Your research areas and interests..."
-              description="List your main research areas"
-              className="min-h-25"
-              maxLength={500}
-              showCounter
+              placeholder="Type and press Enter to add research interests"
+              description="Add your main research areas (press Enter after each tag)"
+              maxLength={50}
             />
           </div>
 

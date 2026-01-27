@@ -22,7 +22,7 @@ export interface AuthorProfile {
   cv: string | null;
   cv_url: string | null;
   bio: string;
-  research_interests: string;
+  research_interests: string[];
   orcid: string;
   google_scholar: string;
   researchgate: string;
@@ -41,7 +41,7 @@ export interface AuthorProfileUpdatePayload {
   degree?: string;
   gender?: string;
   bio?: string;
-  research_interests?: string;
+  research_interests?: string | string[];
   orcid?: string;
   google_scholar?: string;
   researchgate?: string;

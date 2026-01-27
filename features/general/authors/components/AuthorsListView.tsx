@@ -126,15 +126,6 @@ export function AuthorsListView({ initialData = [] }: AuthorsListViewProps) {
               placeholder="Relevance"
             />
           </FilterToolbar>
-          {authors.length > 0 && (
-            <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(authors.length / 10)}
-              totalCount={authors.length}
-              pageSize={10}
-              showPageSizeSelector={false}
-            />
-          )}
 
           {/* Results List */}
           {authors.length > 0 ? (

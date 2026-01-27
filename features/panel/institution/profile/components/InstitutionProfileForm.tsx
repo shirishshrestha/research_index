@@ -10,6 +10,7 @@ import {
   FormInputField,
   FormTextareaField,
   FormSelectField,
+  FormTagInputField,
 } from "@/components/form";
 import { Save, X } from "lucide-react";
 import { InstitutionProfile } from "../types";
@@ -19,6 +20,7 @@ import {
 } from "../utils/schema";
 import { revalidateInstitutionProfileAction } from "../actions";
 import { usePatch } from "@/hooks/useApi";
+import { extractErrorMessage } from "@/utils/errorHandling";
 
 const institutionTypeOptions = [
   { value: "University", label: "University" },
@@ -45,7 +47,7 @@ export function InstitutionProfileForm({
 }: InstitutionProfileFormProps) {
   const router = useRouter();
 
-  const form = useForm<InstitutionProfileFormData>({
+  const form = useForm({
     resolver: zodResolver(institutionProfileSchema),
     defaultValues: {
       institution_name: profile.institution_name || "",
@@ -65,7 +67,14 @@ export function InstitutionProfileForm({
       phone: profile.phone || "",
       website: profile.website || "",
       established_year: profile.established_year?.toString() || "",
-      research_areas: profile.research_areas || "",
+      research_areas: Array.isArray(profile.research_areas)
+        ? profile.research_areas
+        : profile.research_areas
+          ? (profile.research_areas as string)
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [],
       total_researchers: profile.total_researchers?.toString() || "",
     },
   });
@@ -84,7 +93,11 @@ export function InstitutionProfileForm({
       router.refresh();
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to update profile");
+      const errorMessage = extractErrorMessage(
+        error,
+        "Failed to create questionnaire",
+      );
+      toast.error(errorMessage);
     },
   });
 
@@ -215,13 +228,13 @@ export function InstitutionProfileForm({
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Research Information</h3>
 
-            <FormTextareaField
+            <FormTagInputField
               control={form.control}
               name="research_areas"
               label="Research Areas"
-              placeholder="Main research areas and focus"
-              description="List the main research areas and focus of your institution"
-              className="min-h-20"
+              placeholder="Type and press Enter to add research areas"
+              description="Add the main research areas and focus of your institution (press Enter after each tag)"
+              maxLength={50}
             />
 
             <FormInputField

@@ -27,7 +27,7 @@ export function ArticleCard({ publication }: ArticleCardProps) {
   return (
     <Link href={`/articles/${publication.id}`}>
       <Card className="p-6.25 group hover:shadow-md duration-300 transition-shadow shadow-none">
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <div className="flex justify-between">

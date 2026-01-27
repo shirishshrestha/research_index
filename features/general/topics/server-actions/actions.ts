@@ -17,8 +17,8 @@ export async function revalidateTopicsAction(): Promise<{
 }> {
   try {
     // Revalidate cache tags - triggers Server Component refetch
-    // Next.js 16 requires profile/config as second argument
-    revalidateTag("topics-tree", "default");
+    // Next.js 16: Use 'max' profile for stale-while-revalidate semantics
+    revalidateTag("topics-tree", "max");
 
     return { success: true };
   } catch (error) {

@@ -19,7 +19,10 @@ export const institutionProfileSchema = z.object({
   phone: z.string().optional(),
   website: z.string().url("Invalid URL").optional().or(z.literal("")),
   established_year: z.string().optional(),
-  research_areas: z.string().optional(),
+  research_areas: z
+    .array(z.string())
+    .max(20, "Maximum 20 research areas allowed")
+    .default([]),
   total_researchers: z.string().optional(),
   logo: z.instanceof(File).optional(),
 });

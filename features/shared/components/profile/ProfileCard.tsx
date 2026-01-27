@@ -16,22 +16,9 @@ export function ProfileCard({
   isFollowing = false,
   onFollow,
   profilePicture,
+  showFollowButton = false,
+  followLoading = false,
 }: ProfileCardProps) {
-  const [following, setFollowing] = useState(isFollowing);
-  const [loading, setLoading] = useState(false);
-
-  const handleFollow = async () => {
-    setLoading(true);
-    try {
-      await onFollow?.();
-      setFollowing(!following);
-    } catch (error) {
-      console.error("Failed to follow/unfollow", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <Card className="p-0! border-0 bg-background shadow-none">
       <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
@@ -66,15 +53,17 @@ export function ProfileCard({
           {verifiedEmail && (
             <p className="para">Verified email at {verifiedEmail}</p>
           )}
-          <Button
-            size="sm"
-            variant={"outline"}
-            onClick={handleFollow}
-            disabled={loading}
-            className=" border-primary mt-2.75 text-sm px-4 py-1 text-primary"
-          >
-            {loading ? "..." : following ? "Following" : "Follow"}
-          </Button>
+          {showFollowButton && (
+            <Button
+              size="sm"
+              variant={"outline"}
+              onClick={onFollow}
+              disabled={followLoading}
+              className=" border-primary mt-2.75 text-sm px-4 py-1 text-primary"
+            >
+              {followLoading ? "..." : isFollowing ? "Following" : "Follow"}
+            </Button>
+          )}
         </div>
       </div>
     </Card>

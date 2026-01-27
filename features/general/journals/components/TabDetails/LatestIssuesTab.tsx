@@ -172,17 +172,6 @@ export function LatestIssuesTab() {
             />
           </FilterToolbar>
 
-          {/* Pagination Top */}
-          {mockArticles.length > 0 && (
-            <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(40 / 5)}
-              totalCount={40}
-              pageSize={5}
-              showPageSizeSelector={false}
-            />
-          )}
-
           {/* Results List */}
           {mockArticles.map((article) => (
             <div key={article.id} className="space-y-6.25">

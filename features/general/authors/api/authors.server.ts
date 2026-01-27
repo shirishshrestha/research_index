@@ -25,6 +25,7 @@ export async function getPublicAuthors(
   const response = await serverGet<Author[]>(endpoint, {
     tags: ["authors"],
     revalidate: 3600, // Revalidate every hour
+    requireAuth: false,
   });
 
   return response;
@@ -42,6 +43,7 @@ export async function getPublicAuthor(
     {
       tags: ["authors", `author-${id}`],
       revalidate: 3600, // Revalidate every hour
+      requireAuth: false,
     },
   );
 

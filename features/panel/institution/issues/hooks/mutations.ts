@@ -15,6 +15,10 @@ import { JOURNALS_QUERY_KEYS } from "../../journals/constants";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/utils/errorHandling";
+import {
+  revalidateJournalIssuesCache,
+  revalidateIssuePublicationsCache,
+} from "../server-actions/actions";
 
 /**
  * Prepare FormData for issue creation/update
@@ -64,6 +68,9 @@ export const useCreateIssueMutation = (
           queryKey: JOURNALS_QUERY_KEYS.stats(Number(journalId)),
         });
 
+        // Revalidate server-side cache
+        await revalidateJournalIssuesCache(Number(journalId));
+
         // Refresh server components
         router.refresh();
 
@@ -111,6 +118,9 @@ export const useUpdateIssueMutation = (
           ),
         });
 
+        // Revalidate server-side cache
+        await revalidateJournalIssuesCache(Number(journalId));
+
         // Refresh server components
         router.refresh();
 
@@ -152,6 +162,9 @@ export const useDeleteIssueMutation = (
         queryClient.invalidateQueries({
           queryKey: JOURNALS_QUERY_KEYS.stats(Number(journalId)),
         });
+
+        // Revalidate server-side cache
+        await revalidateJournalIssuesCache(Number(journalId));
 
         // Refresh server components
         router.refresh();
@@ -200,6 +213,10 @@ export const useAddArticleToIssueMutation = (
         queryClient.invalidateQueries({
           queryKey: JOURNALS_QUERY_KEYS.stats(Number(journalId)),
         });
+
+        // Revalidate server-side cache
+        await revalidateJournalIssuesCache(Number(journalId));
+        await revalidateIssuePublicationsCache();
 
         toast.success("Article added to issue successfully");
         options?.onSuccess?.(...args);
