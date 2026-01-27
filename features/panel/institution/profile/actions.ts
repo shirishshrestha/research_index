@@ -5,7 +5,7 @@ import { revalidateTag } from "next/cache";
 /**
  * Server Action: Revalidate institution profile cache
  *
- * This function only handles cache revalidation.
+ * This function handles cache revalidation for both panel and public views.
  * Actual API calls are made client-side using TanStack Query + Axios.
  */
 export async function revalidateInstitutionProfileAction(): Promise<{
@@ -13,7 +13,8 @@ export async function revalidateInstitutionProfileAction(): Promise<{
 }> {
   try {
     // Revalidate cache tags - triggers Server Component refetch
-    revalidateTag("institution-profile", "default");
+    revalidateTag("institution-profile", "max"); // Panel view
+    revalidateTag("institutions", "max"); // Public list view
 
     return { success: true };
   } catch (error) {

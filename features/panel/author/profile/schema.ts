@@ -9,9 +9,9 @@ export const authorProfileSchema = z.object({
   gender: z.enum(["Male", "Female", "Other", ""]).optional(),
   bio: z.string().max(1000, "Bio must be less than 1000 characters").optional(),
   research_interests: z
-    .string()
-    .max(500, "Research interests must be less than 500 characters")
-    .optional(),
+    .array(z.string())
+    .max(20, "Maximum 20 research interests allowed")
+    .default([]),
   orcid: z
     .string()
     .regex(/^(\d{4}-\d{4}-\d{4}-\d{3}[0-9X])?$/, "Invalid ORCID format")

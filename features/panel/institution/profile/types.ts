@@ -17,7 +17,7 @@ export interface InstitutionProfile {
   phone: string;
   website: string;
   established_year: number | null;
-  research_areas: string;
+  research_areas: string[];
   total_researchers: number | null;
   stats: InstitutionStats;
 }
@@ -34,7 +34,7 @@ export interface InstitutionProfileUpdatePayload {
   phone?: string;
   website?: string;
   established_year?: number | null;
-  research_areas?: string;
+  research_areas?: string | string[];
   total_researchers?: number | null;
   logo?: File | null;
 }

@@ -7,6 +7,7 @@ import {
   OverviewTab,
   ReferencesTab,
   SimilarArticlesTab,
+  StatsTab,
 } from "./TabDetails";
 import type { Publication } from "@/features/panel/author/publications/types";
 
@@ -67,7 +68,7 @@ export function ArticleDetails({ article }: ArticleDetailsProps) {
           {
             label: "Stats",
             value: "stats",
-            content: <>{/* <StatsTab article={article} /> */}</>,
+            content: <StatsTab article={article} />,
           },
           {
             label: "Citations",

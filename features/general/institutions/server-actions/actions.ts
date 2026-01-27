@@ -15,8 +15,8 @@ export async function revalidateInstitutionsAction(): Promise<{
 }> {
   try {
     // Revalidate cache tags - triggers Server Component refetch
-    // Next.js 16 requires profile/config as second argument
-    revalidateTag("institutions", "default");
+    // Next.js 16: Use 'max' profile for stale-while-revalidate semantics
+    revalidateTag("institutions", "max");
 
     return { revalidated: true };
   } catch (error) {
@@ -38,8 +38,8 @@ export async function revalidateInstitutionAction(
   error?: string;
 }> {
   try {
-    revalidateTag(`institution-${id}`, "default");
-    revalidateTag("institutions", "default");
+    revalidateTag(`institution-${id}`, "max");
+    revalidateTag("institutions", "max");
 
     return { revalidated: true };
   } catch (error) {

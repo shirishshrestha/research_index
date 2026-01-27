@@ -21,8 +21,14 @@ export interface InstitutionDetail extends Institution {
   stats: {
     total_publications: number;
     total_citations: number;
+    average_citations_per_paper: string;
+    total_reads: number;
+    total_downloads: number;
+    recommendations_count: number;
+    total_authors: number;
     h_index: number;
     i10_index: number;
+    last_updated: string;
   } | null;
 }
 

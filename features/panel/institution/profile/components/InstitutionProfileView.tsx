@@ -133,7 +133,8 @@ export function InstitutionProfileView({
               Research Areas
             </label>
             <p className="text-text-gray">
-              {profile.research_areas || "Not specified"}
+              {profile.research_areas.map((area) => area).join(", ") ||
+                "Not specified"}
             </p>
           </div>
         </div>
