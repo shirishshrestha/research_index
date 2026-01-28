@@ -1,3 +1,5 @@
+"use client";
+
 import { ProfileTabs } from "@/features/shared/components/profile";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/shared";
