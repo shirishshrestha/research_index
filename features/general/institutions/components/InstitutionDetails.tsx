@@ -6,11 +6,7 @@ import {
   ProfileTabs,
 } from "@/features/shared/components/profile";
 import { ChevronDown } from "lucide-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { followUser, unfollowUser, getFollowStats } from "@/services/follow";
-import { toast } from "sonner";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import { useFollowToggle } from "@/features/shared/hooks";
 import {
   InstitutionProfileTab,
   MembersTab,
@@ -18,7 +14,6 @@ import {
   StatsTab,
 } from "./TabDetails";
 import type { InstitutionDetail } from "../types";
-import { extractErrorMessage } from "@/utils/errorHandling";
 
 interface InstitutionDetailsProps {
   institution?: InstitutionDetail;
@@ -27,8 +22,6 @@ interface InstitutionDetailsProps {
 export function InstitutionDetails({
   institution: serverInstitution,
 }: InstitutionDetailsProps) {
-  const queryClient = useQueryClient();
-
   // Mock data for demonstration (fallback if no server data)
   const mockInstitution = {
     name: "KAHS",
@@ -82,59 +75,9 @@ export function InstitutionDetails({
 
   // Get follow stats (only if we have a real institution ID and user is authenticated)
   const institutionId = serverInstitution?.id;
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
+  const { isFollowing, isLoading, toggle } = useFollowToggle(
+    institutionId || 0,
   );
-
-  const { data: followStats } = useQuery({
-    queryKey: ["follow-stats", institutionId],
-    queryFn: () => getFollowStats(institutionId!),
-    enabled: !!institutionId && isAuthenticated, // Only fetch if logged in
-  });
-
-  // Follow mutation
-  const followMutation = useMutation({
-    mutationFn: () => followUser(institutionId!),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["follow-stats", institutionId],
-      });
-      toast.success("Successfully followed institution");
-    },
-    onError: (error: Error) => {
-      toast.error(extractErrorMessage(error, "Failed to follow institution"));
-    },
-  });
-
-  // Unfollow mutation
-  const unfollowMutation = useMutation({
-    mutationFn: () => unfollowUser(institutionId!),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["follow-stats", institutionId],
-      });
-      toast.success("Successfully unfollowed institution");
-    },
-    onError: (error: Error) => {
-      toast.error(extractErrorMessage(error, "Failed to unfollow institution"));
-    },
-  });
-
-  const handleFollowToggle = () => {
-    // Check authentication before making API call
-    if (!isAuthenticated) {
-      toast.error("Please log in to follow institutions");
-      return;
-    }
-
-    if (followStats?.is_following) {
-      unfollowMutation.mutate();
-    } else {
-      followMutation.mutate();
-    }
-  };
-
-  const isLoading = followMutation.isPending || unfollowMutation.isPending;
 
   return (
     <div className="section-padding pt-0!">
@@ -147,8 +90,8 @@ export function InstitutionDetails({
             verifiedEmail={institution.verifiedEmail}
             isInstitution
             showFollowButton={!!institutionId}
-            isFollowing={followStats?.is_following || false}
-            onFollow={handleFollowToggle}
+            isFollowing={isFollowing}
+            onFollow={toggle}
             followLoading={isLoading}
           />
           <ProfileStats
@@ -178,10 +121,7 @@ export function InstitutionDetails({
               content: (
                 <StatsTab
                   institutionStats={{
-                    total_authors:
-                      serverInstitution?.total_researchers ||
-                      serverInstitution?.stats?.total_authors ||
-                      0,
+                    total_authors: serverInstitution?.stats?.total_authors || 0,
                     total_publications:
                       serverInstitution?.stats?.total_publications || 0,
                     total_citations:

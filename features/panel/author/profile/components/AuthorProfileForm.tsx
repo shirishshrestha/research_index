@@ -11,6 +11,7 @@ import {
   FormTextareaField,
   FormSelectField,
   FormTagInputField,
+  FormImageUploadField,
 } from "@/components/form";
 import { Save, X } from "lucide-react";
 import { usePatch } from "@/hooks/useApi";
@@ -69,6 +70,8 @@ export function AuthorProfileForm({
       researchgate: profile.researchgate || "",
       linkedin: profile.linkedin || "",
       website: profile.website || "",
+      profile_picture: undefined,
+      cv: undefined,
     },
   });
 
@@ -76,7 +79,7 @@ export function AuthorProfileForm({
    * Use reusable usePatch hook from useApi.ts
    * Flow: axios PATCH → revalidate Server Action → router.refresh()
    */
-  const updateMutation = usePatch<AuthorProfile, AuthorProfileFormData>(
+  const updateMutation = usePatch<AuthorProfile, FormData>(
     "/auth/profile/author/",
     {
       onSuccess: async () => {
@@ -96,7 +99,21 @@ export function AuthorProfileForm({
   );
 
   const onSubmit = (data: AuthorProfileFormData) => {
-    updateMutation.mutate(data);
+    // Convert to FormData for file uploads
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value instanceof File) {
+        formData.append(key, value);
+      } else if (Array.isArray(value)) {
+        // Convert array to comma-separated string
+        formData.append(key, value.join(", "));
+      } else if (value !== undefined && value !== null && value !== "") {
+        formData.append(key, String(value));
+      }
+    });
+
+    updateMutation.mutate(formData);
   };
 
   return (
@@ -126,6 +143,17 @@ export function AuthorProfileForm({
             <h3 className="text-lg font-semibold border-b pb-2">
               Basic Information
             </h3>
+
+            {/* Profile Picture Upload */}
+            <FormImageUploadField
+              control={form.control}
+              name="profile_picture"
+              label="Profile Picture"
+              description="Upload your profile picture (Max 5MB, JPG/PNG)"
+              currentImageUrl={profile.profile_picture_url || undefined}
+              aspectRatio="circle"
+              maxSize={5}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormSelectField

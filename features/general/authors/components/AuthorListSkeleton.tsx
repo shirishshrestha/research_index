@@ -1,29 +1,27 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FilterSkeleton } from "@/features/shared/components";
 
 export function AuthorListItemSkeleton() {
   return (
-    <Card className="p-6.25 hover:shadow-md transition-shadow shadow-none">
-      <div className="flex items-center gap-6.25">
-        <Skeleton className="w-28 h-28 rounded-full shrink-0" />
+    <Card className="p-6.25 group rounded-md transition-all flex flex-row justify-between gap-4 hover:shadow-md">
+      {/* Profile Image and Info */}
+      <div className="flex items-center gap-3.75 justify-between">
+        <Skeleton className="w-16 h-16 rounded-md shrink-0" />
 
-        <div className="flex-1 space-y-3">
-          <Skeleton className="h-6 w-1/2" />
-          <Skeleton className="h-4 w-3/4" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-5 w-5 rounded-full" />
-            <Skeleton className="h-4 w-48" />
-          </div>
+        {/* Author Info */}
+        <div className="flex-1 min-w-0 space-y-1">
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-5 w-64" />
+          <Skeleton className="h-5 w-56" />
         </div>
+      </div>
 
-        <div className="flex gap-3.75">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex flex-col items-center gap-1">
-              <Skeleton className="h-6 w-12" />
-              <Skeleton className="h-4 w-16" />
-            </div>
-          ))}
-        </div>
+      {/* Action Buttons */}
+      <div className="flex items-center gap-2 shrink-0">
+        <Skeleton className="h-9 w-20" />
+        <Skeleton className="h-9 w-20" />
+        <Skeleton className="h-9 w-24" />
       </div>
     </Card>
   );
@@ -31,10 +29,27 @@ export function AuthorListItemSkeleton() {
 
 export function AuthorsListSkeleton() {
   return (
-    <div className="space-y-4 mt-12">
-      {[...Array(10)].map((_, i) => (
-        <AuthorListItemSkeleton key={i} />
-      ))}
+    <div className="pt-12.5! section-padding">
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
+        {/* Left Sidebar - Filter Skeleton */}
+        <FilterSkeleton />
+
+        {/* Right Content - List Skeleton */}
+        <div className="space-y-6">
+          {/* Search and Sort Skeleton */}
+          <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg shadow-xs">
+            <Skeleton className="h-10 flex-1" />
+            <Skeleton className="h-10 w-full sm:w-48" />
+          </div>
+
+          {/* Results List */}
+          <div className="space-y-4">
+            {[...Array(10)].map((_, i) => (
+              <AuthorListItemSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -125,6 +125,7 @@ export const StatsTab = ({ article }: StatsTabProps) => {
         <BarChart
           title="Metrics Breakdown"
           data={metricsData}
+          className="h-fit"
           height={300}
           dataKey="value"
           xAxisKey="name"
@@ -132,15 +133,71 @@ export const StatsTab = ({ article }: StatsTabProps) => {
           StatValuesComp={MetricsStats}
         />
 
-        {/* Doughnut Chart - Metrics Distribution */}
-        <DoughnutChart
-          title="Metrics Distribution"
-          data={metricsDistribution}
-          height={300}
-          innerRadius={60}
-          outerRadius={100}
-          showLegend={true}
-        />
+        {/* Doughnut Chart - Comparison */}
+        <div className="space-y-4">
+          <div className="flex flex-col gap-6">
+            {/* Score Breakdown Card */}
+            <div className="bg-card rounded-xl p-6 shadow-sm ring-1 ring-border h-fit">
+              <h3 className="text-lg font-semibold mb-4">Score Breakdown</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">Citations</span>
+                  <span className="text-sm font-semibold">
+                    {article.stats?.citations_count?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">
+                    Recommendations
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {article.stats?.recommendations_count?.toLocaleString() ||
+                      "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">
+                    Full-Text Reads*
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {article.stats?.reads_count?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">Downloads*</span>
+                  <span className="text-sm font-semibold">
+                    {article.stats?.downloads_count?.toLocaleString() || "0"}
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-text-gray mt-4 pt-4 border-t border-border">
+                *By Nepal Research Index Members
+              </p>
+            </div>
+            {/* Comparison Chart with Description */}
+            <div className="grid xl:grid-cols-[40%_1fr] bg-card rounded-xl shadow-sm ring-1 ring-border p-6">
+              <DoughnutChart
+                data={metricsDistribution}
+                className="shadow-none! border-none! flex-1"
+                height={200}
+                innerRadius={60}
+                outerRadius={100}
+                showLegend={false}
+              />
+              <div className="flex flex-col justify-center">
+                <h4 className="heading-4 text-lg! mb-3.75 text-text-black">
+                  Metrics Distribution
+                </h4>
+                <p className="text-sm text-text-gray">
+                  This article&apos;s engagement metrics demonstrate strong
+                  reader interest and academic impact, with balanced
+                  distribution across citations, reads, downloads, and
+                  recommendations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Additional Info */}

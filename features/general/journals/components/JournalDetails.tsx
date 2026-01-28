@@ -10,24 +10,19 @@ import {
   ContactTab,
   StatsTab,
 } from "./TabDetails";
-import type { JournalDetails as JournalDetailsType } from "../types";
+import type { JournalDetail } from "../api/journals.server";
 
 interface JournalDetailsProps {
-  journal?: any; // Accept journal data from server
+  journal: JournalDetail;
 }
 
-export function JournalDetails({
-  journal: serverJournal,
-}: JournalDetailsProps) {
-  // Use server data if available, otherwise use mock data
-  const journal: JournalDetailsType = serverJournal || {
-    title: "Journal of Himalayan Environmental Studies",
-    institution: "Nepal Academy of Science and Technology (NAST)",
-    issn: "2789-4536",
-    doiPrefix: "10.58291",
-    license: "CC BY-NC-SA 4.0",
-    badge: { label: "ICV 2024", value: "171.50" },
-  };
+export function JournalDetails({ journal }: JournalDetailsProps) {
+  // Calculate badge value from stats
+  const badgeValue =
+    journal.stats?.impact_factor !== null &&
+    journal.stats?.impact_factor !== undefined
+      ? journal.stats.impact_factor.toFixed(2)
+      : "0.00";
 
   return (
     <div className="section-padding pt-0!">
@@ -35,13 +30,13 @@ export function JournalDetails({
       <div className="space-y-8 mb-8 flex justify-between items-start">
         <JournalProfileCard journal={journal} />
         {/* Badge */}
-        {journal?.badge && (
+        {journal.stats?.impact_factor && journal.stats.impact_factor > 0 && (
           <div className="shrink-0 bg-secondary w-fit text-white px-3.75 py-3 rounded-md flex items-center gap-2">
             <span className="text-base font-semibold leading-none">
-              {journal?.badge.label}
+              Impact Factor
             </span>
             <span className="text-lg font-bold font-merriweather leading-none text-text-black">
-              {journal?.badge.value}
+              {badgeValue}
             </span>
           </div>
         )}
@@ -53,12 +48,14 @@ export function JournalDetails({
           {
             label: "Overview",
             value: "overview",
-            content: <JournalOverviewTab />,
+            content: <JournalOverviewTab journal={journal} />,
           },
           {
             label: "Editorial Board",
             value: "editorial-board",
-            content: <EditorialBoard />,
+            content: (
+              <EditorialBoard editorialBoard={journal.editorial_board} />
+            ),
           },
           {
             label: "Articles and Issues",
@@ -88,17 +85,16 @@ export function JournalDetails({
             content: (
               <StatsTab
                 journalStats={{
-                  total_articles: serverJournal?.stats?.total_articles || 0,
-                  total_citations: serverJournal?.stats?.total_citations || 0,
-                  total_issues: serverJournal?.stats?.total_issues || 0,
-                  impact_factor: serverJournal?.stats?.impact_factor || "0.000",
-                  cite_score: serverJournal?.stats?.cite_score || "0.000",
-                  h_index: serverJournal?.stats?.h_index || 0,
-                  acceptance_rate:
-                    serverJournal?.stats?.acceptance_rate || "0.00",
-                  average_review_time:
-                    serverJournal?.stats?.average_review_time || 0,
-                  recommendations: serverJournal?.stats?.recommendations || 0,
+                  total_articles: journal.stats?.total_publications || 0,
+                  total_citations: journal.stats?.total_citations || 0,
+                  total_issues: journal.stats?.total_issues || 0,
+                  impact_factor:
+                    journal.stats?.impact_factor?.toString() || "0.000",
+                  cite_score: "0.000",
+                  h_index: journal.stats?.h_index || 0,
+                  acceptance_rate: "0.00",
+                  average_review_time: 0,
+                  recommendations: 0,
                 }}
               />
             ),
@@ -106,7 +102,7 @@ export function JournalDetails({
           {
             label: "Contact",
             value: "contact",
-            content: <ContactTab />,
+            content: <ContactTab journal={journal} />,
           },
         ]}
         moreOptions={

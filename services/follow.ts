@@ -24,26 +24,34 @@ export interface FollowStats {
   is_following?: boolean;
 }
 
+export interface UserProfileType {
+  institute?: string;
+  designation?: string;
+  institution_name?: string;
+}
+
 export interface FollowerUser {
   id: number;
-  follower_details: {
+  user: {
     id: number;
     email: string;
     user_type: "author" | "institution";
-    full_name?: string;
-    institution_name?: string;
+    name: string;
+    profile_picture: string | null;
+    user_profile_type: UserProfileType;
   };
   created_at: string;
 }
 
 export interface FollowingUser {
   id: number;
-  following_details: {
+  user: {
     id: number;
     email: string;
     user_type: "author" | "institution";
-    full_name?: string;
-    institution_name?: string;
+    name: string;
+    profile_picture: string | null;
+    user_profile_type: UserProfileType;
   };
   created_at: string;
 }

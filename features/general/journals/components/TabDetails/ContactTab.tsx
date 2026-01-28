@@ -1,88 +1,20 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import type { JournalDetail } from "../../api/journals.server";
 
 interface ContactDetail {
   label: string;
   value: string;
 }
 
-interface JournalDetailsData {
-  englishTitle: string;
-  originalTitle: string;
-  shortTitle: string;
-  printedVersion: string;
-  electronicVersion: string;
-  journalCharacter: string;
-  publicationFrequency: string;
-  circulation: string;
-  firstIssueYear: string;
-  freeFullText: string;
+interface ContactTabProps {
+  journal: JournalDetail;
 }
-
-interface ContactInfo {
-  location: string;
-  tel: string;
-  email: string;
-  website: string;
-}
-
-interface ContactData {
-  journalDetails: JournalDetailsData;
-  editorialDetails: ContactInfo;
-  publisherDetails: ContactInfo;
-}
-
-// Mock data - replace with props or API data later
-const mockContactData: ContactData = {
-  journalDetails: {
-    englishTitle: "Journal of Himalayan Environmental Studies",
-    originalTitle: "Himalayan Studies",
-    shortTitle: "n/d",
-    printedVersion: "No",
-    electronicVersion: "Yes",
-    journalCharacter: "naukowy",
-    publicationFrequency: "n/d",
-    circulation: "n/d",
-    firstIssueYear: "2019",
-    freeFullText: "PDF Available",
-  },
-  editorialDetails: {
-    location: "Smart Cities Editorial Office, Grosspeteranlage 5, 4052 Basel",
-    tel: "+977 9800000000",
-    email: "cities@mdpi.com",
-    website: "https://www.mdpi.com/journal/smartcities",
-  },
-  publisherDetails: {
-    location: "MDPI AG, Grosspeteranlage 5, 4052 Basel",
-    tel: "+977 9800000000",
-    email: "indexing@mdpi.com",
-    website: "https://www.mdpi.com",
-  },
-};
-
-const journalDetailFields: { label: string; key: keyof JournalDetailsData }[] =
-  [
-    { label: "English title", key: "englishTitle" },
-    { label: "Original title", key: "originalTitle" },
-    { label: "Short title", key: "shortTitle" },
-    { label: "Printed version", key: "printedVersion" },
-    { label: "Electronic version", key: "electronicVersion" },
-    { label: "Journal character", key: "journalCharacter" },
-    { label: "Publication frequency", key: "publicationFrequency" },
-    { label: "Circulation", key: "circulation" },
-    { label: "First issue year", key: "firstIssueYear" },
-    { label: "Free full text", key: "freeFullText" },
-  ];
-
-const contactFields: { label: string; key: keyof ContactInfo }[] = [
-  { label: "Location", key: "location" },
-  { label: "Tel", key: "tel" },
-  { label: "Email", key: "email" },
-  { label: "Website", key: "website" },
-];
 
 function DetailRow({ label, value }: ContactDetail) {
+  if (!value || value === "N/A") return null;
+
   return (
     <div className="flex gap-2 text-base">
       <span className="font-semibold min-w-fit">{label}:</span>
@@ -91,7 +23,37 @@ function DetailRow({ label, value }: ContactDetail) {
   );
 }
 
-export function ContactTab() {
+export function ContactTab({ journal }: ContactTabProps) {
+  const journalDetails = [
+    { label: "English Title", value: journal.title },
+    { label: "Short Title", value: journal.short_title },
+    { label: "ISSN", value: journal.issn },
+    { label: "E-ISSN", value: journal.e_issn },
+    { label: "Language", value: journal.language },
+    { label: "Publication Frequency", value: journal.frequency_display },
+    {
+      label: "Established Year",
+      value: journal.established_year?.toString() || "N/A",
+    },
+    { label: "Open Access", value: journal.is_open_access ? "Yes" : "No" },
+    { label: "Peer Reviewed", value: journal.peer_reviewed ? "Yes" : "No" },
+  ];
+
+  const contactDetails = [
+    { label: "Email", value: journal.contact_email || "N/A" },
+    { label: "Phone", value: journal.contact_phone || "N/A" },
+    { label: "Address", value: journal.contact_address || "N/A" },
+    { label: "Website", value: journal.website || "N/A" },
+  ];
+
+  const publisherDetails = [
+    {
+      label: "Publisher",
+      value: journal.publisher_name || journal.institution_name,
+    },
+    { label: "Institution", value: journal.institution_name },
+  ];
+
   return (
     <div className="space-y-6.25 grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6.25">
       {/* Journal Details */}
@@ -100,29 +62,29 @@ export function ContactTab() {
           Journal Details
         </h3>
         <div className="space-y-2">
-          {journalDetailFields.map((field) => (
+          {journalDetails.map((field) => (
             <DetailRow
-              key={field.key}
+              key={field.label}
               label={field.label}
-              value={mockContactData.journalDetails[field.key]}
+              value={field.value}
             />
           ))}
         </div>
       </Card>
 
       <div>
-        {/* Editorial Details */}
+        {/* Contact Details */}
         <Card className="p-5 shadow-none gap-6.25 rounded-md">
           <div>
             <h3 className="heading-4 text-lg! text-text-black mb-3.75">
-              Editorial Details
+              Contact Information
             </h3>
             <div className="space-y-2">
-              {contactFields.map((field) => (
+              {contactDetails.map((field) => (
                 <DetailRow
-                  key={field.key}
+                  key={field.label}
                   label={field.label}
-                  value={mockContactData.editorialDetails[field.key]}
+                  value={field.value}
                 />
               ))}
             </div>
@@ -134,11 +96,11 @@ export function ContactTab() {
               Publisher Details
             </h3>
             <div className="space-y-2">
-              {contactFields.map((field) => (
+              {publisherDetails.map((field) => (
                 <DetailRow
-                  key={field.key}
+                  key={field.label}
                   label={field.label}
-                  value={mockContactData.publisherDetails[field.key]}
+                  value={field.value}
                 />
               ))}
             </div>

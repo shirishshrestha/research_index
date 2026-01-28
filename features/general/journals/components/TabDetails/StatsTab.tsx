@@ -162,6 +162,7 @@ export const StatsTab = ({ journalStats }: StatsTabProps) => {
         <BarChart
           title="Publications Over Time"
           data={publicationsByYearData}
+          className="h-fit"
           height={300}
           dataKey="value"
           xAxisKey="name"
@@ -169,15 +170,69 @@ export const StatsTab = ({ journalStats }: StatsTabProps) => {
           StatValuesComp={PublicationsStats}
         />
 
-        {/* Doughnut Chart - Article Types Distribution */}
-        <DoughnutChart
-          title="Article Types Distribution"
-          data={articleTypesData}
-          height={300}
-          innerRadius={60}
-          outerRadius={100}
-          showLegend={true}
-        />
+        {/* Doughnut Chart - Comparison */}
+        <div className="space-y-4">
+          <div className="flex flex-col gap-6">
+            {/* Score Breakdown Card */}
+            <div className="bg-card rounded-xl p-6 shadow-sm ring-1 ring-border h-fit">
+              <h3 className="text-lg font-semibold mb-4">Score Breakdown</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">Total Articles</span>
+                  <span className="text-sm font-semibold">
+                    {journalStats?.total_articles?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">
+                    Total Citations
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {journalStats?.total_citations?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">Total Issues</span>
+                  <span className="text-sm font-semibold">
+                    {journalStats?.total_issues?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">
+                    Recommendations
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {journalStats?.recommendations?.toLocaleString() || "0"}
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-text-gray mt-4 pt-4 border-t border-border">
+                *Based on Nepal Research Index data
+              </p>
+            </div>
+            {/* Comparison Chart with Description */}
+            <div className="grid xl:grid-cols-[40%_1fr] bg-card rounded-xl shadow-sm ring-1 ring-border p-6">
+              <DoughnutChart
+                data={articleTypesData}
+                className="shadow-none! border-none! flex-1"
+                height={200}
+                innerRadius={60}
+                outerRadius={100}
+                showLegend={false}
+              />
+              <div className="flex flex-col justify-center">
+                <h4 className="heading-4 text-lg! mb-3.75 text-text-black">
+                  Article Types Distribution
+                </h4>
+                <p className="text-sm text-text-gray">
+                  This journal publishes diverse article types with a strong
+                  emphasis on Research Articles, ensuring high-quality
+                  peer-reviewed content that advances knowledge in its field.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
