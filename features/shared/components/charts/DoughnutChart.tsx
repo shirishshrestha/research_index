@@ -80,7 +80,7 @@ interface DoughnutChartDataItem {
 }
 
 interface DoughnutChartProps {
-  title: string;
+  title?: string;
   data?: DoughnutChartDataItem[];
   colors?: string[];
   isLoading?: boolean;
@@ -150,9 +150,11 @@ export function DoughnutChart({
   if (isError) {
     return (
       <Card className={className}>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
+        {title && (
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+          </CardHeader>
+        )}
         <CardContent
           className="flex items-center justify-center"
           style={{ height: `${height}px` }}
@@ -171,9 +173,11 @@ export function DoughnutChart({
   if (allZero) {
     return (
       <Card className={className}>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
+        {title && (
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+          </CardHeader>
+        )}
         <CardContent
           className="flex items-center justify-center"
           style={{ height: `${height}px` }}
@@ -197,9 +201,11 @@ export function DoughnutChart({
 
   return (
     <Card className={className}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
+      {title && (
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+      )}
       <CardContent>
         <div className="relative">
           <ResponsiveContainer width="100%" height={height}>

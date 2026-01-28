@@ -27,13 +27,10 @@ export function PanelLoadingSkeleton({
         </div>
 
         {/* Charts skeleton */}
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <Skeleton className="h-75 rounded-xl" />
-          <Skeleton className="h-75 rounded-xl" />
-          <div className="lg:col-span-2">
-            <Skeleton className="h-62.5 rounded-xl" />
-          </div>
-        </div>
+
+        <Skeleton className="h-75 rounded-xl" />
+        <Skeleton className="h-75 rounded-xl" />
+        <Skeleton className="h-62.5 rounded-xl" />
       </div>
     </PanelContainer>
   );

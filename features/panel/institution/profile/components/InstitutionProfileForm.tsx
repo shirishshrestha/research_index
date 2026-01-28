@@ -11,6 +11,7 @@ import {
   FormTextareaField,
   FormSelectField,
   FormTagInputField,
+  FormImageUploadField,
 } from "@/components/form";
 import { Save, X } from "lucide-react";
 import { InstitutionProfile } from "../types";
@@ -76,33 +77,52 @@ export function InstitutionProfileForm({
               .filter(Boolean)
           : [],
       total_researchers: profile.total_researchers?.toString() || "",
+      logo: undefined,
     },
   });
 
   /**
    * TanStack Query mutation using usePatch hook
    */
-  const updateMutation = usePatch<
-    InstitutionProfile,
-    InstitutionProfileFormData
-  >("/auth/profile/institution/", {
-    onSuccess: async () => {
-      await revalidateInstitutionProfileAction();
-      toast.success("Profile updated successfully");
-      onSuccess();
-      router.refresh();
+  const updateMutation = usePatch<InstitutionProfile, FormData>(
+    "/auth/profile/institution/",
+    {
+      onSuccess: async () => {
+        // Revalidate server cache
+        await revalidateInstitutionProfileAction();
+
+        toast.success("Profile updated successfully");
+        onSuccess();
+
+        // Trigger Server Component refetch
+        router.refresh();
+      },
+      onError: (error: Error) => {
+        const errorMessage = extractErrorMessage(
+          error,
+          "Failed to update profile",
+        );
+        toast.error(errorMessage);
+      },
     },
-    onError: (error: Error) => {
-      const errorMessage = extractErrorMessage(
-        error,
-        "Failed to create questionnaire",
-      );
-      toast.error(errorMessage);
-    },
-  });
+  );
 
   const onSubmit = (data: InstitutionProfileFormData) => {
-    updateMutation.mutate(data);
+    // Convert to FormData for file uploads
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value instanceof File) {
+        formData.append(key, value);
+      } else if (Array.isArray(value)) {
+        // Convert array to comma-separated string
+        formData.append(key, value.join(", "));
+      } else if (value !== undefined && value !== null && value !== "") {
+        formData.append(key, String(value));
+      }
+    });
+
+    updateMutation.mutate(formData);
   };
 
   return (
@@ -130,6 +150,17 @@ export function InstitutionProfileForm({
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Basic Information</h3>
+
+            {/* Logo Upload */}
+            <FormImageUploadField
+              control={form.control}
+              name="logo"
+              label="Institution Logo"
+              description="Upload your institution logo (Max 5MB, JPG/PNG)"
+              currentImageUrl={profile.logo_url || undefined}
+              aspectRatio="square"
+              maxSize={5}
+            />
 
             <FormInputField
               control={form.control}

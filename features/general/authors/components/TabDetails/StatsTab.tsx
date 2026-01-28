@@ -3,31 +3,33 @@
 import { BarChart, DoughnutChart } from "@/features/shared/components/charts";
 import { StatsCard } from "@/features/shared/components/cards/StatsCard";
 import { FileText, Quote, BookOpen, ThumbsUp, Eye } from "lucide-react";
+import { AuthorDetail } from "../../types";
 
 interface StatsTabProps {
-  authorStats?: {
-    h_index: number;
-    i10_index: number;
-    total_citations: number;
-    total_publications: number;
-    total_reads: number;
-    total_downloads: number;
-  };
+  author?: AuthorDetail;
 }
 
-export const StatsTab = ({ authorStats }: StatsTabProps) => {
+export const StatsTab = ({ author }: StatsTabProps) => {
   // Score Breakdown Data
   const scoreBreakdownData = [
     {
       name: "Citations",
-      value: authorStats?.total_citations || 0,
+      value: author?.stats?.total_citations || 0,
       color: "#1e3a8a",
     },
-    { name: "Recommendations", value: 0, color: "#3b82f6" },
-    { name: "Reads", value: authorStats?.total_reads || 0, color: "#93c5fd" },
+    {
+      name: "Recommendations",
+      value: author?.stats?.recommendations_count || 0,
+      color: "#3b82f6",
+    },
+    {
+      name: "Reads",
+      value: author?.stats?.total_reads || 0,
+      color: "#93c5fd",
+    },
     {
       name: "Downloads",
-      value: authorStats?.total_downloads || 0,
+      value: author?.stats?.total_downloads || 0,
       color: "#7dd3c0",
     },
   ];
@@ -65,38 +67,31 @@ export const StatsTab = ({ authorStats }: StatsTabProps) => {
   return (
     <div className="space-y-8">
       {/* Stats Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <StatsCard
-          title="h-index"
-          value={authorStats?.h_index || 0}
-          icon={FileText}
-          iconColor="text-blue-600"
-          iconBgColor="bg-blue-100"
-        />
-        <StatsCard
-          title="i10-index"
-          value={authorStats?.i10_index || 0}
-          icon={FileText}
-          iconColor="text-purple-600"
-          iconBgColor="bg-purple-100"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
           title="Citations"
-          value={authorStats?.total_citations?.toLocaleString() || "0"}
+          value={author?.stats?.total_citations?.toLocaleString() || "0"}
           icon={Quote}
           iconColor="text-green-600"
           iconBgColor="bg-green-100"
         />
         <StatsCard
+          title=" Avg. Citations per Publication"
+          value={author?.stats?.avg_citations_per_publication || 0}
+          icon={FileText}
+          iconColor="text-purple-600"
+          iconBgColor="bg-purple-100"
+        />
+        <StatsCard
           title="Publications"
-          value={authorStats?.total_publications?.toLocaleString() || "0"}
+          value={author?.publications_count?.toLocaleString() || "0"}
           icon={BookOpen}
           iconColor="text-orange-600"
           iconBgColor="bg-orange-100"
         />
         <StatsCard
           title="Reads"
-          value={authorStats?.total_reads?.toLocaleString() || "0"}
+          value={author?.stats?.total_reads?.toLocaleString() || "0"}
           icon={Eye}
           iconColor="text-cyan-600"
           iconBgColor="bg-cyan-100"
@@ -109,6 +104,7 @@ export const StatsTab = ({ authorStats }: StatsTabProps) => {
         <BarChart
           title="Score Breakdown"
           data={scoreBreakdownData}
+          className="h-fit"
           height={300}
           dataKey="value"
           xAxisKey="name"
@@ -118,20 +114,69 @@ export const StatsTab = ({ authorStats }: StatsTabProps) => {
 
         {/* Doughnut Chart - Comparison */}
         <div className="space-y-4">
-          <DoughnutChart
-            title="Compared to all Nepal Research Index Members"
-            data={comparisonData}
-            height={300}
-            innerRadius={60}
-            outerRadius={100}
-            showLegend={false}
-          />
-          <p className="text-sm text-text-gray text-center px-4">
-            This author&apos;s research contribution level is higher than{" "}
-            <strong>98%</strong> of Nepal Research Index members, reflecting
-            consistent dedication, impactful publications, and influential role
-            in advancing research and education in Nepal.
-          </p>
+          <div className="flex flex-col gap-6">
+            {/* Right: Score Breakdown */}
+            <div className="bg-card rounded-xl p-6 shadow-sm ring-1 ring-border h-fit">
+              <h3 className="text-lg font-semibold mb-4">Score Breakdown</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">Citations</span>
+                  <span className="text-sm font-semibold">
+                    {author?.stats?.total_citations?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">
+                    Recommendations
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {author?.stats?.recommendations_count?.toLocaleString() ||
+                      "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">
+                    Full-Text Reads*
+                  </span>
+                  <span className="text-sm font-semibold">
+                    {author?.stats?.total_reads?.toLocaleString() || "0"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-text-gray">Other Reads*</span>
+                  <span className="text-sm font-semibold">
+                    {author?.stats?.total_downloads?.toLocaleString() || "0"}
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-text-gray mt-4 pt-4 border-t border-border">
+                *Reads by Nepal Research Index Members
+              </p>
+            </div>
+            {/* Left: Chart with description */}
+            <div className=" grid xl:grid-cols-[40%_1fr] bg-card rounded-xl shadow-sm ring-1 ring-border p-6 ">
+              <DoughnutChart
+                data={comparisonData}
+                className="shadow-none! border-none! flex-1 "
+                height={200}
+                innerRadius={60}
+                outerRadius={100}
+                showLegend={false}
+              />
+              <div className="flex flex-col  justify-center">
+                <h4 className="heading-4 text-lg! mb-3.75 text-text-black">
+                  Compared to all Nepal Research Index Members
+                </h4>
+                <p className="text-sm text-text-gray  ">
+                  {author?.full_name}&apos;s research contribution level is
+                  higher than <strong>98%</strong> of Nepal Research Index
+                  members, reflecting his consistent dedication, impactful
+                  publications, and influential role in advancing research and
+                  education in Nepal.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

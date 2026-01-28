@@ -44,12 +44,20 @@ export function TopicDetailView({ topic: topicData }: TopicDetailViewProps) {
   const handleBrowse = () => {
     if (selectedBranch) {
       // Navigate to publications page filtered by this branch
-      router.push(
-        `/articles?topic=${topicData.id}&branch=${selectedBranch.id}`,
-      );
+      router.push(`/articles?topic_branch=${selectedBranch.id}`);
     } else {
       // Navigate to publications page filtered by main topic
       router.push(`/articles?topic=${topicData.id}`);
+    }
+  };
+
+  const handleBrowseJournals = () => {
+    if (selectedBranch) {
+      // Navigate to journals page filtered by this topic
+      router.push(`/journals?topic_branch=${selectedBranch.id}`);
+    } else {
+      // Navigate to journals page filtered by main topic
+      router.push(`/journals?topic=${topicData.id}`);
     }
   };
 
@@ -291,29 +299,44 @@ export function TopicDetailView({ topic: topicData }: TopicDetailViewProps) {
       </div>
 
       {/* Browse Button at Bottom */}
-      <div className="mt-8">
+      <div className="mt-8 flex flex-col sm:flex-row gap-4">
         <Button
           onClick={handleBrowse}
           disabled={!selectedBranch}
-          className="w-full sm:w-auto py-5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 sm:flex-initial py-5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {selectedBranch ? (
             <span className="flex items-center gap-2">
-              Browse Publications
+              Browse Articles
               <ArrowRight className="w-5 h-5" />
             </span>
           ) : (
-            "Select a topic to browse publications"
+            "Select a topic to browse"
           )}
         </Button>
-        {selectedBranch && (
-          <p className="text-sm text-gray-600 mt-3">
-            You&apos;ll be directed to view{" "}
-            <strong>{selectedBranch.publications_count}</strong> publications in{" "}
-            <strong>{selectedBranch.name}</strong>
-          </p>
-        )}
+        <Button
+          onClick={handleBrowseJournals}
+          disabled={!selectedBranch}
+          variant="outline"
+          className="flex-1 sm:flex-initial py-5 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed border-primary text-primary hover:bg-primary hover:text-white"
+        >
+          {selectedBranch ? (
+            <span className="flex items-center gap-2">
+              Browse Journals
+              <ArrowRight className="w-5 h-5" />
+            </span>
+          ) : (
+            "Select a topic to browse"
+          )}
+        </Button>
       </div>
+      {selectedBranch && (
+        <p className="text-sm text-gray-600 mt-3">
+          You&apos;ll be directed to view{" "}
+          <strong>{selectedBranch.publications_count}</strong> publications in{" "}
+          <strong>{selectedBranch.name}</strong>
+        </p>
+      )}
 
       {/* Enhanced How to Use Section */}
       <div className="mt-8 rounded-xl border border-blue-100 overflow-hidden bg-blue-02">

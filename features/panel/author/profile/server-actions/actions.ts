@@ -17,7 +17,6 @@ export async function revalidateAuthorProfileAction(): Promise<{
 }> {
   try {
     // Revalidate cache tags - triggers Server Component refetch
-    // Next.js 16 requires profile/config as second argument
     revalidateTag("author-profile", "max"); // Panel view
     revalidateTag("authors", "max"); // Public list view
 

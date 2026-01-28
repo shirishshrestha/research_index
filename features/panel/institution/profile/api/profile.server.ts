@@ -20,6 +20,5 @@ import type { InstitutionProfile } from "../types";
 export async function getInstitutionProfile(): Promise<InstitutionProfile> {
   return serverGet<InstitutionProfile>("/auth/profile/institution/", {
     tags: ["institution-profile"],
-    revalidate: 300, // Cache for 5 minutes
   });
 }

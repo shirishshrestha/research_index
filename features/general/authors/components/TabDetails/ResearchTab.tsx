@@ -19,149 +19,6 @@ const categories = [
   { label: "Preprint", value: "preprint", count: 49 },
 ];
 
-const mockPublications: Publication[] = [
-  {
-    id: 1,
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    abstract:
-      "This study examines the effects of climate change on rice cultivation patterns in Nepal.",
-    publication_type: "journal_article",
-    publication_type_display: "Journal Article",
-    pdf_file: "",
-    pdf_url: "https://example.com/paper1.pdf",
-    doi: "10.58291/nrjp.2025.00123",
-    published_date: "2025-05-02",
-    journal: 1,
-    journal_id: 1,
-    journal_title: "Journal of Agricultural Research",
-    journal_issn: "2091-0878",
-    volume: "45",
-    issue: 3,
-    pages: "123-145",
-    publisher: "Nepal Research Index",
-    co_authors: "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher",
-    erratum_from: null,
-    erratum_from_title: "",
-    pubmed_id: "",
-    arxiv_id: "",
-    pubmed_central_id: "",
-    topic_branch: null,
-    is_published: true,
-    created_at: "2025-05-02T00:00:00Z",
-    updated_at: "2025-05-02T00:00:00Z",
-    author_id: 1,
-    author_name: "Dr. Ram Prasad Yadav",
-    author_email: "ram.yadav@example.com",
-    author_orcid: "",
-    mesh_terms: [],
-    citations: [],
-    references: [],
-    link_outs: [],
-    stats: {
-      citations_count: 33,
-      reads_count: 245,
-      downloads_count: 89,
-      recommendations_count: 12,
-      altmetric_score: "8.5",
-      field_citation_ratio: "1.2",
-      last_updated: "2025-05-02T00:00:00Z",
-    },
-  },
-  {
-    id: 2,
-    title: "Statistical Methods in Epidemiological Research",
-    abstract:
-      "A comprehensive review of statistical methods used in epidemiological studies.",
-    publication_type: "journal_article",
-    publication_type_display: "Journal Article",
-    pdf_file: "",
-    pdf_url: "https://example.com/paper2.pdf",
-    doi: "10.58291/nrjp.2025.00124",
-    published_date: "2025-04-15",
-    journal: 2,
-    journal_id: 2,
-    journal_title: "Nepal Medical Journal",
-    journal_issn: "2091-0789",
-    volume: "12",
-    issue: 2,
-    pages: "45-67",
-    publisher: "Nepal Research Index",
-    co_authors: "Dr. Sita Sharma, Dr. Bikash Thapa",
-    erratum_from: null,
-    erratum_from_title: "",
-    pubmed_id: "",
-    arxiv_id: "",
-    pubmed_central_id: "",
-    topic_branch: null,
-    is_published: true,
-    created_at: "2025-04-15T00:00:00Z",
-    updated_at: "2025-04-15T00:00:00Z",
-    author_id: 1,
-    author_name: "Dr. Ram Prasad Yadav",
-    author_email: "ram.yadav@example.com",
-    author_orcid: "",
-    mesh_terms: [],
-    citations: [],
-    references: [],
-    link_outs: [],
-    stats: {
-      citations_count: 28,
-      reads_count: 198,
-      downloads_count: 67,
-      recommendations_count: 8,
-      altmetric_score: "6.2",
-      field_citation_ratio: "1.1",
-      last_updated: "2025-04-15T00:00:00Z",
-    },
-  },
-  {
-    id: 3,
-    title: "Data Analysis in Clinical Trials: A Comprehensive Approach",
-    abstract: "Best practices for analyzing data from clinical trials.",
-    publication_type: "journal_article",
-    publication_type_display: "Journal Article",
-    pdf_file: "",
-    pdf_url: "https://example.com/paper3.pdf",
-    doi: "10.58291/nrjp.2025.00125",
-    published_date: "2025-03-20",
-    journal: 2,
-    journal_id: 2,
-    journal_title: "Nepal Medical Journal",
-    journal_issn: "2091-0789",
-    volume: "12",
-    issue: 1,
-    pages: "12-34",
-    publisher: "Nepal Research Index",
-    co_authors: "Michael T. Roman",
-    erratum_from: null,
-    erratum_from_title: "",
-    pubmed_id: "",
-    arxiv_id: "",
-    pubmed_central_id: "",
-    topic_branch: null,
-    is_published: true,
-    created_at: "2025-03-20T00:00:00Z",
-    updated_at: "2025-03-20T00:00:00Z",
-    author_id: 1,
-    author_name: "Dr. Ram Prasad Yadav",
-    author_email: "ram.yadav@example.com",
-    author_orcid: "",
-    mesh_terms: [],
-    citations: [],
-    references: [],
-    link_outs: [],
-    stats: {
-      citations_count: 45,
-      reads_count: 312,
-      downloads_count: 124,
-      recommendations_count: 15,
-      altmetric_score: "9.8",
-      field_citation_ratio: "1.4",
-      last_updated: "2025-03-20T00:00:00Z",
-    },
-  },
-];
-
 interface ResearchTabProps {
   authorId?: number;
 }
@@ -177,7 +34,7 @@ export const ResearchTab = ({ authorId }: ResearchTabProps) => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
         <CategoryFilter categories={categories} />
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <p className="text-muted-foreground">Loading publications...</p>
         </div>
       </div>
@@ -188,7 +45,7 @@ export const ResearchTab = ({ authorId }: ResearchTabProps) => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
         <CategoryFilter categories={categories} />
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <p className="text-destructive">Failed to load publications</p>
         </div>
       </div>
