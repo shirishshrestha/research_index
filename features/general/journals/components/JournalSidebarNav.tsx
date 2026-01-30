@@ -24,14 +24,14 @@ interface JournalSidebarNavProps {
 
 export const JournalSidebarNav = ({ sections }: JournalSidebarNavProps) => {
   return (
-    <div className="sticky top-32 max-h-150 overflow-y-auto px-4 bg-card rounded-md border ">
+    <div className="sticky top-32 max-h-150 overflow-y-auto px-4  bg-card rounded-md border ">
       <Accordion type="multiple" defaultValue={sections.map((s) => s.title)}>
         {sections.map((section) => (
           <AccordionItem key={section.title} value={section.title}>
-            <AccordionTrigger className="text-primary font-medium text-base hover:no-underline">
+            <AccordionTrigger className="text-primary font-medium py-1 pt-4 text-base! hover:no-underline">
               {section.title}
             </AccordionTrigger>
-            <AccordionContent>
+            <AccordionContent className="pb-2">
               <div className="flex flex-col space-y-1">
                 {section.items.map((item) => (
                   <a

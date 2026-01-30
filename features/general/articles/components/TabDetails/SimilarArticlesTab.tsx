@@ -32,7 +32,7 @@ const mockArticles = [
 export const SimilarArticlesTab = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6">
-      <aside className="space-y-8.75">
+      <aside className="flex flex-col gap-8.75">
         {mockArticles.map((article) => (
           <Link key={article.id} href={`/articles/${article.id}`}>
             <Card className="p-6 hover:shadow-md transition-shadow">

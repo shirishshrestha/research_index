@@ -1,6 +1,10 @@
 "use client";
 
-import { AdminCharts, AdminStatsCards } from "@/features/panel/admin";
+import {
+  AdminCharts,
+  AdminStatsCards,
+  SyncPublicationsButton,
+} from "@/features/panel/admin";
 import { createCurrentUserQueryOptions } from "@/features/shared";
 import { PanelContainer, PanelErrorCard } from "@/features/shared";
 import { useQuery } from "@tanstack/react-query";
@@ -26,12 +30,15 @@ export default function AdminDashboard() {
 
   return (
     <PanelContainer>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-primary">Admin Dashboard</h1>
-        <p className="mt-2 text-text-gray">
-          Manage system users, content, and settings
-        </p>
+      {/* Header with Sync Button */}
+      <div className="mb-8 flex items-start justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-primary">Admin Dashboard</h1>
+          <p className="mt-2 text-text-gray">
+            Manage system users, content, and settings
+          </p>
+        </div>
+        <SyncPublicationsButton />
       </div>
 
       {/* Stats Cards */}
