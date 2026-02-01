@@ -1,5 +1,5 @@
 import { HomePage } from "@/features/general/home";
 
-export default function Home() {
+export default async function Home() {
   return <HomePage />;
 }

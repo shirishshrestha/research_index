@@ -3,39 +3,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import type { Journal } from "@/features/general/journals/api/journals.server";
 
-const journals = [
-  {
-    title: "Journal of Himalayan",
-    issn: "2789-4536",
-    doiPrefix: "10.58291",
-    license: "CC BY-NC-SA 4.0",
-    image: "/journal-placeholder.png",
-  },
-  {
-    title: "Journal of Himalayan",
-    issn: "2789-4536",
-    doiPrefix: "10.58291",
-    license: "CC BY-NC-SA 4.0",
-    image: "/journal-placeholder.png",
-  },
-  {
-    title: "Journal of Himalayan",
-    issn: "2789-4536",
-    doiPrefix: "10.58291",
-    license: "CC BY-NC-SA 4.0",
-    image: "/journal-placeholder.png",
-  },
-  {
-    title: "Journal of Himalayan",
-    issn: "2789-4536",
-    doiPrefix: "10.58291",
-    license: "CC BY-NC-SA 4.0",
-    image: "/journal-placeholder.png",
-  },
-];
+interface LatestJournalsSectionProps {
+  journals: Journal[];
+}
 
-export function LatestJournalsSection() {
+export function LatestJournalsSection({
+  journals,
+}: LatestJournalsSectionProps) {
   return (
     <section className="section-padding">
       <Container>
@@ -103,15 +79,18 @@ export function LatestJournalsSection() {
 
           {/* Right Grid - Journal Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {journals.map((journal, index) => (
+            {journals.map((journal) => (
               <Card
-                key={`${index} - ${journal.title}`}
+                key={journal.id}
                 className="p-6.25 group hover:shadow-md justify-between rounded-md bg-white flex sm:flex-row transition-all space-y-4"
               >
                 {/* Card Header with External Link Icon */}
                 <div className="flex flex-col justify-between h-full items-start">
                   <h3 className="heading-3 text-text-black flex-1 mb-1.25 truncate">
-                    <Link href={"/journals"} className="group-hover:underline">
+                    <Link
+                      href={`/journals/${journal.id}`}
+                      className="group-hover:underline"
+                    >
                       {journal.title}
                     </Link>
                   </h3>
@@ -121,41 +100,33 @@ export function LatestJournalsSection() {
                     <p className="text-text-gray">
                       <span className="">ISSN:</span>{" "}
                       <Link href="#" className="text-primary hover:underline">
-                        {journal.issn}
+                        {journal.issn || "N/A"}
                       </Link>
                     </p>
                     <p className="text-text-gray">
-                      <span className="">DOI Prefix:</span>{" "}
+                      <span className="">E-ISSN:</span>{" "}
                       <Link href="#" className="text-primary hover:underline">
-                        {journal.doiPrefix}
+                        {journal.e_issn || "N/A"}
                       </Link>
                     </p>
                     <p className="text-text-gray">
-                      <span className="">License:</span> {journal.license}
+                      <span className="">Publisher:</span>{" "}
+                      {journal.publisher_name || "N/A"}
                     </p>
                   </div>
-
-                  {/* Follow Button */}
-                  <Button
-                    variant="outline"
-                    className=" border-primary mt-2.75 text-sm px-4 py-1 text-primary"
-                    size={"sm"}
-                    type="button"
-                  >
-                    Follow
-                  </Button>
                 </div>
 
-                <div className="flex flex-col justify-between items-end">
+                <div className="flex flex-col flex-1 justify-between items-end">
                   {/* Journal Image Placeholder */}
-                  <Link href={"/journals"}>
+                  <Link href={`/journals/${journal.id}`}>
                     <Icon name="link-external-02" size={24} />
                   </Link>
                   <Image
                     width={92}
                     height={123}
-                    src={"/sample-journal.png"}
-                    alt="journal-image"
+                    src={journal.cover_image_url || "/sample-journal.png"}
+                    alt={`${journal.title} cover`}
+                    className="w-23 h-30.75"
                   />
                 </div>
               </Card>

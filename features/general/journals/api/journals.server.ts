@@ -138,6 +138,14 @@ export async function getPublicJournals(
 }
 
 /**
+ * Fetch latest journals for homepage (first 4)
+ */
+export async function getLatestJournals(): Promise<Journal[]> {
+  const allJournals = await getPublicJournals();
+  return allJournals.slice(0, 4);
+}
+
+/**
  * Fetch a single journal by ID (public endpoint)
  * @param id - Journal ID
  */
