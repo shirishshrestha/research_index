@@ -97,7 +97,7 @@ export function PublicationFormDialog({
       doi: publication?.doi ?? "",
       published_date: publication?.published_date ?? "",
       journal: publication?.journal ?? null,
-      issue: publication?.issue ?? null,
+      issue: publication?.issue_id ?? publication?.issue ?? null,
       pages: publication?.pages ?? "",
       publisher: publication?.publisher ?? "",
       co_authors: publication?.co_authors ?? "",
@@ -179,15 +179,12 @@ export function PublicationFormDialog({
     if (data.published_date)
       formData.append("published_date", data.published_date);
     if (data.journal) formData.append("journal", String(data.journal));
+    
+    // Send issue_id for IssueArticle linkage
     if (data.issue) {
-      formData.append("issue", String(data.issue));
-      // Find the selected issue to get volume and issue_number
-      const selectedIssue = issues?.find((i) => i.id === Number(data.issue));
-      if (selectedIssue) {
-        formData.append("volume", String(selectedIssue.volume));
-        formData.append("issue_number", String(selectedIssue.issue_number));
-      }
+      formData.append("issue_id", String(data.issue));
     }
+    
     if (data.pages?.trim()) formData.append("pages", data.pages.trim());
     if (data.publisher?.trim())
       formData.append("publisher", data.publisher.trim());

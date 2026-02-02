@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Skeleton } from "@/components/ui/skeleton";
 import { JournalSidebarNav } from "../JournalSidebarNav";
 import { useJournalVolumes } from "../../api/journals.client";
 import Link from "next/link";
@@ -44,16 +45,59 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
+        {/* Sidebar Skeleton */}
         <aside className="">
           <div className="flex flex-col gap-1.25 sticky top-32">
-            <div className="h-96 flex items-center justify-center">
-              <p className="text-text-gray">Loading issues...</p>
+            <Skeleton className="h-8 w-48 mb-4" />
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-6 w-full" />
+                  <div className="pl-4 space-y-1.5">
+                    {[1, 2].map((j) => (
+                      <Skeleton key={j} className="h-5 w-4/5" />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </aside>
-        <div className="flex items-center justify-center min-h-96">
-          <p className="text-text-gray">Loading content...</p>
-        </div>
+
+        {/* Main Content Skeleton */}
+        <aside className="space-y-6.25">
+          <Skeleton className="h-9 w-40" />
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="border rounded-lg px-6 py-4 shadow-xs space-y-4"
+              >
+                {/* Volume Header */}
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-7 w-48" />
+                  <Skeleton className="h-5 w-32" />
+                </div>
+                {/* Issues */}
+                <div className="space-y-3 pl-4">
+                  {[1, 2].map((j) => (
+                    <div key={j} className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-6 w-40" />
+                        <Skeleton className="h-4 w-24" />
+                      </div>
+                      <div className="pl-4 space-y-2">
+                        {[1, 2, 3].map((k) => (
+                          <Skeleton key={k} className="h-16 w-full" />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
       </div>
     );
   }

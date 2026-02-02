@@ -48,20 +48,60 @@ export function PublicationsList({
       render: (row) => (
         <div className="flex flex-col gap-1">
           <span className="font-medium">{row.title}</span>
-          {row.journal_title && (
+          {row.doi && (
             <span className="text-xs text-muted-foreground">
-              {row.journal_title}
-              {row.volume && ` · Vol. ${row.volume}`}
-              {row.issue && ` (${row.issue})`}
+              DOI: {row.doi}
             </span>
           )}
         </div>
       ),
     },
     {
+      key: "journal",
+      header: "Journal",
+      render: (row) =>
+        row.journal_title || row.journal_name ? (
+          <div className="flex flex-col gap-0.5">
+            <span className="text-sm font-medium">
+              {row.journal_title || row.journal_name}
+            </span>
+            {row.journal_issn && (
+              <span className="text-xs text-muted-foreground">
+                ISSN: {row.journal_issn}
+              </span>
+            )}
+          </div>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        ),
+    },
+    {
+      key: "volume_issue",
+      header: "Vol/Issue",
+      render: (row) => {
+        const parts = [];
+        if (row.issue_volume || row.volume) {
+          parts.push(`Vol. ${row.issue_volume || row.volume}`);
+        }
+        if (row.issue_number) {
+          parts.push(`Issue ${row.issue_number}`);
+        }
+        return parts.length > 0 ? (
+          <div className="flex flex-col gap-0.5">
+            {parts.map((part, i) => (
+              <span key={i} className="text-sm">
+                {part}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        );
+      },
+    },
+    {
       key: "publication_type",
       header: "Type",
-
       render: (row) => (
         <Badge
           variant="secondary"
@@ -74,7 +114,6 @@ export function PublicationsList({
     {
       key: "published_date",
       header: "Published",
-
       render: (row) =>
         row.published_date
           ? new Date(row.published_date).toLocaleDateString("en-US", {
@@ -85,26 +124,8 @@ export function PublicationsList({
           : "—",
     },
     {
-      key: "topic_branch",
-      header: "Topic",
-      render: (row) =>
-        row.topic_branch ? (
-          <div className="flex flex-col gap-1">
-            <span className="text-sm">{row.topic_branch.topic_name}</span>
-            {row.topic_branch.name && (
-              <span className="text-xs text-muted-foreground">
-                {row.topic_branch.full_path}
-              </span>
-            )}
-          </div>
-        ) : (
-          <span className="text-muted-foreground">—</span>
-        ),
-    },
-    {
       key: "stats",
       header: "Citations",
-
       render: (row) => (
         <span className="font-medium">{row.stats?.citations_count || 0}</span>
       ),
@@ -112,7 +133,6 @@ export function PublicationsList({
     {
       key: "is_published",
       header: "Status",
-
       render: (row) => (
         <Badge variant={row.is_published ? "default" : "outline"}>
           {row.is_published ? (
@@ -132,6 +152,14 @@ export function PublicationsList({
       align: "right",
       render: (row) => (
         <div className="flex items-center gap-2 justify-end">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => window.open(`/articles/${row.id}`, "_blank")}
+            title="View article details"
+          >
+            <Eye className="w-4 h-4" />
+          </Button>
           {row.doi && (
             <Button
               size="sm"
@@ -139,12 +167,18 @@ export function PublicationsList({
               onClick={() =>
                 window.open(`https://doi.org/${row.doi}`, "_blank")
               }
+              title="Open DOI link"
             >
               <ExternalLink className="w-4 h-4" />
             </Button>
           )}
           <PublicationFormDialog publication={row} />
-          <Button size="sm" variant="ghost" onClick={() => setDeleteId(row.id)}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setDeleteId(row.id)}
+            title="Delete publication"
+          >
             <Trash2 className="w-4 h-4 text-red-600" />
           </Button>
         </div>
