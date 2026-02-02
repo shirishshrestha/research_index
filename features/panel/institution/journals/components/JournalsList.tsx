@@ -150,7 +150,7 @@ export function JournalsList() {
         <div>
           <h1 className="text-3xl font-bold text-primary">Manage Journals</h1>
           <p className="text-text-gray mt-1">
-            Create and manage your institution's journals
+            Create and manage your institution&apos;s journals
           </p>
         </div>
         <Link href="/institution/journals/create">
@@ -179,6 +179,7 @@ export function JournalsList() {
         emptyMessage="No journals yet. Create your first journal to get started."
         hoverable
         onRowClick={(row) => router.push(`/institution/journals/${row.id}`)}
+        tableClassName="flex justify-center "
       />
     </div>
   );

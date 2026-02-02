@@ -38,11 +38,22 @@ export function JournalCard({
 
           {/* Journal Details */}
           <div className="flex-1 flex gap-12.5 ">
-            {imageUrl && (
+            {imageUrl ? (
               <div className="shrink-0">
                 <div className="relative w-28 h-37.5 overflow-hidden bg-gray-100">
                   <Image
                     src={imageUrl}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="shrink-0">
+                <div className="relative w-28 h-37.5 overflow-hidden bg-gray-100">
+                  <Image
+                    src={"/placeholder.jpg"}
                     alt={title}
                     fill
                     className="object-cover"

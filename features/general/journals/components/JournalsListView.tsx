@@ -246,26 +246,39 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
                       : undefined
                 }
                 metrics={
-                  "stats" in journal && journal.stats
+                  "stats" in journal
                     ? [
                         {
-                          value:
-                            journal.stats.impact_factor?.toString() || "N/A",
+                          value: journal.stats?.impact_factor?.toString() || 0,
                           label: "Impact factor",
                         },
                         {
                           value:
-                            journal.stats.total_publications?.toString() || "0",
+                            journal.stats?.total_publications?.toString() ||
+                            "0",
                           label: "Total Publications",
                         },
                         {
-                          value: journal.stats.total_issues?.toString() || "0",
+                          value: journal.stats?.total_issues?.toString() || "0",
                           label: "Total Issues",
                         },
                       ]
                     : "metrics" in journal
                       ? journal.metrics
-                      : []
+                      : [
+                          {
+                            value: 0,
+                            label: "Impact factor",
+                          },
+                          {
+                            value: "0",
+                            label: "Total Publications",
+                          },
+                          {
+                            value: "0",
+                            label: "Total Issues",
+                          },
+                        ]
                 }
                 href={`/journals/${journal.id}`}
               />

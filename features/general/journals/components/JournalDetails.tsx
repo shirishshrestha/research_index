@@ -21,7 +21,7 @@ export function JournalDetails({ journal }: JournalDetailsProps) {
   const badgeValue =
     journal.stats?.impact_factor !== null &&
     journal.stats?.impact_factor !== undefined
-      ? journal.stats.impact_factor.toFixed(2)
+      ? Number(journal?.stats?.impact_factor).toFixed(2)
       : "0.00";
 
   return (
@@ -65,12 +65,12 @@ export function JournalDetails({ journal }: JournalDetailsProps) {
               {
                 label: "Latest Issues",
                 value: "latest-issues",
-                content: <LatestIssuesTab />,
+                content: <LatestIssuesTab journalId={journal.id} />,
               },
               {
                 label: "All Issues",
                 value: "all-issues",
-                content: <AllIssuesTab />,
+                content: <AllIssuesTab journalId={journal.id} />,
               },
               {
                 label: "Linked Datasets",

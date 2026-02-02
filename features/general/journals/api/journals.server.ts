@@ -1,6 +1,10 @@
 import { serverGet } from "@/lib/server-api";
 import type { Publication } from "@/features/general/articles/types";
 
+/* =======================
+   Journal Types
+======================= */
+
 export interface JournalStats {
   total_publications: number;
   total_issues: number;
@@ -42,6 +46,28 @@ export interface EditorialBoardMember {
   is_active: boolean;
 }
 
+export interface JournalDetail extends Journal {
+  institution_id: number;
+  scope: string;
+  cover_image: string;
+  language: string;
+  about_journal: string;
+  ethics_policies: string;
+  writing_formatting: string;
+  submitting_manuscript: string;
+  help_support: string;
+  contact_email: string;
+  contact_phone: string;
+  contact_address: string;
+  website: string;
+  doi_prefix: string;
+  editorial_board: EditorialBoardMember[];
+}
+
+/* =======================
+   Issue Types
+======================= */
+
 export interface Issue {
   id: number;
   journal_title: string;
@@ -61,41 +87,73 @@ export interface Issue {
 
 export interface IssueArticle {
   id: number;
-  publication_id: number;
-  publication_title: string;
-  page_start: number | null;
-  page_end: number | null;
+  publication: number;
+  article_title: string;
+  article_authors: string;
+  article_doi: string;
   order: number;
+  section: string;
 }
 
 export interface IssueDetail extends Issue {
   journal_id: number;
   cover_image: string | null;
   submission_deadline: string | null;
-  doi: string;
-  pages_range: string;
-  editorial_note: string;
-  guest_editors: string;
+  doi: string | null;
+  pages_range: string | null;
+  editorial_note: string | null;
+  guest_editors: string | null;
   articles: IssueArticle[];
 }
 
-export interface JournalDetail extends Journal {
-  institution_id: number;
-  scope: string;
-  cover_image: string;
-  language: string;
-  about_journal: string;
-  ethics_policies: string;
-  writing_formatting: string;
-  submitting_manuscript: string;
-  help_support: string;
-  contact_email: string;
-  contact_phone: string;
-  contact_address: string;
-  website: string;
-  doi_prefix: string;
-  editorial_board: EditorialBoardMember[];
+/* =======================
+   Volume Types
+======================= */
+
+export interface IssueArticleDetail {
+  id: number;
+  publication_id: number;
+  title: string;
+  authors: string;
+  abstract: string;
+  doi: string | null;
+  pages: string | null;
+  published_date: string;
+  pdf_url: string | null;
+  order: number;
+  section: string;
 }
+
+export interface VolumeIssue {
+  id: number;
+  volume: number;
+  issue_number: number;
+  title: string;
+  description: string;
+  cover_image_url: string | null;
+  publication_date: string;
+  is_special_issue: boolean;
+  articles: IssueArticleDetail[];
+}
+
+export interface Volume {
+  volume: number;
+  year: number | null;
+  issues_count: number;
+  articles_count: number;
+  issues: VolumeIssue[];
+}
+
+export interface JournalVolumesResponse {
+  journal_id: number;
+  journal_title: string;
+  total_volumes: number;
+  volumes: Volume[];
+}
+
+/* =======================
+   Filters
+======================= */
 
 export interface JournalFilters {
   institution?: number | string;
@@ -104,127 +162,86 @@ export interface JournalFilters {
   search?: string;
 }
 
-/**
- * Fetch all journals (public endpoint)
- * @param filters - Optional filters for institution, open_access, peer_reviewed, and search
- */
-export async function getPublicJournals(
-  filters?: JournalFilters,
-): Promise<Journal[]> {
-  const params = new URLSearchParams();
-
-  if (filters?.institution) {
-    params.append("institution", String(filters.institution));
-  }
-  if (filters?.open_access !== undefined) {
-    params.append("open_access", String(filters.open_access));
-  }
-  if (filters?.peer_reviewed !== undefined) {
-    params.append("peer_reviewed", String(filters.peer_reviewed));
-  }
-  if (filters?.search) {
-    params.append("search", filters.search);
-  }
-
-  const endpoint = `/publications/journals/public/${params.toString() ? `?${params.toString()}` : ""}`;
-
-  const response = await serverGet<Journal[]>(endpoint, {
-    tags: ["journals"],
-    revalidate: 3600, // Revalidate every hour
-  });
-
-  return response;
-}
-
-/**
- * Fetch a single journal by ID (public endpoint)
- * @param id - Journal ID
- */
-export async function getPublicJournal(
-  id: number | string,
-): Promise<JournalDetail> {
-  const response = await serverGet<JournalDetail>(
-    `/publications/journals/public/${id}/`,
-    {
-      tags: ["journals", `journal-${id}`],
-      revalidate: 3600, // Revalidate every hour
-    },
-  );
-
-  return response;
-}
-
-/**
- * Fetch all publications for a specific journal (public endpoint)
- * @param journalId - Journal ID
- */
-export async function getJournalPublications(
-  journalId: number | string,
-): Promise<Publication[]> {
-  const response = await serverGet<Publication[]>(
-    `/publications/journals/${journalId}/publications/`,
-    {
-      tags: ["journals", `journal-${journalId}`, "publications"],
-      revalidate: 3600, // Revalidate every hour
-    },
-  );
-
-  return response;
-}
-
 export interface IssueFilters {
   year?: number;
   volume?: number;
   status?: "draft" | "published" | "archived";
 }
 
-/**
- * Fetch all issues for a specific journal (public endpoint)
- * @param journalId - Journal ID
- * @param filters - Optional filters for year, volume, and status
- */
+/* =======================
+   API Functions
+======================= */
+
+export async function getPublicJournals(
+  filters?: JournalFilters,
+): Promise<Journal[]> {
+  const params = new URLSearchParams();
+
+  if (filters?.institution) params.append("institution", String(filters.institution));
+  if (filters?.open_access !== undefined) params.append("open_access", String(filters.open_access));
+  if (filters?.peer_reviewed !== undefined) params.append("peer_reviewed", String(filters.peer_reviewed));
+  if (filters?.search) params.append("search", filters.search);
+
+  return serverGet<Journal[]>(
+    `/publications/journals/public/${params.toString() ? `?${params}` : ""}`,
+    { tags: ["journals"], revalidate: 3600 },
+  );
+}
+
+export async function getLatestJournals(): Promise<Journal[]> {
+  const journals = await getPublicJournals();
+  return journals.slice(0, 4);
+}
+
+export async function getPublicJournal(
+  id: number | string,
+): Promise<JournalDetail> {
+  return serverGet<JournalDetail>(
+    `/publications/journals/public/${id}/`,
+    { tags: ["journals", `journal-${id}`], revalidate: 3600 },
+  );
+}
+
+export async function getJournalPublications(
+  journalId: number | string,
+): Promise<Publication[]> {
+  return serverGet<Publication[]>(
+    `/publications/journals/${journalId}/publications/`,
+    { tags: ["journals", `journal-${journalId}`, "publications"], revalidate: 3600 },
+  );
+}
+
+export async function getJournalVolumes(
+  journalId: number | string,
+): Promise<JournalVolumesResponse> {
+  return serverGet<JournalVolumesResponse>(
+    `/publications/journals/public/${journalId}/volumes/`,
+    { tags: ["journals", `journal-${journalId}`, "volumes"], revalidate: 3600 },
+  );
+}
+
 export async function getPublicJournalIssues(
   journalId: number | string,
   filters?: IssueFilters,
 ): Promise<Issue[]> {
   const params = new URLSearchParams();
 
-  if (filters?.year) {
-    params.append("year", String(filters.year));
-  }
-  if (filters?.volume) {
-    params.append("volume", String(filters.volume));
-  }
-  if (filters?.status) {
-    params.append("status", filters.status);
-  }
+  if (filters?.year) params.append("year", String(filters.year));
+  if (filters?.volume) params.append("volume", String(filters.volume));
+  if (filters?.status) params.append("status", filters.status);
 
-  const endpoint = `/publications/journals/public/${journalId}/issues/${params.toString() ? `?${params.toString()}` : ""}`;
-
-  const response = await serverGet<Issue[]>(endpoint, {
-    tags: ["journals", `journal-${journalId}`, "issues"],
-    revalidate: 3600, // Revalidate every hour
-  });
-
-  return response;
+  return serverGet<Issue[]>(
+    `/publications/journals/public/${journalId}/issues/${params.toString() ? `?${params}` : ""}`,
+    { tags: ["journals", `journal-${journalId}`, "issues"], revalidate: 3600 },
+  );
 }
 
-/**
- * Fetch a single issue by ID (public endpoint)
- * @param journalId - Journal ID
- * @param issueId - Issue ID
- */
 export async function getPublicJournalIssue(
   journalId: number | string,
   issueId: number | string,
 ): Promise<IssueDetail> {
-  const response = await serverGet<IssueDetail>(
+  return serverGet<IssueDetail>(
     `/publications/journals/public/${journalId}/issues/${issueId}/`,
-    {
-      tags: ["journals", `journal-${journalId}`, "issues", `issue-${issueId}`],
-      revalidate: 3600, // Revalidate every hour
-    },
+    { tags: ["journals", `journal-${journalId}`, "issues", `issue-${issueId}`], revalidate: 3600 },
   );
-
-  return response;
 }

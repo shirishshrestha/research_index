@@ -120,6 +120,10 @@ export interface Publication {
   journal_id: number;
   journal_title: string;
   journal_issn: string;
+  journal_name: string; // Alias for journal_title
+  issue_id: number | null; // Issue ID from IssueArticle linkage
+  issue_number: number | null; // Issue number from IssueArticle linkage
+  issue_volume: number | null; // Volume from IssueArticle linkage
   volume: string;
   issue: number; // Changed from issue string to issue ID
   pages: string;
@@ -153,7 +157,8 @@ export interface PublicationFormData {
   doi?: string;
   published_date?: string;
   journal?: number; // Changed from journal_name to journal ID
-  issue?: number; // Changed from issue string to issue ID
+  issue?: number; // This is now issue_id for IssueArticle linkage
+  issue_id?: number; // Explicit issue_id field
   volume?: string;
   pages?: string;
   publisher?: string;

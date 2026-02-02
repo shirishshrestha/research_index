@@ -4,14 +4,17 @@ import {
   AboutPlatformSection,
   LatestJournalsSection,
 } from "./components";
+import { getLatestJournals } from "../journals/api/journals.server";
 
-export function HomePage() {
+export async function HomePage() {
+  const journals = await getLatestJournals();
+
   return (
     <>
       <HeroSection />
       <FeaturesSection />
       <AboutPlatformSection />
-      <LatestJournalsSection />
+      <LatestJournalsSection journals={journals} />
     </>
   );
 }

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Icon } from "@/components/shared";
-import { FilterToolbar, Pagination } from "@/features/shared/components";
+import { FilterToolbar } from "@/features/shared/components";
 import {
   accessTypeOptions,
   publicationTypeOptions,
@@ -12,66 +12,48 @@ import {
   languageOptions,
 } from "@/features/shared/constants/filterOptions";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useJournalIssues } from "../../api/journals.client";
 
-interface Article {
-  id: string;
-  title: string;
-  authors: string;
-  publishedAt: string;
-  doi: string;
-  citations: number;
+interface LatestIssuesTabProps {
+  journalId: number;
 }
 
-const mockArticles: Article[] = [
-  {
-    id: "1",
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    authors:
-      "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
-    publishedAt: "02 May 2025",
-    doi: "10.5829/nrip.2025.00123",
-    citations: 33,
-  },
-  {
-    id: "2",
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    authors:
-      "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
-    publishedAt: "02 May 2025",
-    doi: "10.5829/nrip.2025.00123",
-    citations: 33,
-  },
-  {
-    id: "3",
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    authors:
-      "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
-    publishedAt: "02 May 2025",
-    doi: "10.5829/nrip.2025.00123",
-    citations: 33,
-  },
-  {
-    id: "4",
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    authors:
-      "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
-    publishedAt: "02 May 2025",
-    doi: "10.5829/nrip.2025.00123",
-    citations: 33,
-  },
-  {
-    id: "5",
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    authors:
-      "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
-    publishedAt: "02 May 2025",
-    doi: "10.5829/nrip.2025.00123",
-    citations: 33,
-  },
-];
+export function LatestIssuesTab({ journalId }: LatestIssuesTabProps) {
+  const {
+    data: issues = [],
+    isLoading: loading,
+    error,
+  } = useJournalIssues(journalId, { status: "published" });
 
-export function LatestIssuesTab() {
+  // Get the latest issue (first one)
+  const latestIssue = issues.length > 0 ? issues[0] : null;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <p className="text-text-gray">Loading latest issue...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <p className="text-destructive">
+          Failed to load latest issue. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
+  if (!latestIssue) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <p className="text-text-gray">No published issues yet.</p>
+      </div>
+    );
+  }
+
   return (
     <div className=" ">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
@@ -147,64 +129,51 @@ export function LatestIssuesTab() {
             <h2 className="heading-3 text-primary mb-8.75">Latest Issue</h2>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="heading-4 text-text-black">Volume 365</h3>
-                <p className="desc text-base">December 2025</p>
+                <h3 className="heading-4 text-text-black">
+                  Volume {latestIssue.volume}, Issue {latestIssue.issue_number}
+                </h3>
+                <p className="desc text-base">
+                  {new Date(latestIssue.publication_date).toLocaleDateString(
+                    "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                    },
+                  )}
+                </p>
+                {latestIssue.title && (
+                  <p className="text-sm text-text-gray mt-1">
+                    {latestIssue.title}
+                  </p>
+                )}
               </div>
               <div className="flex gap-3">
-                <Button variant="outline" size="sm">
-                  <ChevronLeft size={20} />
-                  <span>Previous vol/issue</span>
-                </Button>
-                <Button variant="outline" size="sm">
-                  <span>Next vol/issue</span>
-                  <ChevronRight size={20} />
-                </Button>
+                <Link href={`/journals/${journalId}/issues/${latestIssue.id}`}>
+                  <Button variant="default" size="sm">
+                    View Full Issue
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
 
-          {/* Search */}
-          <FilterToolbar containerClass="flex-row! items-end bg-white p-4 rounded-lg shadow-xs">
-            <FilterToolbar.Search
-              placeholder="Search articles...."
-              paramName="search"
-              label="Search"
-            />
-          </FilterToolbar>
+          {/* Message about articles */}
+          <div className="p-6 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              This issue contains <strong>{latestIssue.articles_count}</strong>{" "}
+              {latestIssue.articles_count === 1 ? "article" : "articles"}.{" "}
+              <Link
+                href={`/journals/${journalId}/issues/${latestIssue.id}`}
+                className="underline font-semibold"
+              >
+                View full issue details
+              </Link>{" "}
+              to see all articles.
+            </p>
+          </div>
 
-          {/* Results List */}
-          {mockArticles.map((article) => (
-            <div key={article.id} className="space-y-6.25">
-              <Link href={`/articles/${article.id}`}>
-                <Card className="p-6 hover:shadow-md transition-shadow">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {article.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-2">
-                    {article.authors}
-                  </p>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span>{article.publishedAt}</span>
-                    <span>•</span>
-                    <span>{article.doi}</span>
-                    <span>•</span>
-                    <span>{article.citations} Citations</span>
-                  </div>
-                </Card>
-              </Link>
-            </div>
-          ))}
-
-          {/* Pagination Bottom */}
-          {mockArticles.length > 0 && (
-            <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(40 / 5)}
-              totalCount={40}
-              pageSize={5}
-              showPageSizeSelector={false}
-            />
-          )}
+          {/* If you have articles in the Issue type, display them */}
+          {/* For now, showing a placeholder as articles need to be fetched from issue detail endpoint */}
         </div>
       </div>
     </div>
