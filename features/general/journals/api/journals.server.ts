@@ -70,6 +70,47 @@ export interface IssueArticle {
   section: string;
 }
 
+export interface IssueArticleDetail {
+  id: number;
+  publication_id: number;
+  title: string;
+  authors: string;
+  abstract: string;
+  doi: string | null;
+  pages: string | null;
+  published_date: string;
+  pdf_url: string | null;
+  order: number;
+  section: string;
+}
+
+export interface VolumeIssue {
+  id: number;
+  volume: number;
+  issue_number: number;
+  title: string;
+  description: string;
+  cover_image_url: string | null;
+  publication_date: string;
+  is_special_issue: boolean;
+  articles: IssueArticleDetail[];
+}
+
+export interface Volume {
+  volume: number;
+  year: number | null;
+  issues_count: number;
+  articles_count: number;
+  issues: VolumeIssue[];
+}
+
+export interface JournalVolumesResponse {
+  journal_id: number;
+  journal_title: string;
+  total_volumes: number;
+  volumes: Volume[];
+}
+
 export interface Issue {
   id: number;
   journal_title: string;
@@ -174,6 +215,25 @@ export async function getJournalPublications(
     `/publications/journals/${journalId}/publications/`,
     {
       tags: ["journals", `journal-${journalId}`, "publications"],
+      revalidate: 3600, // Revalidate every hour
+    },
+  );
+
+  return response;
+}
+
+/**
+ * Fetch journal volumes with nested issues and articles (public endpoint)
+ * This endpoint returns data pre-grouped by volume with all nested data
+ * @param journalId - Journal ID
+ */
+export async function getJournalVolumes(
+  journalId: number | string,
+): Promise<JournalVolumesResponse> {
+  const response = await serverGet<JournalVolumesResponse>(
+    `/publications/journals/public/${journalId}/volumes/`,
+    {
+      tags: ["journals", `journal-${journalId}`, "volumes"],
       revalidate: 3600, // Revalidate every hour
     },
   );

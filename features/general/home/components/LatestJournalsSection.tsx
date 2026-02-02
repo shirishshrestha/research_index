@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import type { Journal } from "@/features/general/journals/api/journals.server";
+import { EllipsisTooltip } from "@/features/shared";
 
 interface LatestJournalsSectionProps {
   journals: Journal[];
@@ -82,18 +83,21 @@ export function LatestJournalsSection({
             {journals.map((journal) => (
               <Card
                 key={journal.id}
-                className="p-6.25 group hover:shadow-md justify-between rounded-md bg-white flex sm:flex-row transition-all space-y-4"
+                className="gap-1 sm:gap-3 p-6.25 group hover:shadow-md justify-between rounded-md bg-white flex sm:flex-row
+                transition-all space-y-4 "
               >
                 {/* Card Header with External Link Icon */}
-                <div className="flex flex-col justify-between h-full items-start">
-                  <h3 className="heading-3 text-text-black flex-1 mb-1.25 truncate">
-                    <Link
-                      href={`/journals/${journal.id}`}
-                      className="group-hover:underline"
-                    >
-                      {journal.title}
-                    </Link>
-                  </h3>
+                <div className="flex w-full  flex-col gap-2 h-full items-start">
+                  <Link
+                    href={`/journals/${journal.id}`}
+                    className="group-hover:underline heading-3"
+                  >
+                    <EllipsisTooltip
+                      text={journal.title}
+                      spanProps={{ className: "max-w-45" }}
+                      maxLength={25}
+                    />
+                  </Link>
 
                   {/* Journal Details */}
                   <div className="space-y-1 text-sm">
@@ -116,7 +120,7 @@ export function LatestJournalsSection({
                   </div>
                 </div>
 
-                <div className="flex flex-col flex-1 justify-between items-end">
+                <div className="flex flex-col w-full justify-between sm:items-end">
                   {/* Journal Image Placeholder */}
                   <Link href={`/journals/${journal.id}`}>
                     <Icon name="link-external-02" size={24} />
@@ -126,7 +130,7 @@ export function LatestJournalsSection({
                     height={123}
                     src={journal.cover_image_url || "/sample-journal.png"}
                     alt={`${journal.title} cover`}
-                    className="w-23 h-30.75"
+                    className="w-[80%] h-45 object-cover "
                   />
                 </div>
               </Card>

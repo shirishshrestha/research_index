@@ -179,6 +179,7 @@ export function JournalsList() {
         emptyMessage="No journals yet. Create your first journal to get started."
         hoverable
         onRowClick={(row) => router.push(`/institution/journals/${row.id}`)}
+        tableClassName="flex justify-center "
       />
     </div>
   );

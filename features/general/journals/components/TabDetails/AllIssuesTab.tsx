@@ -7,16 +7,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { JournalSidebarNav } from "../JournalSidebarNav";
-import { useJournalIssues } from "../../api/journals.client";
-import type { Issue } from "../../api/journals.server";
+import { useJournalVolumes } from "../../api/journals.client";
 import Link from "next/link";
 import { useMemo } from "react";
-
-interface VolumeGroup {
-  volume: number;
-  year: number;
-  issues: Issue[];
-}
 
 interface AllIssuesTabProps {
   journalId: number;
@@ -24,37 +17,22 @@ interface AllIssuesTabProps {
 
 export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
   const {
-    data: issues = [],
+    data: volumesData,
     isLoading: loading,
     error,
-  } = useJournalIssues(journalId);
+  } = useJournalVolumes(journalId);
 
-  // Group issues by volume
-  const volumes = useMemo(() => {
-    const volumeMap = new Map<number, VolumeGroup>();
-
-    issues.forEach((issue) => {
-      if (!volumeMap.has(issue.volume)) {
-        const year = new Date(issue.publication_date).getFullYear();
-        volumeMap.set(issue.volume, {
-          volume: issue.volume,
-          year,
-          issues: [],
-        });
-      }
-      volumeMap.get(issue.volume)!.issues.push(issue);
-    });
-
-    // Convert to array and sort by volume (descending)
-    return Array.from(volumeMap.values()).sort((a, b) => b.volume - a.volume);
-  }, [issues]);
+  const volumes = useMemo(
+    () => volumesData?.volumes || [],
+    [volumesData?.volumes],
+  );
 
   // Generate sidebar sections from volumes
   const sidebarSections = useMemo(
     () =>
-      volumes.map((volumeGroup) => ({
-        title: `Volume ${volumeGroup.volume} (${volumeGroup.year})`,
-        items: volumeGroup.issues.map((issue) => ({
+      volumes.map((volume) => ({
+        title: `Volume ${volume.volume} (${volume.year || "N/A"})`,
+        items: volume.issues.map((issue) => ({
           id: `issue-${issue.id}`,
           label: `Issue ${issue.issue_number}`,
           href: `#issue-${issue.id}`,
@@ -102,7 +80,7 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
   if (volumes.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-96">
-        <p className="text-text-gray">No issues published yet.</p>
+        <p className="text-text-gray">No published issues yet.</p>
       </div>
     );
   }
@@ -122,76 +100,118 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
       <aside className="space-y-6.25">
         <h2 className="heading-3 text-primary!">All Issues</h2>
         <Accordion type="multiple" className="w-full space-y-4">
-          {volumes.map((volumeGroup) => (
+          {volumes.map((volume) => (
             <AccordionItem
-              key={volumeGroup.volume}
-              value={`volume-${volumeGroup.volume}`}
+              key={volume.volume}
+              value={`volume-${volume.volume}`}
               className="border rounded-lg px-6 py-2 shadow-xs"
             >
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center justify-between w-full pr-4">
                   <span className="heading-4 text-lg! text-text-black">
-                    Volume {volumeGroup.volume} ({volumeGroup.year})
+                    Volume {volume.volume} ({volume.year || "N/A"})
                   </span>
                   <span className="text-sm text-text-gray">
-                    {volumeGroup.issues.length}{" "}
-                    {volumeGroup.issues.length === 1 ? "issue" : "issues"}
+                    {volume.issues_count}{" "}
+                    {volume.issues_count === 1 ? "issue" : "issues"} •{" "}
+                    {volume.articles_count}{" "}
+                    {volume.articles_count === 1 ? "article" : "articles"}
                   </span>
                 </div>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="space-y-3">
-                  {volumeGroup.issues.map((issue) => (
-                    <Link
+                <Accordion type="multiple" className="w-full space-y-3">
+                  {volume.issues.map((issue) => (
+                    <AccordionItem
                       key={issue.id}
-                      href={`/journals/${journalId}/issues/${issue.id}`}
+                      value={`issue-${issue.id}`}
                       id={`issue-${issue.id}`}
-                      className="flex items-center justify-between p-4 rounded-md hover:bg-blue-02 transition-colors border border-border hover:border-primary/20 scroll-mt-40"
+                      className="border rounded-md scroll-mt-40"
                     >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-1">
-                          <span className="font-semibold text-base text-text-black">
-                            Issue {issue.issue_number}
-                          </span>
-                          {issue.is_special_issue && (
-                            <span className="px-2 py-0.5 text-xs font-medium bg-secondary text-white rounded">
-                              Special Issue
-                            </span>
-                          )}
-                          {issue.status !== "published" && (
-                            <span className="px-2 py-0.5 text-xs font-medium bg-gray-200 text-gray-700 rounded">
-                              {issue.status_display}
-                            </span>
-                          )}
+                      <AccordionTrigger className="hover:no-underline px-4 py-3">
+                        <div className="flex items-start justify-between w-full pr-4 text-left">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-1">
+                              <span className="font-semibold text-base text-text-black">
+                                Issue {issue.issue_number}
+                              </span>
+                              {issue.is_special_issue && (
+                                <span className="px-2 py-0.5 text-xs font-medium bg-secondary text-white rounded">
+                                  Special Issue
+                                </span>
+                              )}
+                            </div>
+                            {issue.title && (
+                              <p className="text-sm text-text-gray mb-1">
+                                {issue.title}
+                              </p>
+                            )}
+                            <div className="flex items-center gap-4 text-xs text-text-gray">
+                              <span>
+                                Published:{" "}
+                                {new Date(
+                                  issue.publication_date,
+                                ).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                })}
+                              </span>
+                              <span>•</span>
+                              <span>
+                                {issue.articles.length}{" "}
+                                {issue.articles.length === 1
+                                  ? "article"
+                                  : "articles"}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        {issue.title && (
-                          <p className="text-sm text-text-gray mb-1">
-                            {issue.title}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4 pb-4">
+                        {issue.articles.length === 0 ? (
+                          <p className="text-sm text-text-gray py-2">
+                            No articles in this issue yet.
                           </p>
+                        ) : (
+                          <div className="space-y-2">
+                            {issue.articles.map((article, index) => (
+                              <Link
+                                key={article.id}
+                                href={`/articles/${article.publication_id}`}
+                                className="block p-3 rounded-md hover:bg-blue-02 transition-colors border border-border hover:border-primary/20"
+                              >
+                                <div className="flex items-start gap-3">
+                                  <span className="text-xs font-medium text-text-gray mt-1 shrink-0">
+                                    {index + 1}.
+                                  </span>
+                                  <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-semibold text-text-black mb-1 line-clamp-2">
+                                      {article.title}
+                                    </h4>
+                                    <p className="text-xs text-text-gray mb-1">
+                                      {article.authors}
+                                    </p>
+                                    {article.pages && (
+                                      <p className="text-xs text-text-gray">
+                                        Pages: {article.pages}
+                                      </p>
+                                    )}
+                                    {article.doi && (
+                                      <p className="text-xs text-primary mt-1">
+                                        DOI: {article.doi}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
                         )}
-                        <div className="flex items-center gap-4 text-xs text-text-gray">
-                          <span>
-                            Published:{" "}
-                            {new Date(
-                              issue.publication_date,
-                            ).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </span>
-                          <span>•</span>
-                          <span>
-                            {issue.articles_count}{" "}
-                            {issue.articles_count === 1
-                              ? "article"
-                              : "articles"}
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
+                      </AccordionContent>
+                    </AccordionItem>
                   ))}
-                </div>
+                </Accordion>
               </AccordionContent>
             </AccordionItem>
           ))}

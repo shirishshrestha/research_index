@@ -2,7 +2,31 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api";
-import type { Issue } from "./journals.server";
+import type { Issue, JournalVolumesResponse } from "./journals.server";
+
+/**
+ * Fetch journal volumes with nested issues and articles from the client side
+ * @param journalId - The journal ID
+ */
+async function fetchJournalVolumes(
+  journalId: number | string,
+): Promise<JournalVolumesResponse> {
+  return api.get<JournalVolumesResponse>(
+    `/publications/journals/public/${journalId}/volumes/`,
+  );
+}
+
+/**
+ * React Query hook to fetch journal volumes with nested issues and articles
+ * @param journalId - The journal ID
+ */
+export function useJournalVolumes(journalId: number | undefined) {
+  return useQuery({
+    queryKey: ["journal-volumes", journalId],
+    queryFn: () => fetchJournalVolumes(journalId!),
+    enabled: !!journalId,
+  });
+}
 
 /**
  * Fetch journal issues from the client side
