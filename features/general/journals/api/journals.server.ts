@@ -1,6 +1,10 @@
 import { serverGet } from "@/lib/server-api";
 import type { Publication } from "@/features/general/articles/types";
 
+/* =======================
+   Journal Types
+======================= */
+
 export interface JournalStats {
   total_publications: number;
   total_issues: number;
@@ -60,6 +64,27 @@ export interface JournalDetail extends Journal {
   editorial_board: EditorialBoardMember[];
 }
 
+/* =======================
+   Issue Types
+======================= */
+
+export interface Issue {
+  id: number;
+  journal_title: string;
+  volume: number;
+  issue_number: number;
+  title: string;
+  description: string;
+  cover_image_url: string | null;
+  publication_date: string;
+  status: "draft" | "published" | "archived";
+  status_display: string;
+  is_special_issue: boolean;
+  articles_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface IssueArticle {
   id: number;
   publication: number;
@@ -69,6 +94,21 @@ export interface IssueArticle {
   order: number;
   section: string;
 }
+
+export interface IssueDetail extends Issue {
+  journal_id: number;
+  cover_image: string | null;
+  submission_deadline: string | null;
+  doi: string | null;
+  pages_range: string | null;
+  editorial_note: string | null;
+  guest_editors: string | null;
+  articles: IssueArticle[];
+}
+
+/* =======================
+   Volume Types
+======================= */
 
 export interface IssueArticleDetail {
   id: number;
@@ -111,33 +151,9 @@ export interface JournalVolumesResponse {
   volumes: Volume[];
 }
 
-export interface Issue {
-  id: number;
-  journal_title: string;
-  volume: number;
-  issue_number: number;
-  title: string;
-  description: string;
-  cover_image_url: string | null;
-  publication_date: string;
-  status: string;
-  status_display: string;
-  is_special_issue: boolean;
-  articles_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface IssueDetail extends Issue {
-  journal_id: number;
-  cover_image: string;
-  submission_deadline: string | null;
-  doi: string | null;
-  pages_range: string | null;
-  editorial_note: string | null;
-  guest_editors: string | null;
-  articles: IssueArticle[];
-}
+/* =======================
+   Filters
+======================= */
 
 export interface JournalFilters {
   institution?: number | string;
@@ -146,152 +162,86 @@ export interface JournalFilters {
   search?: string;
 }
 
-/**
- * Fetch all journals (public endpoint)
- * @param filters - Optional filters for institution, open_access, peer_reviewed, and search
- */
+export interface IssueFilters {
+  year?: number;
+  volume?: number;
+  status?: "draft" | "published" | "archived";
+}
+
+/* =======================
+   API Functions
+======================= */
+
 export async function getPublicJournals(
   filters?: JournalFilters,
 ): Promise<Journal[]> {
   const params = new URLSearchParams();
 
-  if (filters?.institution) {
-    params.append("institution", String(filters.institution));
-  }
-  if (filters?.open_access !== undefined) {
-    params.append("open_access", String(filters.open_access));
-  }
-  if (filters?.peer_reviewed !== undefined) {
-    params.append("peer_reviewed", String(filters.peer_reviewed));
-  }
-  if (filters?.search) {
-    params.append("search", filters.search);
-  }
+  if (filters?.institution) params.append("institution", String(filters.institution));
+  if (filters?.open_access !== undefined) params.append("open_access", String(filters.open_access));
+  if (filters?.peer_reviewed !== undefined) params.append("peer_reviewed", String(filters.peer_reviewed));
+  if (filters?.search) params.append("search", filters.search);
 
-  const endpoint = `/publications/journals/public/${params.toString() ? `?${params.toString()}` : ""}`;
-
-  const response = await serverGet<Journal[]>(endpoint, {
-    tags: ["journals"],
-    revalidate: 3600, // Revalidate every hour
-  });
-
-  return response;
+  return serverGet<Journal[]>(
+    `/publications/journals/public/${params.toString() ? `?${params}` : ""}`,
+    { tags: ["journals"], revalidate: 3600 },
+  );
 }
 
-/**
- * Fetch latest journals for homepage (first 4)
- */
 export async function getLatestJournals(): Promise<Journal[]> {
-  const allJournals = await getPublicJournals();
-  return allJournals.slice(0, 4);
+  const journals = await getPublicJournals();
+  return journals.slice(0, 4);
 }
 
-/**
- * Fetch a single journal by ID (public endpoint)
- * @param id - Journal ID
- */
 export async function getPublicJournal(
   id: number | string,
 ): Promise<JournalDetail> {
-  const response = await serverGet<JournalDetail>(
+  return serverGet<JournalDetail>(
     `/publications/journals/public/${id}/`,
-    {
-      tags: ["journals", `journal-${id}`],
-      revalidate: 3600, // Revalidate every hour
-    },
+    { tags: ["journals", `journal-${id}`], revalidate: 3600 },
   );
-
-  return response;
 }
 
-/**
- * Fetch all publications for a specific journal (public endpoint)
- * @param journalId - Journal ID
- */
 export async function getJournalPublications(
   journalId: number | string,
 ): Promise<Publication[]> {
-  const response = await serverGet<Publication[]>(
+  return serverGet<Publication[]>(
     `/publications/journals/${journalId}/publications/`,
-    {
-      tags: ["journals", `journal-${journalId}`, "publications"],
-      revalidate: 3600, // Revalidate every hour
-    },
+    { tags: ["journals", `journal-${journalId}`, "publications"], revalidate: 3600 },
   );
-
-  return response;
 }
 
-/**
- * Fetch journal volumes with nested issues and articles (public endpoint)
- * This endpoint returns data pre-grouped by volume with all nested data
- * @param journalId - Journal ID
- */
 export async function getJournalVolumes(
   journalId: number | string,
 ): Promise<JournalVolumesResponse> {
-  const response = await serverGet<JournalVolumesResponse>(
+  return serverGet<JournalVolumesResponse>(
     `/publications/journals/public/${journalId}/volumes/`,
-    {
-      tags: ["journals", `journal-${journalId}`, "volumes"],
-      revalidate: 3600, // Revalidate every hour
-    },
+    { tags: ["journals", `journal-${journalId}`, "volumes"], revalidate: 3600 },
   );
-
-  return response;
 }
 
-/**
- * Fetch all issues for a specific journal (public endpoint)
- * @param journalId - Journal ID
- * @param filters - Optional filters for year, volume, and status
- */
-export async function getJournalIssues(
+export async function getPublicJournalIssues(
   journalId: number | string,
-  filters?: {
-    year?: number;
-    volume?: number;
-    status?: string;
-  },
+  filters?: IssueFilters,
 ): Promise<Issue[]> {
   const params = new URLSearchParams();
 
-  if (filters?.year) {
-    params.append("year", String(filters.year));
-  }
-  if (filters?.volume) {
-    params.append("volume", String(filters.volume));
-  }
-  if (filters?.status) {
-    params.append("status", filters.status);
-  }
+  if (filters?.year) params.append("year", String(filters.year));
+  if (filters?.volume) params.append("volume", String(filters.volume));
+  if (filters?.status) params.append("status", filters.status);
 
-  const endpoint = `/publications/journals/${journalId}/issues/${params.toString() ? `?${params.toString()}` : ""}`;
-
-  const response = await serverGet<Issue[]>(endpoint, {
-    tags: ["journals", `journal-${journalId}`, "issues"],
-    revalidate: 3600, // Revalidate every hour
-  });
-
-  return response;
+  return serverGet<Issue[]>(
+    `/publications/journals/public/${journalId}/issues/${params.toString() ? `?${params}` : ""}`,
+    { tags: ["journals", `journal-${journalId}`, "issues"], revalidate: 3600 },
+  );
 }
 
-/**
- * Fetch a single issue by ID (public endpoint)
- * @param journalId - Journal ID
- * @param issueId - Issue ID
- */
-export async function getJournalIssue(
+export async function getPublicJournalIssue(
   journalId: number | string,
   issueId: number | string,
 ): Promise<IssueDetail> {
-  const response = await serverGet<IssueDetail>(
-    `/publications/journals/${journalId}/issues/${issueId}/`,
-    {
-      tags: ["journals", `journal-${journalId}`, "issues", `issue-${issueId}`],
-      revalidate: 3600, // Revalidate every hour
-    },
+  return serverGet<IssueDetail>(
+    `/publications/journals/public/${journalId}/issues/${issueId}/`,
+    { tags: ["journals", `journal-${journalId}`, "issues", `issue-${issueId}`], revalidate: 3600 },
   );
-
-  return response;
 }
