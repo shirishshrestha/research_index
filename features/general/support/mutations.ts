@@ -13,6 +13,7 @@ import type {
   SponsorshipPartnershipContent,
 } from "./types";
 import { toast } from "sonner";
+import { extractErrorMessage } from "@/utils/errorHandling";
 
 interface UpdateSupportPageData {
   title?: string;
@@ -71,7 +72,7 @@ export const useUpdateSupportPageMutation = (
       toast.success("Support page updated successfully");
     },
     onError: (error) => {
-      toast.error("Failed to update support page");
+      toast.error(extractErrorMessage(error, "Failed to update support page"));
     },
   });
 };
@@ -104,8 +105,8 @@ export const useCreatePricingTierMutation = (
       queryClient.invalidateQueries({ queryKey });
       toast.success("Pricing tier created successfully");
     },
-    onError: () => {
-      toast.error("Failed to create pricing tier");
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to create pricing tier"));
     },
   });
 };
@@ -135,8 +136,8 @@ export const useUpdatePricingTierMutation = (
       queryClient.invalidateQueries({ queryKey });
       toast.success("Pricing tier updated successfully");
     },
-    onError: () => {
-      toast.error("Failed to update pricing tier");
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to update pricing tier"));
     },
   });
 };
@@ -165,8 +166,8 @@ export const useDeletePricingTierMutation = (
       queryClient.invalidateQueries({ queryKey });
       toast.success("Pricing tier deleted successfully");
     },
-    onError: () => {
-      toast.error("Failed to delete pricing tier");
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to delete pricing tier"));
     },
   });
 };
@@ -199,8 +200,8 @@ export const useCreateBenefitMutation = (
       queryClient.invalidateQueries({ queryKey });
       toast.success("Benefit created successfully");
     },
-    onError: () => {
-      toast.error("Failed to create benefit");
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to create benefit"));
     },
   });
 };
@@ -229,8 +230,8 @@ export const useDeleteBenefitMutation = (
       queryClient.invalidateQueries({ queryKey });
       toast.success("Benefit deleted successfully");
     },
-    onError: () => {
-      toast.error("Failed to delete benefit");
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to delete benefit"));
     },
   });
 };
@@ -263,8 +264,10 @@ export const useCreateWhySupportMutation = (
       queryClient.invalidateQueries({ queryKey });
       toast.success("Why support point created successfully");
     },
-    onError: () => {
-      toast.error("Failed to create why support point");
+    onError: (error) => {
+      toast.error(
+        extractErrorMessage(error, "Failed to create why support point"),
+      );
     },
   });
 };
@@ -293,8 +296,10 @@ export const useDeleteWhySupportMutation = (
       queryClient.invalidateQueries({ queryKey });
       toast.success("Why support point deleted successfully");
     },
-    onError: () => {
-      toast.error("Failed to delete why support point");
+    onError: (error) => {
+      toast.error(
+        extractErrorMessage(error, "Failed to delete why support point"),
+      );
     },
   });
 };

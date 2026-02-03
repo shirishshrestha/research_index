@@ -177,7 +177,7 @@ export function WhySupportManager({
           ))}
           {points.length === 0 && (
             <p className="text-center text-gray-500 py-8">
-              No points yet. Click "Add Point" to create one.
+              No points yet. Click &apos;Add Point&apos; to create one.
             </p>
           )}
         </div>
