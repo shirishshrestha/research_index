@@ -1,4 +1,5 @@
 import type { Publication } from "@/features/panel/author/publications/types";
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
 
 const categories = [
   { label: "Abstract", value: "abstract" },
@@ -39,9 +40,13 @@ export const OverviewTab = ({ article }: OverviewTabProps) => {
           <h3 className="heading-4 text-text-black scroll-mt-32" id="abstract">
             Abstract
           </h3>
-          <p className="sub-body">
-            {article.abstract || "No abstract available."}
-          </p>
+          <div className="sub-body">
+            {article.abstract ? (
+              <RichTextDisplay content={article.abstract} />
+            ) : (
+              <p>No abstract available.</p>
+            )}
+          </div>
         </div>
 
         {article.erratum_from && (

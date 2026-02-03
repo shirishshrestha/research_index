@@ -11,6 +11,7 @@ import {
   FormTextareaField,
   FormSelectField,
 } from "@/components/form";
+import { FormRichTextField } from "@/components/form/FormRichTextField";
 import { Save, X, Image as ImageIcon } from "lucide-react";
 import { journalFormSchema, type JournalFormSchema } from "../utils";
 import {
@@ -211,14 +212,14 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
                   placeholder="IJAR"
                 />
 
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="description"
                   label="Description"
                   placeholder="Brief description of the journal"
                 />
 
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="scope"
                   label="Scope & Aims"
@@ -380,35 +381,35 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="about_journal"
                   label="About the Journal"
                   placeholder="Detailed information about the journal..."
                 />
 
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="ethics_policies"
                   label="Ethics & Editorial Policies"
                   placeholder="Publication ethics and editorial policies..."
                 />
 
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="writing_formatting"
                   label="Writing & Formatting Guidelines"
                   placeholder="Guidelines for writing and formatting manuscripts..."
                 />
 
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="submitting_manuscript"
                   label="Manuscript Submission Guidelines"
                   placeholder="Instructions for submitting manuscripts..."
                 />
 
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="help_support"
                   label="Help & Support"
@@ -441,7 +442,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
                   placeholder="+1 234 567 8900"
                 />
 
-                <FormTextareaField
+                <FormRichTextField
                   control={form.control}
                   name="contact_address"
                   label="Contact Address"

@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Form } from "@/components/ui/form";
 import { FormInputField } from "@/components/form/FormInputField";
 import { FormTextareaField } from "@/components/form/FormTextareaField";
+import { FormRichTextField } from "@/components/form/FormRichTextField";
 import { FormSelectField } from "@/components/form/FormSelectField";
 import { useForm, useWatch, useFieldArray } from "react-hook-form";
 import {
@@ -179,12 +180,12 @@ export function PublicationFormDialog({
     if (data.published_date)
       formData.append("published_date", data.published_date);
     if (data.journal) formData.append("journal", String(data.journal));
-    
+
     // Send issue_id for IssueArticle linkage
     if (data.issue) {
       formData.append("issue_id", String(data.issue));
     }
-    
+
     if (data.pages?.trim()) formData.append("pages", data.pages.trim());
     if (data.publisher?.trim())
       formData.append("publisher", data.publisher.trim());
@@ -267,7 +268,7 @@ export function PublicationFormDialog({
                 placeholder="Enter publication title"
               />
 
-              <FormTextareaField
+              <FormRichTextField
                 control={form.control}
                 name="abstract"
                 label="Abstract"

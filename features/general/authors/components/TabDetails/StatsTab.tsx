@@ -14,22 +14,22 @@ export const StatsTab = ({ author }: StatsTabProps) => {
   const scoreBreakdownData = [
     {
       name: "Citations",
-      value: author?.stats?.total_citations || 0,
+      value: author?.stats?.total_citations || 10,
       color: "#1e3a8a",
     },
     {
       name: "Recommendations",
-      value: author?.stats?.recommendations_count || 0,
+      value: author?.stats?.recommendations_count || 10,
       color: "#3b82f6",
     },
     {
       name: "Reads",
-      value: author?.stats?.total_reads || 0,
+      value: author?.stats?.total_reads || 10,
       color: "#93c5fd",
     },
     {
       name: "Downloads",
-      value: author?.stats?.total_downloads || 0,
+      value: author?.stats?.total_downloads || 10,
       color: "#7dd3c0",
     },
   ];
