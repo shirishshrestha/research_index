@@ -57,7 +57,7 @@ export const useUpdateSupportPageMutation = (
 
   return useMutation({
     mutationFn: async (data: UpdateSupportPageData) => {
-      return api.patch<SupportPage>(`/support/pages/${pageId}/`, data);
+      return api.put<SupportPage>(`/support/pages/${pageType}/`, data);
     },
     onSuccess: (data) => {
       const queryKey =
@@ -88,10 +88,10 @@ export const useCreatePricingTierMutation = (
 
   return useMutation({
     mutationFn: async (data: CreatePricingTierData) => {
-      return api.post<PricingTier>(
-        `/support/pages/${pageId}/pricing_tiers/`,
-        data,
-      );
+      return api.post<PricingTier>(`/support/pricing-tiers/`, {
+        ...data,
+        support_page: pageId,
+      });
     },
     onSuccess: () => {
       const queryKey =
@@ -122,10 +122,7 @@ export const useUpdatePricingTierMutation = (
 
   return useMutation({
     mutationFn: async (data: UpdatePricingTierData) => {
-      return api.patch<PricingTier>(
-        `/support/pages/${pageId}/pricing_tiers/${tierId}/`,
-        data,
-      );
+      return api.put<PricingTier>(`/support/pricing-tiers/${tierId}/`, data);
     },
     onSuccess: () => {
       const queryKey =
@@ -155,7 +152,7 @@ export const useDeletePricingTierMutation = (
 
   return useMutation({
     mutationFn: async (tierId: number) => {
-      return api.delete(`/support/pages/${pageId}/pricing_tiers/${tierId}/`);
+      return api.delete(`/support/pricing-tiers/${tierId}/`);
     },
     onSuccess: () => {
       const queryKey =
@@ -186,10 +183,10 @@ export const useCreateBenefitMutation = (
 
   return useMutation({
     mutationFn: async (data: CreateBenefitData) => {
-      return api.post<SupportBenefit>(
-        `/support/pages/${pageId}/benefits/`,
-        data,
-      );
+      return api.post<SupportBenefit>(`/support/benefits/`, {
+        ...data,
+        support_page: pageId,
+      });
     },
     onSuccess: () => {
       const queryKey =
@@ -219,7 +216,7 @@ export const useDeleteBenefitMutation = (
 
   return useMutation({
     mutationFn: async (benefitId: number) => {
-      return api.delete(`/support/pages/${pageId}/benefits/${benefitId}/`);
+      return api.delete(`/support/benefits/${benefitId}/`);
     },
     onSuccess: () => {
       const queryKey =
@@ -250,10 +247,10 @@ export const useCreateWhySupportMutation = (
 
   return useMutation({
     mutationFn: async (data: CreateWhySupportData) => {
-      return api.post<WhySupportPoint>(
-        `/support/pages/${pageId}/why_support/`,
-        data,
-      );
+      return api.post<WhySupportPoint>(`/support/why-support/`, {
+        ...data,
+        support_page: pageId,
+      });
     },
     onSuccess: () => {
       const queryKey =
@@ -283,7 +280,7 @@ export const useDeleteWhySupportMutation = (
 
   return useMutation({
     mutationFn: async (pointId: number) => {
-      return api.delete(`/support/pages/${pageId}/why_support/${pointId}/`);
+      return api.delete(`/support/why-support/${pointId}/`);
     },
     onSuccess: () => {
       const queryKey =
