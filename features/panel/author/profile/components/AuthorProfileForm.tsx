@@ -13,6 +13,7 @@ import {
   FormTagInputField,
   FormImageUploadField,
 } from "@/components/form";
+import { FormRichTextField } from "@/components/form/FormRichTextField";
 import { Save, X } from "lucide-react";
 import { usePatch } from "@/hooks/useApi";
 import { authorProfileSchema, type AuthorProfileFormData } from "../schema";
@@ -206,15 +207,12 @@ export function AuthorProfileForm({
           <div className="rounded-xl bg-card p-6 shadow-sm ring-1 ring-border space-y-4">
             <h3 className="text-lg font-semibold border-b pb-2">About</h3>
 
-            <FormTextareaField
+            <FormRichTextField
               control={form.control}
               name="bio"
               label="Bio"
               placeholder="Tell us about yourself..."
               description="A brief description of your background and expertise"
-              className="min-h-30"
-              maxLength={1000}
-              showCounter
             />
 
             <FormTagInputField

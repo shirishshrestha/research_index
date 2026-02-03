@@ -25,6 +25,7 @@ export function RichTextDisplay({ content, className }: RichTextDisplayProps) {
     ],
     content: content ? JSON.parse(content) : "",
     editable: false,
+    immediatelyRender: false,
   });
 
   if (!content) return null;

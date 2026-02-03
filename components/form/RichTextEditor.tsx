@@ -20,6 +20,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCallback } from "react";
+import '@/styles/_variables.scss';
+import '@/styles/_keyframe-animations.scss';
+
 
 interface RichTextEditorProps {
   content?: string;
@@ -169,6 +172,7 @@ export function RichTextEditor({
     ],
     content: content ? JSON.parse(content) : "",
     editable,
+    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       const json = JSON.stringify(editor.getJSON());
       onChange?.(json);

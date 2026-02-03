@@ -1,5 +1,7 @@
 "use client";
 
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
+
 import { useState } from "react";
 import { AuthorProfile } from "../types";
 import { Button } from "@/components/ui/button";
@@ -124,7 +126,13 @@ export function AuthorProfileView({ profile }: AuthorProfileViewProps) {
 
         <div>
           <label className="block text-sm font-medium mb-1">Bio</label>
-          <p className="text-text-gray">{profile.bio || "Not specified"}</p>
+          <div className="text-text-gray">
+            {profile.bio ? (
+              <RichTextDisplay content={profile.bio} />
+            ) : (
+              <p>Not specified</p>
+            )}
+          </div>
         </div>
 
         <div>

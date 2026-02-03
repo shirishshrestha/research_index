@@ -1,5 +1,7 @@
 "use client";
 
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
+
 import { useState } from "react";
 import { InstitutionProfile } from "../types";
 import { Button } from "@/components/ui/button";
@@ -123,9 +125,13 @@ export function InstitutionProfileView({
             <label className="block text-sm font-medium mb-1">
               Description
             </label>
-            <p className="text-text-gray">
-              {profile.description || "Not specified"}
-            </p>
+            <div className="text-text-gray">
+              {profile.description ? (
+                <RichTextDisplay content={profile.description} />
+              ) : (
+                <p>Not specified</p>
+              )}
+            </div>
           </div>
 
           <div className="md:col-span-2">
