@@ -26,29 +26,16 @@ export interface WhySupportPoint {
 export interface Sponsor {
   id: number;
   name: string;
-  logo: string;
+  logo?: File | string;
+  logo_url?: string;
   website_url?: string;
+  is_active: boolean;
   order: number;
-}
-
-export interface SponsorshipPoint {
-  id: number;
-  text: string;
-  order: number;
-}
-
-export interface PartnershipPoint {
-  id: number;
-  text: string;
-  order: number;
-}
-
-export interface SponsorshipPartnershipContent {
-  sponsorship_intro: string;
-  partnership_intro: string;
-  join_cta: string;
-  sponsorship_points: SponsorshipPoint[];
-  partnership_points: PartnershipPoint[];
+  show_on_author_supporter: boolean;
+  show_on_institutional_supporter: boolean;
+  show_on_sponsorship_partnership: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface SupportPage {
@@ -63,7 +50,8 @@ export interface SupportPage {
   benefits: SupportBenefit[];
   why_support_points: WhySupportPoint[];
   sponsors: Sponsor[];
-  sponsorship_content?: SponsorshipPartnershipContent;
+  sponsorship_detail?: string;
+  partnership_detail?: string;
   created_at: string;
   updated_at: string;
 }
