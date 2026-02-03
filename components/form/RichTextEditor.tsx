@@ -21,8 +21,6 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCallback } from "react";
 
-
-
 interface RichTextEditorProps {
   content?: string;
   onChange?: (json: string) => void;
@@ -183,8 +181,8 @@ export function RichTextEditor({
       <EditorContent
         editor={editor}
         className={cn(
-          "prose prose-sm max-w-none p-4 min-h-[150px] focus:outline-none",
-          "[&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[150px]",
+          "prose prose-sm max-w-none p-4 min-h-37.5 focus:outline-none",
+          "[&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-37.5",
           "[&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
           "[&_.ProseMirror_p.is-editor-empty:first-child::before]:text-muted-foreground",
           "[&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left",
