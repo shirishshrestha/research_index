@@ -37,8 +37,6 @@ interface SupportPageEditorProps {
 }
 
 export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -50,11 +48,7 @@ export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
   const updateMutation = useUpdateSupportPageMutation(data.id, pageType);
 
   const onSubmit = (formData: FormData) => {
-    updateMutation.mutate(formData, {
-      onSuccess: () => {
-        setIsEditing(false);
-      },
-    });
+    updateMutation.mutate(formData);
   };
 
   return (
@@ -84,28 +78,9 @@ export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
               />
 
               <div className="flex gap-2">
-                {!isEditing ? (
-                  <Button type="button" onClick={() => setIsEditing(true)}>
-                    Edit Content
-                  </Button>
-                ) : (
-                  <>
-                    <Button type="submit" disabled={updateMutation.isPending}>
-                      {updateMutation.isPending ? "Saving..." : "Save Changes"}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setIsEditing(false);
-                        form.reset();
-                      }}
-                      disabled={updateMutation.isPending}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
+                <Button type="submit" disabled={updateMutation.isPending}>
+                  {updateMutation.isPending ? "Saving..." : "Save Changes"}
+                </Button>
               </div>
             </form>
           </Form>

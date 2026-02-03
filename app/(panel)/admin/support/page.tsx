@@ -21,10 +21,10 @@ export default function AdminSupportPage() {
   const sponsorshipQuery = useSponsorshipPartnershipQuery();
 
   return (
-    <div className="section-padding py-8">
+    <div className="">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="heading-2 text-text-black">Manage Support Pages</h1>
+          <h1 className="heading-2 text-primary!">Manage Support Pages</h1>
           <p className="sub-body text-text-gray mt-2">
             Edit support page content, pricing tiers, benefits, and manage
             sponsors.
