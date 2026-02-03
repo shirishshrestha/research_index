@@ -12,6 +12,7 @@ import {
   FormSelectField,
   FormCheckboxField,
 } from "@/components/form";
+import { FormRichTextField } from "@/components/form/FormRichTextField";
 import { Save, X, Image as ImageIcon } from "lucide-react";
 import { issueFormSchema, type IssueFormSchema } from "../utils";
 import {
@@ -152,7 +153,7 @@ export function IssueForm({ journalId, issue, mode }: IssueFormProps) {
               placeholder="e.g., Special Issue on AI Research"
             />
 
-            <FormTextareaField
+            <FormRichTextField
               control={form.control}
               name="description"
               label="Description"
@@ -274,14 +275,14 @@ export function IssueForm({ journalId, issue, mode }: IssueFormProps) {
               />
             </div>
 
-            <FormTextareaField
+            <FormRichTextField
               control={form.control}
               name="editorial_note"
               label="Editorial Note"
               placeholder="Editor's note for this issue..."
             />
 
-            <FormTextareaField
+            <FormRichTextField
               control={form.control}
               name="guest_editors"
               label="Guest Editors"

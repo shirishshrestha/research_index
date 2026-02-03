@@ -1,5 +1,6 @@
 import { JournalSidebarNav } from "../JournalSidebarNav";
 import type { JournalDetail } from "../../api/journals.server";
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
 
 interface JournalOverviewTabProps {
   journal: JournalDetail;
@@ -89,10 +90,8 @@ export const JournalOverviewTab = ({ journal }: JournalOverviewTabProps) => {
             {journal.scope && (
               <div id="aims-scope" className="mb-6">
                 <h3 className="text-xl font-semibold mb-3">Aims and Scope</h3>
-                <div className="prose max-w-none">
-                  <p className="text-text-gray whitespace-pre-wrap">
-                    {journal.scope}
-                  </p>
+                <div className="prose max-w-none text-text-gray">
+                  <RichTextDisplay content={journal.scope} />
                 </div>
               </div>
             )}
@@ -100,10 +99,8 @@ export const JournalOverviewTab = ({ journal }: JournalOverviewTabProps) => {
             {journal.description && (
               <div id="description" className="mb-6">
                 <h3 className="text-xl font-semibold mb-3">Description</h3>
-                <div className="prose max-w-none">
-                  <p className="text-text-gray whitespace-pre-wrap">
-                    {journal.description}
-                  </p>
+                <div className="prose max-w-none text-text-gray">
+                  <RichTextDisplay content={journal.description} />
                 </div>
               </div>
             )}
@@ -114,10 +111,8 @@ export const JournalOverviewTab = ({ journal }: JournalOverviewTabProps) => {
         {journal.ethics_policies && (
           <section id="ethics-policies" className="mb-8">
             <h2 className="text-2xl font-bold mb-4">Ethics and Policies</h2>
-            <div className="prose max-w-none">
-              <p className="text-text-gray whitespace-pre-wrap">
-                {journal.ethics_policies}
-              </p>
+            <div className="prose max-w-none text-text-gray">
+              <RichTextDisplay content={journal.ethics_policies} />
             </div>
           </section>
         )}
@@ -126,10 +121,8 @@ export const JournalOverviewTab = ({ journal }: JournalOverviewTabProps) => {
         {journal.writing_formatting && (
           <section id="writing-formatting" className="mb-8">
             <h2 className="text-2xl font-bold mb-4">Writing and Formatting</h2>
-            <div className="prose max-w-none">
-              <p className="text-text-gray whitespace-pre-wrap">
-                {journal.writing_formatting}
-              </p>
+            <div className="prose max-w-none text-text-gray">
+              <RichTextDisplay content={journal.writing_formatting} />
             </div>
           </section>
         )}
@@ -140,10 +133,8 @@ export const JournalOverviewTab = ({ journal }: JournalOverviewTabProps) => {
             <h2 className="text-2xl font-bold mb-4">
               Submitting Your Manuscript
             </h2>
-            <div className="prose max-w-none">
-              <p className="text-text-gray whitespace-pre-wrap">
-                {journal.submitting_manuscript}
-              </p>
+            <div className="prose max-w-none text-text-gray">
+              <RichTextDisplay content={journal.submitting_manuscript} />
             </div>
           </section>
         )}
@@ -152,10 +143,8 @@ export const JournalOverviewTab = ({ journal }: JournalOverviewTabProps) => {
         {journal.help_support && (
           <section id="help-support" className="mb-8">
             <h2 className="text-2xl font-bold mb-4">Help and Support</h2>
-            <div className="prose max-w-none">
-              <p className="text-text-gray whitespace-pre-wrap">
-                {journal.help_support}
-              </p>
+            <div className="prose max-w-none text-text-gray">
+              <RichTextDisplay content={journal.help_support} />
             </div>
           </section>
         )}

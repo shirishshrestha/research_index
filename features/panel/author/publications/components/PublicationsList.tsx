@@ -158,7 +158,7 @@ export function PublicationsList({
             onClick={() => window.open(`/articles/${row.id}`, "_blank")}
             title="View article details"
           >
-            <Eye className="w-4 h-4" />
+            <ExternalLink className="w-4 h-4" />
           </Button>
           {row.doi && (
             <Button

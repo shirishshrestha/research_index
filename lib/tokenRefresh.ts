@@ -45,7 +45,7 @@ export const setupTokenRefreshInterceptor = () => {
         "/auth/token/refresh/",
       ];
       const isSkipEndpoint = skipRefreshEndpoints.some((endpoint) =>
-        originalRequest?.url?.includes(endpoint)
+        originalRequest?.url?.includes(endpoint),
       );
 
       // If error is 401 and we haven't tried to refresh yet and not a skip endpoint
@@ -92,12 +92,31 @@ export const setupTokenRefreshInterceptor = () => {
           }
           return api.instance(originalRequest!);
         } catch (refreshError) {
-          // Refresh failed - logout user
+          // Refresh failed - logout user and clear ALL cookies
           processQueue(refreshError, null);
           store.dispatch(logout());
 
-          // Redirect to login if in browser
+          // Clear ALL cookies from frontend
           if (typeof window !== "undefined") {
+            // Get all cookies and clear them
+            const cookies = document.cookie.split(";");
+
+            for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i];
+              const eqPos = cookie.indexOf("=");
+              const name =
+                eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+
+              // Clear cookie for all possible paths and domains
+              document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+              document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure`;
+              document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict`;
+              document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=None; Secure`;
+              document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+              document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure`;
+            }
+
+            // Redirect to login
             window.location.href = "/login";
           }
 
@@ -108,6 +127,6 @@ export const setupTokenRefreshInterceptor = () => {
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 };

@@ -13,6 +13,7 @@ import {
   FormTagInputField,
   FormImageUploadField,
 } from "@/components/form";
+import { FormRichTextField } from "@/components/form/FormRichTextField";
 import { Save, X } from "lucide-react";
 import { InstitutionProfile } from "../types";
 import {
@@ -177,13 +178,12 @@ export function InstitutionProfileForm({
               options={institutionTypeOptions}
             />
 
-            <FormTextareaField
+            <FormRichTextField
               control={form.control}
               name="description"
               label="Description"
               placeholder="Brief description of your institution"
               description="Provide a brief overview of your institution"
-              className="min-h-25"
             />
 
             <FormInputField

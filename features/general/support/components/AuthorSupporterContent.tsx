@@ -1,5 +1,8 @@
 "use client";
 
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
+import { useAuthorSupporterQuery } from "../hooks";
+
 const categories = [
   { label: "Overview", value: "overview" },
   { label: "Pricing (2025 - 2027)", value: "pricing" },
@@ -8,70 +11,24 @@ const categories = [
   { label: "Support Network", value: "network" },
 ];
 
-const pricingData = [
-  {
-    category: "Senior Researcher / Professor",
-    npr: "10,000",
-    usd: "75",
-    purpose: "Supports data maintenance and research discoverability",
-  },
-  {
-    category: "Independent Researcher / Scholar",
-    npr: "7,000",
-    usd: "50",
-    purpose: "Contributes to indexing and infrastructure growth",
-  },
-  {
-    category: "Postgraduate Student",
-    npr: "3500",
-    usd: "25",
-    purpose: "Assists with research visibility and student indexing",
-  },
-  {
-    category: "Undergraduate Student",
-    npr: "1500",
-    usd: "10",
-    purpose: "Encourages early-career participation in research indexing",
-  },
-];
-
-const whySupportPoints = [
-  {
-    title: "Enhance research visibility",
-    description:
-      "Ensure your work is discoverable by national and international readers.",
-  },
-  {
-    title: "Contribute to open access growth",
-    description:
-      "Support a system that makes Nepali scholarship freely accessible.",
-  },
-  {
-    title: "Strengthen research integrity",
-    description:
-      "Help maintain a transparent and standardized platform for verified research.",
-  },
-  {
-    title: "Build community connections",
-    description:
-      "Join a growing network of authors promoting responsible publication and collaboration.",
-  },
-  {
-    title: "Invest in the future of Nepali academia",
-    description:
-      "Your support sustains a national research repository built on inclusion and accessibility.",
-  },
-];
-
-const benefitsPoints = [
-  "A verified supporter badge displayed on their NRI author profile.",
-  "Priority access to metadata updates and research indexing.",
-  "Eligibility for training, workshops, and digital publication support offered by NRI.",
-  "Recognition in NRI's annual report and newsletters.",
-  "Early insights into new tools, metrics, and author resources being developed.",
-];
-
 export function AuthorSupporterContent() {
+  const { data, isLoading, error } = useAuthorSupporterQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-red-500">Failed to load support page content.</p>
+      </div>
+    );
+  }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6 section-padding pt-12.5!">
       {/* Main Content */}
@@ -79,18 +36,7 @@ export function AuthorSupporterContent() {
         {/* Overview */}
         <div className="space-y-3.75 scroll-mt-32" id="overview">
           <h3 className="heading-4 text-text-black">Overview</h3>
-          <p className="sub-body">
-            The Nepal Research Index thrives through the active participation of
-            authors who believe in accessible, transparent, and globally visible
-            research. Our Author Supporter Model allows individual researchers
-            and writers to contribute to maintaining and expanding the national
-            research infrastructure.
-          </p>
-          <p className="sub-body">
-            Your support helps us improve metadata quality, enhance journal
-            visibility, and ensure that Nepali research outputs are indexed and
-            accessible worldwide.
-          </p>
+          <RichTextDisplay content={data.overview} />
         </div>
 
         {/* Pricing */}
@@ -122,15 +68,19 @@ export function AuthorSupporterContent() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {pricingData.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                {data.pricing_tiers.map((tier) => (
+                  <tr key={tier.id} className="hover:bg-gray-50">
                     <td className="p-4 text-sm text-text-black">
-                      {row.category}
+                      {tier.category}
                     </td>
-                    <td className="p-4 text-sm text-text-gray">{row.npr}</td>
-                    <td className="p-4 text-sm text-text-gray">{row.usd}</td>
                     <td className="p-4 text-sm text-text-gray">
-                      {row.purpose}
+                      {tier.npr_amount}
+                    </td>
+                    <td className="p-4 text-sm text-text-gray">
+                      {tier.usd_amount}
+                    </td>
+                    <td className="p-4 text-sm text-text-gray">
+                      {tier.purpose}
                     </td>
                   </tr>
                 ))}
@@ -152,8 +102,8 @@ export function AuthorSupporterContent() {
             Why Support NRI as an Author
           </h3>
           <div className="space-y-4">
-            {whySupportPoints.map((point, index) => (
-              <div key={index} className="flex gap-3">
+            {data.why_support_points.map((point) => (
+              <div key={point.id} className="flex gap-3">
                 <div className="shrink-0 mt-1">
                   <div className="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center">
                     <span className="text-primary-600 font-semibold text-xs">
@@ -178,9 +128,9 @@ export function AuthorSupporterContent() {
             Benefits for Authors Supporters
           </h3>
           <ul className="space-y-2  list-disc pl-6">
-            {benefitsPoints.map((benefit, index) => (
-              <li key={index} className="sub-body">
-                {benefit}
+            {data.benefits.map((benefit) => (
+              <li key={benefit.id} className="sub-body">
+                {benefit.title} - {benefit.description}
               </li>
             ))}
           </ul>
