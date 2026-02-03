@@ -51,6 +51,40 @@ interface RichTextEditorProps {
   editable?: boolean;
 }
 
+/**
+ * Safely parse content - handles both plain text and JSON.
+ * Converts plain text to Tiptap JSON format.
+ */
+function parseContent(content?: string) {
+  if (!content || content.trim() === "") {
+    return "";
+  }
+
+  try {
+    // Try to parse as JSON first
+    const parsed = JSON.parse(content);
+    if (typeof parsed === "object" && parsed !== null) {
+      return parsed;
+    }
+  } catch (e) {
+    // If parsing fails, it's plain text - convert to Tiptap JSON
+    const paragraphs = content.split("\n\n").filter((p) => p.trim());
+    return {
+      type: "doc",
+      content:
+        paragraphs.length > 0
+          ? paragraphs.map((para) => ({
+              type: "paragraph",
+              content: [{ type: "text", text: para.trim() }],
+            }))
+          : [{ type: "paragraph" }],
+    };
+  }
+
+  // Fallback
+  return content;
+}
+
 export function RichTextEditor({
   content,
   onChange,
@@ -101,7 +135,7 @@ export function RichTextEditor({
         onError: (error: Error) => console.error("Upload failed:", error),
       }),
     ],
-    content: content ? JSON.parse(content) : "",
+    content: parseContent(content),
     onUpdate: ({ editor }) => {
       const json = JSON.stringify(editor.getJSON());
       onChange?.(json);

@@ -11,6 +11,37 @@ interface RichTextDisplayProps {
   className?: string;
 }
 
+/**
+ * Safely parse content for display - handles both plain text and JSON.
+ */
+function parseDisplayContent(content?: string | null) {
+  if (!content || content.trim() === "") {
+    return "";
+  }
+
+  try {
+    const parsed = JSON.parse(content);
+    if (typeof parsed === "object" && parsed !== null) {
+      return parsed;
+    }
+  } catch (e) {
+    // Plain text - convert to Tiptap JSON
+    const paragraphs = content.split("\n\n").filter((p) => p.trim());
+    return {
+      type: "doc",
+      content:
+        paragraphs.length > 0
+          ? paragraphs.map((para) => ({
+              type: "paragraph",
+              content: [{ type: "text", text: para.trim() }],
+            }))
+          : [{ type: "paragraph" }],
+    };
+  }
+
+  return content;
+}
+
 export function RichTextDisplay({ content, className }: RichTextDisplayProps) {
   const editor = useEditor({
     extensions: [
@@ -23,7 +54,7 @@ export function RichTextDisplay({ content, className }: RichTextDisplayProps) {
       }),
       Image,
     ],
-    content: content ? JSON.parse(content) : "",
+    content: parseDisplayContent(content),
     editable: false,
     immediatelyRender: false,
   });
