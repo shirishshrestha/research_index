@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
+import { useInstitutionalSupporterQuery } from "../hooks";
 
 const categories = [
   { label: "Overview", value: "overview" },
@@ -11,102 +13,24 @@ const categories = [
   { label: "Current Sponsors & Partners", value: "sponsors" },
 ];
 
-const pricingData = [
-  {
-    category: "Large institutions (universities, research councils)",
-    npr: "200,000",
-    usd: "1500",
-    purpose: "Supports platform growth and infrastructure",
-  },
-  {
-    category: "Medium institutions (colleges, research centers)",
-    npr: "100,000",
-    usd: "750",
-    purpose: "Contributes to maintenance and data curation",
-  },
-  {
-    category: "Small institutions (departments, NGOs)",
-    npr: "50,000",
-    usd: "375",
-    purpose: "Helps support access and metadata services",
-  },
-  {
-    category: "Institutions from remote or community-based regions",
-    npr: "25,000",
-    usd: "190",
-    purpose: "Ensures inclusion and regional participation",
-  },
-];
-
-const whySupportPoints = [
-  {
-    title: "Locally led, nationally impactful",
-    description:
-      "Your contribution strengthens Nepal's capacity for digital research visibility and independence.",
-  },
-  {
-    title: "Promotes open access",
-    description:
-      "Supporting NRI ensures that Nepali research outputs are discoverable globally without paywalls or barriers.",
-  },
-  {
-    title: "Encourages best practices",
-    description:
-      "NRI promotes transparent publishing and metadata standards that enhance the credibility of Nepali journals and researchers.",
-  },
-  {
-    title: "Sustains growth and quality",
-    description:
-      "As submissions and collaborations grow, your support helps us maintain quality and expand digital tools.",
-  },
-  {
-    title: "Builds global connections",
-    description:
-      "By joining NRI, your institution becomes part of a larger movement linking Nepali research to the international academic community.",
-  },
-  {
-    title: "Empowers policy and decision-making",
-    description:
-      "NRI data enables informed academic planning and supports evidence-based development in Nepal.",
-  },
-];
-
-const benefitsPoints = [
-  "Your institution will be acknowledged in NRI publications, reports, and outreach materials.",
-  "You can highlight your supporter status on your institutional website and communications.",
-  "Gain access to enhanced metadata integration via our API or research data sharing tools.",
-  "Participate in capacity-building workshops, training sessions, and collaborative initiatives hosted by NRI.",
-  "Be recognized as a key contributor to strengthening open research visibility and accessibility in Nepal.",
-];
-
-const sponsors = [
-  {
-    name: "Nepal Medical College",
-    logo: "/nepal-medical-college.png",
-  },
-  {
-    name: "Nepal Medical Association",
-    logo: "/nepal-medical-association.png",
-  },
-  {
-    name: "Kathmandu University",
-    logo: "/ku.png",
-  },
-  {
-    name: "Tribhuvan University",
-    logo: "/tu.png",
-  },
-  {
-    name: "Pokhara University",
-    logo: "/pou.png",
-  },
-  {
-    name: "Purbanchal University",
-    logo: "/pu.png",
-  },
-];
-
 export function InstitutionalSupporterContent() {
+  const { data, isLoading, error } = useInstitutionalSupporterQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-red-500">Failed to load support page content.</p>
+      </div>
+    );
+  }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6 section-padding pt-12.5!">
       {/* Main Content */}
@@ -114,14 +38,7 @@ export function InstitutionalSupporterContent() {
         {/* Overview */}
         <div className="space-y-3.75 scroll-mt-32" id="overview">
           <h3 className="heading-4 text-text-black">Overview</h3>
-          <p className="sub-body">
-            Academic and research institutions can become Nepal Research Index
-            (NRI) supporters. Their support enables us to build an open and
-            sustainable research ecosystem that connects authors, journals, and
-            institutions across Nepal and beyond. We deeply value the
-            contributions of our partner institutions to our shared vision of
-            accessible and discoverable Nepali research.
-          </p>
+          <RichTextDisplay content={data.overview} />
         </div>
 
         {/* Pricing */}
@@ -154,14 +71,14 @@ export function InstitutionalSupporterContent() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {pricingData.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
+                {data.pricing_tiers.map((tier) => (
+                  <tr key={tier.id} className="hover:bg-gray-50">
                     <td className="p-4 text-sm text-text-black">
-                      {row.category}
+                      {tier.category}
                     </td>
-                    <td className="p-4 text-sm ">{row.npr}</td>
-                    <td className="p-4 text-sm ">{row.usd}</td>
-                    <td className="p-4 text-sm ">{row.purpose}</td>
+                    <td className="p-4 text-sm ">{tier.npr_amount}</td>
+                    <td className="p-4 text-sm ">{tier.usd_amount}</td>
+                    <td className="p-4 text-sm ">{tier.purpose}</td>
                   </tr>
                 ))}
               </tbody>
@@ -191,8 +108,8 @@ export function InstitutionalSupporterContent() {
             Why You Should Support NRI
           </h3>
           <div className="space-y-4">
-            {whySupportPoints.map((point, index) => (
-              <div key={index} className="flex gap-3">
+            {data.why_support_points.map((point) => (
+              <div key={point.id} className="flex gap-3">
                 <div className="shrink-0 mt-1">
                   <div className="w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center">
                     <span className="text-primary-600 font-semibold text-xs">
@@ -217,9 +134,9 @@ export function InstitutionalSupporterContent() {
             Benefits for Institutional Supporters
           </h3>
           <ul className="space-y-2 list-disc pl-6">
-            {benefitsPoints.map((benefit, index) => (
-              <li key={index} className="sub-body">
-                {benefit}
+            {data.benefits.map((benefit) => (
+              <li key={benefit.id} className="sub-body">
+                {benefit.title} - {benefit.description}
               </li>
             ))}
           </ul>
@@ -247,31 +164,33 @@ export function InstitutionalSupporterContent() {
         </div>
 
         {/* Current Sponsors & Partners */}
-        <div className="space-y-3.75 scroll-mt-32" id="sponsors">
-          <h3 className="heading-4 text-text-black">
-            Current Sponsors & Partners
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {sponsors.map((sponsor, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-center bg-white rounded-lg p-3.75"
-                style={{
-                  boxShadow: "0 4px 15px 0 rgba(0, 0, 0, 0.25)",
-                }}
-              >
-                <div className="relative w-[110.5px] h-[110.5px]">
-                  <Image
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    fill
-                    className="object-contain"
-                  />
+        {data.sponsors.length > 0 && (
+          <div className="space-y-3.75 scroll-mt-32" id="sponsors">
+            <h3 className="heading-4 text-text-black">
+              Current Sponsors & Partners
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {data.sponsors.map((sponsor) => (
+                <div
+                  key={sponsor.id}
+                  className="flex items-center justify-center bg-white rounded-lg p-3.75"
+                  style={{
+                    boxShadow: "0 4px 15px 0 rgba(0, 0, 0, 0.25)",
+                  }}
+                >
+                  <div className="relative w-[110.5px] h-[110.5px]">
+                    <Image
+                      src={sponsor.logo}
+                      alt={sponsor.name}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       {/* Sticky Sidebar Navigation */}
       <aside>

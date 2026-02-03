@@ -1,28 +1,47 @@
 "use client";
 
-import { useEditor, EditorContent, type Editor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-import Placeholder from "@tiptap/extension-placeholder";
-import {
-  Bold,
-  Italic,
-  List,
-  ListOrdered,
-  Link as LinkIcon,
-  Image as ImageIcon,
-  Heading1,
-  Heading2,
-  Undo,
-  Redo,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useEditor, EditorContent, EditorContext } from "@tiptap/react";
+import { StarterKit } from "@tiptap/starter-kit";
+import { Link } from "@tiptap/extension-link";
+import { Image } from "@tiptap/extension-image";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { TaskList, TaskItem } from "@tiptap/extension-list";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { Highlight } from "@tiptap/extension-highlight";
+import { Subscript } from "@tiptap/extension-subscript";
+import { Superscript } from "@tiptap/extension-superscript";
 import { cn } from "@/lib/utils";
-import { useCallback } from "react";
-import '@/styles/_variables.scss';
-import '@/styles/_keyframe-animations.scss';
 
+// UI Components from simple-editor
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+} from "@/components/tiptap-ui-primitive/toolbar";
+import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu";
+import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
+import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
+import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
+import { ColorHighlightPopover } from "@/components/tiptap-ui/color-highlight-popover";
+import { LinkPopover } from "@/components/tiptap-ui/link-popover";
+import { MarkButton } from "@/components/tiptap-ui/mark-button";
+import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
+import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
+import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button";
+import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension";
+import { HorizontalRule } from "@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node-extension";
+
+// Styles
+import "@/components/tiptap-node/blockquote-node/blockquote-node.scss";
+import "@/components/tiptap-node/code-block-node/code-block-node.scss";
+import "@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss";
+import "@/components/tiptap-node/list-node/list-node.scss";
+import "@/components/tiptap-node/image-node/image-node.scss";
+import "@/components/tiptap-node/heading-node/heading-node.scss";
+import "@/components/tiptap-node/paragraph-node/paragraph-node.scss";
+
+// Utils
+import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 interface RichTextEditorProps {
   content?: string;
@@ -32,123 +51,6 @@ interface RichTextEditorProps {
   editable?: boolean;
 }
 
-const MenuBar = ({ editor }: { editor: Editor | null }) => {
-  if (!editor) return null;
-
-  const addImage = useCallback(() => {
-    const url = window.prompt("Enter image URL:");
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  }, [editor]);
-
-  const setLink = useCallback(() => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("Enter URL:", previousUrl);
-
-    if (url === null) return;
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
-    }
-
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
-  }, [editor]);
-
-  return (
-    <div className="flex flex-wrap gap-1 p-2 border-b">
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().undo().run()}
-        disabled={!editor.can().undo()}
-      >
-        <Undo className="h-4 w-4" />
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().redo().run()}
-        disabled={!editor.can().redo()}
-      >
-        <Redo className="h-4 w-4" />
-      </Button>
-      <div className="w-px h-6 bg-border my-auto mx-1" />
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive("bold") ? "bg-accent" : ""}
-      >
-        <Bold className="h-4 w-4" />
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive("italic") ? "bg-accent" : ""}
-      >
-        <Italic className="h-4 w-4" />
-      </Button>
-      <div className="w-px h-6 bg-border my-auto mx-1" />
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive("heading", { level: 1 }) ? "bg-accent" : ""}
-      >
-        <Heading1 className="h-4 w-4" />
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive("heading", { level: 2 }) ? "bg-accent" : ""}
-      >
-        <Heading2 className="h-4 w-4" />
-      </Button>
-      <div className="w-px h-6 bg-border my-auto mx-1" />
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive("bulletList") ? "bg-accent" : ""}
-      >
-        <List className="h-4 w-4" />
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={editor.isActive("orderedList") ? "bg-accent" : ""}
-      >
-        <ListOrdered className="h-4 w-4" />
-      </Button>
-      <div className="w-px h-6 bg-border my-auto mx-1" />
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={setLink}
-        className={editor.isActive("link") ? "bg-accent" : ""}
-      >
-        <LinkIcon className="h-4 w-4" />
-      </Button>
-      <Button type="button" variant="ghost" size="sm" onClick={addImage}>
-        <ImageIcon className="h-4 w-4" />
-      </Button>
-    </div>
-  );
-};
-
 export function RichTextEditor({
   content,
   onChange,
@@ -157,36 +59,119 @@ export function RichTextEditor({
   editable = true,
 }: RichTextEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
+    editable,
+    editorProps: {
+      attributes: {
+        autocomplete: "off",
+        autocorrect: "off",
+        autocapitalize: "off",
+        class: cn(
+          "prose prose-sm max-w-none p-4 min-h-37.5 focus:outline-none",
+          "[&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-37.5",
+        ),
+      },
+    },
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        horizontalRule: false,
+      }),
+      HorizontalRule,
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: "text-primary underline",
+          class: "text-primary underline cursor-pointer",
         },
       }),
       Image,
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      Highlight.configure({ multicolor: true }),
+      Superscript,
+      Subscript,
       Placeholder.configure({
         placeholder,
       }),
+      ImageUploadNode.configure({
+        accept: "image/*",
+        maxSize: MAX_FILE_SIZE,
+        limit: 3,
+        upload: handleImageUpload,
+        onError: (error: Error) => console.error("Upload failed:", error),
+      }),
     ],
     content: content ? JSON.parse(content) : "",
-    editable,
-    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       const json = JSON.stringify(editor.getJSON());
       onChange?.(json);
     },
   });
 
+  if (!editor) return null;
+
   return (
-    <div className={cn("border rounded-md", className)}>
-      {editable && <MenuBar editor={editor} />}
+    <div className={cn("border rounded-md overflow-hidden", className)}>
+      {editable && (
+        <EditorContext.Provider value={{ editor }}>
+          <Toolbar className="border-b">
+            <ToolbarGroup>
+              <UndoRedoButton action="undo" />
+              <UndoRedoButton action="redo" />
+            </ToolbarGroup>
+
+            <ToolbarSeparator />
+
+            <ToolbarGroup>
+              <HeadingDropdownMenu levels={[1, 2, 3, 4]} />
+              <ListDropdownMenu
+                types={["bulletList", "orderedList", "taskList"]}
+              />
+              <BlockquoteButton />
+              <CodeBlockButton />
+            </ToolbarGroup>
+
+            <ToolbarSeparator />
+
+            <ToolbarGroup>
+              <MarkButton type="bold" />
+              <MarkButton type="italic" />
+              <MarkButton type="strike" />
+              <MarkButton type="code" />
+              <MarkButton type="underline" />
+              <LinkPopover />
+            </ToolbarGroup>
+
+            <ToolbarSeparator />
+
+            <ToolbarGroup>
+              <MarkButton type="superscript" />
+              <MarkButton type="subscript" />
+            </ToolbarGroup>
+
+            <ToolbarSeparator />
+
+            <ToolbarGroup>
+              <TextAlignButton align="left" />
+              <TextAlignButton align="center" />
+              <TextAlignButton align="right" />
+              <TextAlignButton align="justify" />
+            </ToolbarGroup>
+
+            <ToolbarSeparator />
+
+            <ToolbarGroup>
+              <ImageUploadButton text="Add Image" />
+            </ToolbarGroup>
+          </Toolbar>
+        </EditorContext.Provider>
+      )}
+
       <EditorContent
         editor={editor}
         className={cn(
-          "prose prose-sm max-w-none p-4 min-h-37.5 focus:outline-none",
-          "[&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-37.5",
+          "prose prose-sm max-w-none",
+          "[&_.ProseMirror]:p-4 [&_.ProseMirror]:min-h-37.5 [&_.ProseMirror]:outline-none",
           "[&_.ProseMirror_p.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]",
           "[&_.ProseMirror_p.is-editor-empty:first-child::before]:text-muted-foreground",
           "[&_.ProseMirror_p.is-editor-empty:first-child::before]:float-left",
