@@ -20,10 +20,13 @@ import type { SupportPage } from "@/features/general/support/types";
 import { PricingTiersManager } from "./PricingTiersManager";
 import { BenefitsManager } from "./BenefitsManager";
 import { WhySupportManager } from "./WhySupportManager";
+import { SponsorsManager } from "./SponsorsManager";
 
 const schema = z.object({
   title: z.string().min(1, "Title is required"),
   overview: z.string().min(1, "Overview is required"),
+  sponsorship_detail: z.string().optional(),
+  partnership_detail: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -42,6 +45,8 @@ export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
     defaultValues: {
       title: data.title,
       overview: data.overview,
+      sponsorship_detail: data.sponsorship_detail || "",
+      partnership_detail: data.partnership_detail || "",
     },
   });
 
@@ -77,6 +82,24 @@ export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
                 placeholder="Write the overview content..."
               />
 
+              {pageType === "sponsorship_partnership" && (
+                <>
+                  <FormRichTextField
+                    control={form.control}
+                    name="sponsorship_detail"
+                    label="Sponsorship Details"
+                    placeholder="Write sponsorship benefits and details (supports HTML)..."
+                  />
+
+                  <FormRichTextField
+                    control={form.control}
+                    name="partnership_detail"
+                    label="Partnership Details"
+                    placeholder="Write partnership benefits and details (supports HTML)..."
+                  />
+                </>
+              )}
+
               <div className="flex gap-2">
                 <Button type="submit" disabled={updateMutation.isPending}>
                   {updateMutation.isPending ? "Saving..." : "Save Changes"}
@@ -107,6 +130,9 @@ export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
         pageType={pageType}
         benefits={data.benefits}
       />
+
+      {/* Sponsors */}
+      <SponsorsManager />
     </div>
   );
 }

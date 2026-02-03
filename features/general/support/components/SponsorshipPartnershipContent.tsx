@@ -23,7 +23,7 @@ export function SponsorshipPartnershipContent() {
     );
   }
 
-  if (error || !data || !data.sponsorship_content) {
+  if (error || !data) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <p className="text-red-500">Failed to load support page content.</p>
@@ -31,7 +31,6 @@ export function SponsorshipPartnershipContent() {
     );
   }
 
-  const { sponsorship_content } = data;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6 section-padding pt-12.5!">
       {/* Main Content */}
@@ -43,30 +42,20 @@ export function SponsorshipPartnershipContent() {
         </div>
 
         {/* Sponsorship Model */}
-        <div className="space-y-3.75 scroll-mt-32" id="sponsorship">
-          <h3 className="heading-4 text-text-black">Sponsorship Model</h3>
-          <RichTextDisplay content={sponsorship_content.sponsorship_intro} />
-          <ul className="space-y-2 list-disc pl-6">
-            {sponsorship_content.sponsorship_points.map((point) => (
-              <li key={point.id} className="sub-body">
-                {point.text}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {data.sponsorship_detail && (
+          <div className="space-y-3.75 scroll-mt-32" id="sponsorship">
+            <h3 className="heading-4 text-text-black">Sponsorship Model</h3>
+            <RichTextDisplay content={data.sponsorship_detail} />
+          </div>
+        )}
 
         {/* Partnership Model */}
-        <div className="space-y-3.75 scroll-mt-32" id="partnership">
-          <h3 className="heading-4 text-text-black">Partnership Model</h3>
-          <RichTextDisplay content={sponsorship_content.partnership_intro} />
-          <ul className="space-y-2 list-disc pl-6">
-            {sponsorship_content.partnership_points.map((point) => (
-              <li key={point.id} className="sub-body">
-                {point.text}
-              </li>
-            ))}
-          </ul>
-        </div>
+        {data.partnership_detail && (
+          <div className="space-y-3.75 scroll-mt-32" id="partnership">
+            <h3 className="heading-4 text-text-black">Partnership Model</h3>
+            <RichTextDisplay content={data.partnership_detail} />
+          </div>
+        )}
 
         {/* Current Sponsors & Partners */}
         {data.sponsors.length > 0 && (
@@ -85,7 +74,7 @@ export function SponsorshipPartnershipContent() {
                 >
                   <div className="relative w-[110.5px] h-[110.5px]">
                     <Image
-                      src={sponsor.logo}
+                      src={sponsor.logo_url || sponsor.logo || ""}
                       alt={sponsor.name}
                       fill
                       className="object-contain"
@@ -97,13 +86,7 @@ export function SponsorshipPartnershipContent() {
           </div>
         )}
 
-        {/* Join */}
-        <div className="space-y-3.75 scroll-mt-32" id="join">
-          <h3 className="heading-4 text-text-black">
-            Join as a Sponsor or Partner
-          </h3>
-          <RichTextDisplay content={sponsorship_content.join_cta} />
-        </div>
+        {/* Join - can be part of partnership_detail or a separate section if needed */}
       </div>
 
       {/* Sticky Sidebar Navigation */}

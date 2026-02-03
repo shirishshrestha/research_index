@@ -10,7 +10,7 @@ import type {
   PricingTier,
   SupportBenefit,
   WhySupportPoint,
-  SponsorshipPartnershipContent,
+  Sponsor,
 } from "./types";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/utils/errorHandling";
@@ -300,6 +300,89 @@ export const useDeleteWhySupportMutation = (
       toast.error(
         extractErrorMessage(error, "Failed to delete why support point"),
       );
+    },
+  });
+};
+
+// Sponsor Management
+export const useCreateSponsorMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      return api.post<Sponsor>(`/support/sponsors/`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SUPPORT_QUERY_KEYS.sponsors });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.authorSupporter,
+      });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.institutionalSupporter,
+      });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.sponsorshipPartnership,
+      });
+      toast.success("Sponsor created successfully");
+    },
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to create sponsor"));
+    },
+  });
+};
+
+export const useUpdateSponsorMutation = (id: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      return api.put<Sponsor>(`/support/sponsors/${id}/`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SUPPORT_QUERY_KEYS.sponsors });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.authorSupporter,
+      });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.institutionalSupporter,
+      });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.sponsorshipPartnership,
+      });
+      toast.success("Sponsor updated successfully");
+    },
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to update sponsor"));
+    },
+  });
+};
+
+export const useDeleteSponsorMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      return api.delete(`/support/sponsors/${id}/`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SUPPORT_QUERY_KEYS.sponsors });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.authorSupporter,
+      });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.institutionalSupporter,
+      });
+      queryClient.invalidateQueries({
+        queryKey: SUPPORT_QUERY_KEYS.sponsorshipPartnership,
+      });
+      toast.success("Sponsor deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(extractErrorMessage(error, "Failed to delete sponsor"));
     },
   });
 };
