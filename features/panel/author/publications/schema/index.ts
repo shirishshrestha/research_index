@@ -8,6 +8,7 @@ export const publicationSchema = z.object({
   abstract: z.string().optional().default(""),
   doi: z.string().optional().default(""),
   published_date: z.string().optional().default(""),
+  volume: z.string().optional().default(""),
   pages: z.string().optional().default(""),
   publisher: z.string().optional().default(""),
   co_authors: z.string().optional().default(""),
