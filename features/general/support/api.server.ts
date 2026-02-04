@@ -15,7 +15,7 @@ export async function getSupportPage(
   pageType: string,
 ): Promise<SupportPage | null> {
   try {
-    return await serverGet<SupportPage>(`/api/support/pages/${pageType}/`, {
+    return await serverGet<SupportPage>(`/support/pages/${pageType}/`, {
       tags: [`support-page-${pageType}`, "support-pages"],
       revalidate: 3600, // Cache for 1 hour
     });
