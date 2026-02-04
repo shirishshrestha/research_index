@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
 import { useSponsorshipPartnershipQuery } from "../hooks";
+import { BACKEND_URL } from "@/utils/constants";
 
 const categories = [
   { label: "Overview", value: "overview" },
@@ -17,7 +18,7 @@ export function SponsorshipPartnershipContent() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <p className="text-gray-500">Loading...</p>
       </div>
     );
@@ -25,7 +26,7 @@ export function SponsorshipPartnershipContent() {
 
   if (error || !data) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <p className="text-red-500">Failed to load support page content.</p>
       </div>
     );
@@ -74,7 +75,7 @@ export function SponsorshipPartnershipContent() {
                 >
                   <div className="relative w-[110.5px] h-[110.5px]">
                     <Image
-                      src={sponsor.logo_url || sponsor.logo || ""}
+                      src={`${BACKEND_URL}${sponsor.logo_url}`}
                       alt={sponsor.name}
                       fill
                       className="object-contain"

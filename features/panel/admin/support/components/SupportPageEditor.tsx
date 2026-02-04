@@ -53,7 +53,11 @@ export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
   const updateMutation = useUpdateSupportPageMutation(data.id, pageType);
 
   const onSubmit = (formData: FormData) => {
-    updateMutation.mutate(formData);
+    const sponsor_data = {
+      ...formData,
+      page_type: pageType,
+    };
+    updateMutation.mutate(sponsor_data);
   };
 
   return (
@@ -111,25 +115,30 @@ export function SupportPageEditor({ data, pageType }: SupportPageEditorProps) {
       </Card>
 
       {/* Pricing Tiers */}
-      <PricingTiersManager
-        pageId={data.id}
-        pageType={pageType}
-        tiers={data.pricing_tiers}
-      />
+      {pageType !== "sponsorship_partnership" && (
+        <PricingTiersManager
+          pageId={data.id}
+          pageType={pageType}
+          tiers={data.pricing_tiers}
+        />
+      )}
 
       {/* Why Support Points */}
-      <WhySupportManager
-        pageId={data.id}
-        pageType={pageType}
-        points={data.why_support_points}
-      />
+      {pageType !== "sponsorship_partnership" && (
+        <WhySupportManager
+          pageId={data.id}
+          pageType={pageType}
+          points={data.why_support_points}
+        />
+      )}
 
-      {/* Benefits */}
-      <BenefitsManager
-        pageId={data.id}
-        pageType={pageType}
-        benefits={data.benefits}
-      />
+      {pageType !== "sponsorship_partnership" && (
+        <BenefitsManager
+          pageId={data.id}
+          pageType={pageType}
+          benefits={data.benefits}
+        />
+      )}
 
       {/* Sponsors */}
       <SponsorsManager />

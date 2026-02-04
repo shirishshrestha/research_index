@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
 import { useInstitutionalSupporterQuery } from "../hooks";
+import { BACKEND_URL } from "@/utils/constants";
 
 const categories = [
   { label: "Overview", value: "overview" },
@@ -15,7 +16,6 @@ const categories = [
 
 export function InstitutionalSupporterContent() {
   const { data, isLoading, error } = useInstitutionalSupporterQuery();
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -180,7 +180,7 @@ export function InstitutionalSupporterContent() {
                 >
                   <div className="relative w-[110.5px] h-[110.5px]">
                     <Image
-                      src={sponsor.logo}
+                      src={`${BACKEND_URL}${sponsor.logo_url}`}
                       alt={sponsor.name}
                       fill
                       className="object-contain"
