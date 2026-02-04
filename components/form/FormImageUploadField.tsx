@@ -14,6 +14,7 @@ import { Upload, X, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Control, FieldPath, FieldValues } from "react-hook-form";
+import { toast } from "sonner";
 
 interface FormImageUploadFieldProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -52,13 +53,13 @@ export function FormImageUploadField<
 
     // Validate file size
     if (file.size > maxSize * 1024 * 1024) {
-      alert(`File size must be less than ${maxSize}MB`);
+      toast.error(`File size must be less than ${maxSize}MB`);
       return;
     }
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      alert("Please upload an image file");
+      toast.error("Please upload an image file");
       return;
     }
 

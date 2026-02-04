@@ -14,6 +14,8 @@ import type {
 } from "./types";
 import { toast } from "sonner";
 import { extractErrorMessage } from "@/utils/errorHandling";
+import { useRouter } from "next/navigation";
+import { revalidateSupportPageCache } from "./server-actions/actions";
 
 interface UpdateSupportPageData {
   title?: string;
@@ -55,12 +57,13 @@ export const useUpdateSupportPageMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (data: UpdateSupportPageData) => {
       return api.put<SupportPage>(`/support/pages/${pageType}/`, data);
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -69,6 +72,11 @@ export const useUpdateSupportPageMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.setQueryData(queryKey, data);
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Support page updated successfully");
     },
     onError: (error) => {
@@ -86,6 +94,7 @@ export const useCreatePricingTierMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (data: CreatePricingTierData) => {
@@ -94,7 +103,7 @@ export const useCreatePricingTierMutation = (
         support_page: pageId,
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -103,6 +112,11 @@ export const useCreatePricingTierMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Pricing tier created successfully");
     },
     onError: (error) => {
@@ -120,12 +134,13 @@ export const useUpdatePricingTierMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (data: UpdatePricingTierData) => {
       return api.put<PricingTier>(`/support/pricing-tiers/${tierId}/`, data);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -134,6 +149,11 @@ export const useUpdatePricingTierMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Pricing tier updated successfully");
     },
     onError: (error) => {
@@ -150,12 +170,13 @@ export const useDeletePricingTierMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (tierId: number) => {
       return api.delete(`/support/pricing-tiers/${tierId}/`);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -164,6 +185,11 @@ export const useDeletePricingTierMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Pricing tier deleted successfully");
     },
     onError: (error) => {
@@ -181,6 +207,7 @@ export const useCreateBenefitMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (data: CreateBenefitData) => {
@@ -189,7 +216,7 @@ export const useCreateBenefitMutation = (
         support_page: pageId,
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -198,6 +225,11 @@ export const useCreateBenefitMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Benefit created successfully");
     },
     onError: (error) => {
@@ -214,12 +246,13 @@ export const useDeleteBenefitMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (benefitId: number) => {
       return api.delete(`/support/benefits/${benefitId}/`);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -228,6 +261,11 @@ export const useDeleteBenefitMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Benefit deleted successfully");
     },
     onError: (error) => {
@@ -245,6 +283,7 @@ export const useCreateWhySupportMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (data: CreateWhySupportData) => {
@@ -253,7 +292,7 @@ export const useCreateWhySupportMutation = (
         support_page: pageId,
       });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -262,6 +301,11 @@ export const useCreateWhySupportMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Why support point created successfully");
     },
     onError: (error) => {
@@ -280,12 +324,13 @@ export const useDeleteWhySupportMutation = (
     | "sponsorship_partnership",
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (pointId: number) => {
       return api.delete(`/support/why-support/${pointId}/`);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       const queryKey =
         pageType === "author_supporter"
           ? SUPPORT_QUERY_KEYS.authorSupporter
@@ -294,6 +339,11 @@ export const useDeleteWhySupportMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
+      
+      // Revalidate server-side cache
+      await revalidateSupportPageCache(pageType);
+      router.refresh();
+      
       toast.success("Why support point deleted successfully");
     },
     onError: (error) => {

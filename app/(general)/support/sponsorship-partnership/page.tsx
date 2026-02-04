@@ -1,6 +1,9 @@
+import { Suspense } from "react";
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
-import { SponsorshipPartnershipContent } from "@/features/general/support";
+import { SponsorshipPartnershipContentServer } from "@/features/general/support/components/SponsorshipPartnershipContentServer";
+import { SupportPageSkeleton } from "@/features/general/support/components/SupportPageSkeleton";
+import { getSupportPage } from "@/features/general/support/api.server";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +11,20 @@ export const metadata: Metadata = {
   description:
     "Join Nepal Research Index as a sponsor or partner to promote research transparency and accessibility",
 };
+
+async function SponsorshipPartnershipData() {
+  const data = await getSupportPage("sponsorship_partnership");
+
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-red-500">Failed to load support page content.</p>
+      </div>
+    );
+  }
+
+  return <SponsorshipPartnershipContentServer data={data} />;
+}
 
 export default function SponsorshipPartnershipPage() {
   return (
@@ -31,7 +48,9 @@ export default function SponsorshipPartnershipPage() {
       />
 
       <Container>
-        <SponsorshipPartnershipContent />
+        <Suspense fallback={<SupportPageSkeleton />}>
+          <SponsorshipPartnershipData />
+        </Suspense>
       </Container>
     </section>
   );

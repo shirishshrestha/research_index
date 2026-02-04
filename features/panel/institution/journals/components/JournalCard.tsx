@@ -27,6 +27,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { useDeleteJournalMutation } from "../hooks";
+import { ConfirmationPopup } from "@/features/shared/components/dialog/ConfirmationPopup";
+import { useState } from "react";
+import { AlertCircle } from "lucide-react";
 
 interface JournalCardProps {
   journal: JournalListItem;
@@ -34,18 +37,9 @@ interface JournalCardProps {
 
 export function JournalCard({ journal }: JournalCardProps) {
   const router = useRouter();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const deleteMutation = useDeleteJournalMutation(journal.id);
-
-  const handleDelete = () => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete "${journal.title}"? This action cannot be undone.`,
-      )
-    ) {
-      deleteMutation.mutate();
-    }
-  };
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -108,7 +102,7 @@ export function JournalCard({ journal }: JournalCardProps) {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={handleDelete}
+                  onClick={() => setIsDeleteOpen(true)}
                   className="text-red-600 focus:text-red-600"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
@@ -119,6 +113,22 @@ export function JournalCard({ journal }: JournalCardProps) {
           </div>
         </div>
       </CardHeader>
+
+      {/* Delete Confirmation Popup */}
+      <ConfirmationPopup
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        title="Delete Journal"
+        description={`Are you sure you want to delete "${journal.title}"? This action cannot be undone.`}
+        icon={<AlertCircle className="h-12 w-12 text-red-500" />}
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={() => deleteMutation.mutate()}
+        isPending={deleteMutation.isPending}
+        isSuccess={deleteMutation.isSuccess}
+        loadingText="Deleting..."
+      />
 
       <CardContent className="pt-4">
         <Link href={`/institution/journals/${journal.id}`}>
