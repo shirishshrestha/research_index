@@ -1,8 +1,6 @@
-"use client";
-
 import Image from "next/image";
 import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
-import { useInstitutionalSupporterQuery } from "../hooks";
+import type { SupportPage } from "../types";
 import { BACKEND_URL } from "@/utils/constants";
 
 const categories = [
@@ -14,23 +12,18 @@ const categories = [
   { label: "Current Sponsors & Partners", value: "sponsors" },
 ];
 
-export function InstitutionalSupporterContent() {
-  const { data, isLoading, error } = useInstitutionalSupporterQuery();
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-gray-500">Loading...</p>
-      </div>
-    );
-  }
+interface InstitutionalSupporterContentServerProps {
+  data: SupportPage;
+}
 
-  if (error || !data) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-red-500">Failed to load support page content.</p>
-      </div>
-    );
-  }
+export function InstitutionalSupporterContentServer({
+  data,
+}: InstitutionalSupporterContentServerProps) {
+  const activeSponsors =
+    data.sponsors?.filter(
+      (s) => s.is_active && s.show_on_institutional_supporter,
+    ) || [];
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6 section-padding pt-12.5!">
       {/* Main Content */}
@@ -51,7 +44,6 @@ export function InstitutionalSupporterContent() {
             and expand access to national and international audiences.
           </p>
 
-          {/* Pricing Table */}
           <div className="overflow-x-auto border border-border rounded-lg">
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-border">
@@ -102,10 +94,10 @@ export function InstitutionalSupporterContent() {
           </div>
         </div>
 
-        {/* Why Support NRI */}
+        {/* Why Support */}
         <div className="space-y-3.75 scroll-mt-32" id="whySupport">
           <h3 className="heading-4 text-text-black">
-            Why You Should Support NRI
+            Why Support NRI as an Institution
           </h3>
           <div className="space-y-4">
             {data.why_support_points.map((point) => (
@@ -141,6 +133,7 @@ export function InstitutionalSupporterContent() {
             ))}
           </ul>
         </div>
+
         {/* Join Network */}
         <div className="space-y-3.75 scroll-mt-32" id="network">
           <h3 className="heading-4 text-text-black">
@@ -152,10 +145,11 @@ export function InstitutionalSupporterContent() {
             ensure that Nepali knowledge is visible, valued, and connected to
             the world.
           </p>
-          <p className="sub-body ">
+
+          <p className="sub-body">
             Become an{" "}
             <a
-              href="/support/register/institutional"
+              href="/support/register/institution"
               className="text-primary-600 hover:text-primary-700 font-semibold underline"
             >
               Institutional Supporter
@@ -163,36 +157,49 @@ export function InstitutionalSupporterContent() {
           </p>
         </div>
 
-        {/* Current Sponsors & Partners */}
-        {data.sponsors.length > 0 && (
+        {/* Current Sponsors */}
+        {activeSponsors.length > 0 && (
           <div className="space-y-3.75 scroll-mt-32" id="sponsors">
             <h3 className="heading-4 text-text-black">
               Current Sponsors & Partners
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {data.sponsors.map((sponsor) => (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {activeSponsors.map((sponsor) => (
                 <div
                   key={sponsor.id}
-                  className="flex items-center justify-center bg-white rounded-lg p-3.75"
-                  style={{
-                    boxShadow: "0 4px 15px 0 rgba(0, 0, 0, 0.25)",
-                  }}
+                  className="flex flex-col items-center gap-3 p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
-                  <div className="relative w-[110.5px] h-[110.5px]">
-                    <Image
-                      src={`${BACKEND_URL}${sponsor.logo_url}`}
-                      alt={sponsor.name}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
+                  {sponsor.logo_url && (
+                    <div className="relative w-24 h-24">
+                      <Image
+                        src={`${BACKEND_URL}${sponsor.logo_url}`}
+                        alt={sponsor.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
+                  <p className="text-sm font-medium text-center">
+                    {sponsor.name}
+                  </p>
+                  {sponsor.website_url && (
+                    <a
+                      href={sponsor.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary-600 hover:underline"
+                    >
+                      Visit Website
+                    </a>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         )}
       </div>
-      {/* Sticky Sidebar Navigation */}
+
+      {/* Sticky Sidebar */}
       <aside>
         <div className="flex flex-col gap-1.25 sticky top-32">
           {categories.map((category) => (

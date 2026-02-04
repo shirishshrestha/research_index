@@ -1,36 +1,21 @@
-"use client";
-
-import Image from "next/image";
 import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
-import { useInstitutionalSupporterQuery } from "../hooks";
-import { BACKEND_URL } from "@/utils/constants";
+import type { SupportPage } from "../types";
 
 const categories = [
   { label: "Overview", value: "overview" },
   { label: "Pricing (2025 - 2027)", value: "pricing" },
   { label: "Why Support NRI", value: "whySupport" },
-  { label: "Benefits for Institutional Supporters", value: "benefits" },
+  { label: "Benefits for Author Supporters", value: "benefits" },
   { label: "Support Network", value: "network" },
-  { label: "Current Sponsors & Partners", value: "sponsors" },
 ];
 
-export function InstitutionalSupporterContent() {
-  const { data, isLoading, error } = useInstitutionalSupporterQuery();
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-gray-500">Loading...</p>
-      </div>
-    );
-  }
+interface AuthorSupporterContentServerProps {
+  data: SupportPage;
+}
 
-  if (error || !data) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-red-500">Failed to load support page content.</p>
-      </div>
-    );
-  }
+export function AuthorSupporterContentServer({
+  data,
+}: AuthorSupporterContentServerProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6 section-padding pt-12.5!">
       {/* Main Content */}
@@ -45,10 +30,9 @@ export function InstitutionalSupporterContent() {
         <div className="space-y-3.75 scroll-mt-32" id="pricing">
           <h3 className="heading-4 text-text-black">Pricing (2025 - 2027)</h3>
           <p className="sub-body mb-6">
-            To strengthen transparency and long-term sustainability, we have
-            developed a tiered supporter model for institutions in Nepal. This
-            model allows us to maintain the platform, improve infrastructure,
-            and expand access to national and international audiences.
+            NRI has introduced a simplified contribution model for authors,
+            designed to remain affordable while sustaining long-term growth and
+            technical development.
           </p>
 
           {/* Pricing Table */}
@@ -76,9 +60,15 @@ export function InstitutionalSupporterContent() {
                     <td className="p-4 text-sm text-text-black">
                       {tier.category}
                     </td>
-                    <td className="p-4 text-sm ">{tier.npr_amount}</td>
-                    <td className="p-4 text-sm ">{tier.usd_amount}</td>
-                    <td className="p-4 text-sm ">{tier.purpose}</td>
+                    <td className="p-4 text-sm text-text-gray">
+                      {tier.npr_amount}
+                    </td>
+                    <td className="p-4 text-sm text-text-gray">
+                      {tier.usd_amount}
+                    </td>
+                    <td className="p-4 text-sm text-text-gray">
+                      {tier.purpose}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -86,26 +76,17 @@ export function InstitutionalSupporterContent() {
           </div>
 
           <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm ">
-              Institutions joining through a consortium or network may receive
-              up to a <strong className="text-blue-900">20% discount</strong>.
-              For customized partnership options or additional funding
-              opportunities, please{" "}
-              <a
-                href="/contact"
-                className="text-primary-600 hover:underline font-medium"
-              >
-                Contact Us
-              </a>
-              .
+            <p className="text-sm text-gray-700">
+              Authors can also choose to contribute voluntarily at higher levels
+              or through institutional memberships.
             </p>
           </div>
         </div>
 
-        {/* Why Support NRI */}
+        {/* Why Support NRI as an Author */}
         <div className="space-y-3.75 scroll-mt-32" id="whySupport">
           <h3 className="heading-4 text-text-black">
-            Why You Should Support NRI
+            Why Support NRI as an Author
           </h3>
           <div className="space-y-4">
             {data.why_support_points.map((point) => (
@@ -131,9 +112,9 @@ export function InstitutionalSupporterContent() {
         {/* Benefits */}
         <div className="space-y-3.75 scroll-mt-32" id="benefits">
           <h3 className="heading-4 text-text-black">
-            Benefits for Institutional Supporters
+            Benefits for Authors Supporters
           </h3>
-          <ul className="space-y-2 list-disc pl-6">
+          <ul className="space-y-2  list-disc pl-6">
             {data.benefits.map((benefit) => (
               <li key={benefit.id} className="sub-body">
                 {benefit.title} - {benefit.description}
@@ -141,6 +122,7 @@ export function InstitutionalSupporterContent() {
             ))}
           </ul>
         </div>
+
         {/* Join Network */}
         <div className="space-y-3.75 scroll-mt-32" id="network">
           <h3 className="heading-4 text-text-black">
@@ -152,45 +134,17 @@ export function InstitutionalSupporterContent() {
             ensure that Nepali knowledge is visible, valued, and connected to
             the world.
           </p>
-          <p className="sub-body ">
+
+          <p className="sub-body">
             Become an{" "}
             <a
-              href="/support/register/institutional"
+              href="/support/register/author"
               className="text-primary-600 hover:text-primary-700 font-semibold underline"
             >
-              Institutional Supporter
+              Author Supporter
             </a>
           </p>
         </div>
-
-        {/* Current Sponsors & Partners */}
-        {data.sponsors.length > 0 && (
-          <div className="space-y-3.75 scroll-mt-32" id="sponsors">
-            <h3 className="heading-4 text-text-black">
-              Current Sponsors & Partners
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {data.sponsors.map((sponsor) => (
-                <div
-                  key={sponsor.id}
-                  className="flex items-center justify-center bg-white rounded-lg p-3.75"
-                  style={{
-                    boxShadow: "0 4px 15px 0 rgba(0, 0, 0, 0.25)",
-                  }}
-                >
-                  <div className="relative w-[110.5px] h-[110.5px]">
-                    <Image
-                      src={`${BACKEND_URL}${sponsor.logo_url}`}
-                      alt={sponsor.name}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
       {/* Sticky Sidebar Navigation */}
       <aside>

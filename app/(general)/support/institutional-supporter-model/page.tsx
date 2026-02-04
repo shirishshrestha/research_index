@@ -1,13 +1,33 @@
+import { Suspense } from "react";
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
-import { InstitutionalSupporterContent } from "@/features/general/support";
+import { InstitutionalSupporterContentServer } from "@/features/general/support/components/InstitutionalSupporterContentServer";
+import { SupportPageSkeleton } from "@/features/general/support/components/SupportPageSkeleton";
+import { getSupportPage } from "@/features/general/support/api.server";
 import { Metadata } from "next";
+
+// Force dynamic rendering to avoid build-time fetch issues
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Institutional Supporter Model - Research Index",
   description:
     "Support Nepal's research ecosystem through our institutional supporter model",
 };
+
+async function InstitutionalSupporterData() {
+  const data = await getSupportPage("institutional_supporter");
+
+  if (!data) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <p className="text-red-500">Failed to load support page content.</p>
+      </div>
+    );
+  }
+
+  return <InstitutionalSupporterContentServer data={data} />;
+}
 
 export default function InstitutionalSupporterModelPage() {
   return (
@@ -31,7 +51,9 @@ export default function InstitutionalSupporterModelPage() {
       />
 
       <Container>
-        <InstitutionalSupporterContent />
+        <Suspense fallback={<SupportPageSkeleton />}>
+          <InstitutionalSupporterData />
+        </Suspense>
       </Container>
     </section>
   );

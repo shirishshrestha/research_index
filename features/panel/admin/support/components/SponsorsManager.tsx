@@ -299,7 +299,7 @@ export function SponsorsManager() {
             No sponsors yet. Add your first sponsor!
           </p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
             {sponsors.map((sponsor) => (
               <div
                 key={sponsor.id}
@@ -307,7 +307,7 @@ export function SponsorsManager() {
               >
                 <div className="flex items-center gap-4 flex-1">
                   {sponsor.logo_url && (
-                    <div className="relative w-16 h-16 border rounded overflow-hidden flex-shrink-0">
+                    <div className="relative w-16 h-16 border rounded overflow-hidden shrink-0">
                       <Image
                         src={sponsor.logo_url}
                         alt={sponsor.name}

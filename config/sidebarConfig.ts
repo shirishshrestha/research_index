@@ -51,6 +51,11 @@ export const sidebarConfig: Record<string, MenuItem[]> = {
       icon: BookOpen,
     },
     {
+      path: "/admin/support",
+      name: "Support Pages",
+      icon: Files,
+    },
+    {
       name: "Journals",
       path: "/admin/journals",
       icon: Book,
