@@ -6,7 +6,7 @@ import { SupportPageSkeleton } from "@/features/general/support/components/Suppo
 import { getSupportPage } from "@/features/general/support/api.server";
 import { Metadata } from "next";
 
-// Force dynamic rendering to avoid build-time fetch issues
+// Force runtime rendering to avoid build-time fetch issues
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -15,21 +15,18 @@ export const metadata: Metadata = {
     "Join Nepal Research Index as a sponsor or partner to promote research transparency and accessibility",
 };
 
-async function SponsorshipPartnershipData() {
-  const data = await getSupportPage("sponsorship_partnership");
-
-  if (!data) {
-    return (
-      <div className="flex items-center justify-center min-h-100">
-        <p className="text-red-500">Failed to load support page content.</p>
-      </div>
-    );
+async function getSponsorshipPartnershipData() {
+  try {
+    return await getSupportPage("sponsorship_partnership");
+  } catch (error) {
+    console.error("Error fetching sponsorship/partnership page:", error);
+    return null;
   }
-
-  return <SponsorshipPartnershipContentServer data={data} />;
 }
 
-export default function SponsorshipPartnershipPage() {
+export default async function SponsorshipPartnershipPage() {
+  const data = await getSponsorshipPartnershipData();
+
   return (
     <section>
       <Container>
@@ -52,7 +49,15 @@ export default function SponsorshipPartnershipPage() {
 
       <Container>
         <Suspense fallback={<SupportPageSkeleton />}>
-          <SponsorshipPartnershipData />
+          {data ? (
+            <SponsorshipPartnershipContentServer data={data} />
+          ) : (
+            <div className="flex items-center justify-center min-h-100">
+              <p className="text-red-500">
+                Failed to load support page content.
+              </p>
+            </div>
+          )}
         </Suspense>
       </Container>
     </section>

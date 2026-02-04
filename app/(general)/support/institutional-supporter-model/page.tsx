@@ -6,7 +6,7 @@ import { SupportPageSkeleton } from "@/features/general/support/components/Suppo
 import { getSupportPage } from "@/features/general/support/api.server";
 import { Metadata } from "next";
 
-// Force dynamic rendering to avoid build-time fetch issues
+// Force runtime rendering to avoid build-time fetch issues
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -15,21 +15,18 @@ export const metadata: Metadata = {
     "Support Nepal's research ecosystem through our institutional supporter model",
 };
 
-async function InstitutionalSupporterData() {
-  const data = await getSupportPage("institutional_supporter");
-
-  if (!data) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-red-500">Failed to load support page content.</p>
-      </div>
-    );
+async function getInstitutionalSupporterData() {
+  try {
+    return await getSupportPage("institutional_supporter");
+  } catch (error) {
+    console.error("Error fetching institutional supporter page:", error);
+    return null;
   }
-
-  return <InstitutionalSupporterContentServer data={data} />;
 }
 
-export default function InstitutionalSupporterModelPage() {
+export default async function InstitutionalSupporterModelPage() {
+  const data = await getInstitutionalSupporterData();
+
   return (
     <section>
       <Container>
@@ -52,7 +49,15 @@ export default function InstitutionalSupporterModelPage() {
 
       <Container>
         <Suspense fallback={<SupportPageSkeleton />}>
-          <InstitutionalSupporterData />
+          {data ? (
+            <InstitutionalSupporterContentServer data={data} />
+          ) : (
+            <div className="flex items-center justify-center min-h-[400px]">
+              <p className="text-red-500">
+                Failed to load support page content.
+              </p>
+            </div>
+          )}
         </Suspense>
       </Container>
     </section>
