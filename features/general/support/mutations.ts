@@ -72,11 +72,11 @@ export const useUpdateSupportPageMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.setQueryData(queryKey, data);
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Support page updated successfully");
     },
     onError: (error) => {
@@ -112,11 +112,11 @@ export const useCreatePricingTierMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Pricing tier created successfully");
     },
     onError: (error) => {
@@ -149,11 +149,11 @@ export const useUpdatePricingTierMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Pricing tier updated successfully");
     },
     onError: (error) => {
@@ -185,11 +185,11 @@ export const useDeletePricingTierMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Pricing tier deleted successfully");
     },
     onError: (error) => {
@@ -225,11 +225,11 @@ export const useCreateBenefitMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Benefit created successfully");
     },
     onError: (error) => {
@@ -261,11 +261,11 @@ export const useDeleteBenefitMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Benefit deleted successfully");
     },
     onError: (error) => {
@@ -301,11 +301,11 @@ export const useCreateWhySupportMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Why support point created successfully");
     },
     onError: (error) => {
@@ -339,11 +339,11 @@ export const useDeleteWhySupportMutation = (
             : SUPPORT_QUERY_KEYS.sponsorshipPartnership;
 
       queryClient.invalidateQueries({ queryKey });
-      
+
       // Revalidate server-side cache
       await revalidateSupportPageCache(pageType);
       router.refresh();
-      
+
       toast.success("Why support point deleted successfully");
     },
     onError: (error) => {

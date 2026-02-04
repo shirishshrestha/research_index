@@ -6,6 +6,9 @@ import { SupportPageSkeleton } from "@/features/general/support/components/Suppo
 import { getSupportPage } from "@/features/general/support/api.server";
 import { Metadata } from "next";
 
+// Force dynamic rendering to avoid build-time fetch issues
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Institutional Supporter Model - Research Index",
   description:

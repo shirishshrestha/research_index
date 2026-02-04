@@ -32,9 +32,7 @@ export async function revalidateSupportPagesCache(): Promise<{
  * Call after creating, updating, or deleting content on a specific support page
  * @param pageType - "author_supporter" | "institutional_supporter" | "sponsorship_partnership"
  */
-export async function revalidateSupportPageCache(
-  pageType: string,
-): Promise<{
+export async function revalidateSupportPageCache(pageType: string): Promise<{
   revalidated: boolean;
   error?: string;
 }> {

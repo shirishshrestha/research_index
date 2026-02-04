@@ -9,7 +9,7 @@ import { SupportPage } from "./types";
 /**
  * Get a specific support page by page type
  * @param pageType - "author_supporter" | "institutional_supporter" | "sponsorship_partnership"
- * @returns Support page data
+ * @returns Support page data or null if not found
  */
 export async function getSupportPage(
   pageType: string,
@@ -21,6 +21,7 @@ export async function getSupportPage(
     });
   } catch (error) {
     console.error(`Failed to fetch support page ${pageType}:`, error);
+    // Return null to show fallback UI instead of crashing the page
     return null;
   }
 }

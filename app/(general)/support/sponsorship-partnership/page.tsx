@@ -6,6 +6,9 @@ import { SupportPageSkeleton } from "@/features/general/support/components/Suppo
 import { getSupportPage } from "@/features/general/support/api.server";
 import { Metadata } from "next";
 
+// Force dynamic rendering to avoid build-time fetch issues
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Sponsorship & Partnership Model - Research Index",
   description:
@@ -17,7 +20,7 @@ async function SponsorshipPartnershipData() {
 
   if (!data) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <p className="text-red-500">Failed to load support page content.</p>
       </div>
     );

@@ -19,7 +19,10 @@ interface InstitutionalSupporterContentServerProps {
 export function InstitutionalSupporterContentServer({
   data,
 }: InstitutionalSupporterContentServerProps) {
-  const activeSponsors = data.sponsors?.filter((s) => s.is_active && s.show_on_institutional_supporter) || [];
+  const activeSponsors =
+    data.sponsors?.filter(
+      (s) => s.is_active && s.show_on_institutional_supporter,
+    ) || [];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_287px] gap-6 section-padding pt-12.5!">
