@@ -1,74 +1,86 @@
-import Link from "next/link";
-import { Card } from "@/components/ui/card";
+"use client";
 
-const mockArticles = [
-  {
-    id: "1",
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    authors:
-      "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher, Michael T. Roman, James A. Sinclair",
-    publishedAt: "02 May 2025",
-    doi: "10.58291/nrip.2025.00123",
-    citations: 33,
-  },
-  {
-    id: "2",
-    title: "Sustainable Agricultural Practices in Mountain Communities",
-    authors: "Ramesh Kumar, Sita Devi, Prakash Sharma",
-    publishedAt: "15 Apr 2025",
-    doi: "10.58291/nrip.2025.00089",
-    citations: 25,
-  },
-  {
-    id: "3",
-    title: "Water Resource Management in the Himalayan Region",
-    authors: "Maya Thapa, Bikram Rai, Anita Gurung",
-    publishedAt: "28 Mar 2025",
-    doi: "10.58291/nrip.2025.00067",
-    citations: 18,
-  },
-];
+import { useArticleCitations } from "../../hooks/useArticleData";
+import type { Publication } from "@/features/panel/author/publications/types";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export const CitationsTab = () => {
+interface CitationsTabProps {
+  article: Publication;
+}
+
+export const CitationsTab = ({ article }: CitationsTabProps) => {
+  const { data, isLoading, error } = useArticleCitations(article.doi);
+
+  if (!article.doi) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          No DOI available for this article. Citations cannot be fetched.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-3 text-muted-foreground">Loading citations...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          Error loading citations: {(error as Error).message}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  const citationCount =
+    data?.data?.citation_count || data?.data?.is_referenced_by_count || 0;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
       <aside className="">
         <div className="flex flex-col gap-1.25 sticky top-32">
           <p
-            className={`w-full text-left p-2.5 rounded-md transition-all border border-white-02 bg-white hover:bg-gray-50
-              `}
+            className={`w-full text-left p-2.5 rounded-md transition-all border border-white-02 bg-white hover:bg-gray-50`}
           >
             <span className="text-base text-text-black">
-              All Citations (33)
+              All Citations ({citationCount})
             </span>
           </p>
         </div>
       </aside>
-      <aside className="space-y-8.75 flex flex-col ">
-        {mockArticles.map((article) => (
-          <Link key={article.id} href={`/articles/${article.id}`}>
-            <Card className="p-6 hover:shadow-md transition-shadow  ">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <h4 className="text-lg font-semibold text-primary mb-2 hover:underline">
-                    {article.title}
-                  </h4>
-                  <p className="text-sm text-gray-600 mb-2">
-                    {article.authors}
-                  </p>
-                  <div className="flex gap-2 text-sm text-gray-500">
-                    <span>Published: {article.publishedAt}</span>
-                    <span>·</span>
-                    <span>DOI: {article.doi}</span>
-                  </div>
-                </div>
-                <span className="text-sm font-medium whitespace-nowrap">
-                  {article.citations} Cite
-                </span>
-              </div>
-            </Card>
-          </Link>
-        ))}
+      <aside className="space-y-8.75 flex flex-col">
+        {citationCount === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">
+              No citations found for this article yet.
+            </p>
+          </div>
+        ) : (
+          <div className="p-6 border rounded-lg bg-white">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-primary mb-2">
+                {citationCount}
+              </p>
+              <p className="text-muted-foreground">Total Citations</p>
+              <p className="text-sm text-muted-foreground mt-4">
+                Citation details from citing works are available through
+                Crossref. Individual citing articles will be displayed as they
+                become available.
+              </p>
+            </div>
+          </div>
+        )}
       </aside>
     </div>
   );

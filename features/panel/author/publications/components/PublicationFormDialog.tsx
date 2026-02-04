@@ -48,6 +48,7 @@ import {
   MultiSelectGroup,
   MultiSelectItem,
 } from "@/components/ui/multi-select";
+import { DOIFetcher } from "./DOIFetcher";
 
 // Helper to flatten nested branches recursively
 interface BranchNode {
@@ -99,6 +100,7 @@ export function PublicationFormDialog({
       published_date: publication?.published_date ?? "",
       journal: publication?.journal ?? null,
       issue: publication?.issue_id ?? publication?.issue ?? null,
+      volume: publication?.volume ?? "",
       pages: publication?.pages ?? "",
       publisher: publication?.publisher ?? "",
       co_authors: publication?.co_authors ?? "",
@@ -186,6 +188,7 @@ export function PublicationFormDialog({
       formData.append("issue_id", String(data.issue));
     }
 
+    if (data.volume?.trim()) formData.append("volume", data.volume.trim());
     if (data.pages?.trim()) formData.append("pages", data.pages.trim());
     if (data.publisher?.trim())
       formData.append("publisher", data.publisher.trim());
@@ -257,6 +260,15 @@ export function PublicationFormDialog({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+            {/* DOI Auto-fill Section */}
+            <DOIFetcher
+              form={form}
+              journalOptions={journals?.map((j) => ({
+                id: j.id,
+                title: j.title,
+              }))}
+            />
+
             {/* Basic Information */}
             <div className="grid gap-4">
               <h3 className="text-sm font-semibold">Basic Information</h3>
@@ -431,12 +443,21 @@ export function PublicationFormDialog({
                 </div>
               ) : null}
 
-              <FormInputField
-                control={form.control}
-                name="pages"
-                label="Pages"
-                placeholder="123-145"
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormInputField
+                  control={form.control}
+                  name="volume"
+                  label="Volume"
+                  placeholder="e.g., 59"
+                />
+
+                <FormInputField
+                  control={form.control}
+                  name="pages"
+                  label="Pages"
+                  placeholder="123-145"
+                />
+              </div>
 
               <FormInputField
                 control={form.control}

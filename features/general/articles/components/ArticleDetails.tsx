@@ -75,12 +75,12 @@ export function ArticleDetails({ article }: ArticleDetailsProps) {
           {
             label: "Citations",
             value: "citations",
-            content: <CitationsTab />,
+            content: <CitationsTab article={article} />,
           },
           {
             label: "References",
             value: "references",
-            content: <ReferencesTab />,
+            content: <ReferencesTab article={article} />,
           },
           {
             label: "Similar Articles",
