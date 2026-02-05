@@ -3,6 +3,7 @@
 import { Plus, Eye, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import DataTable, {
   type DataTableColumn,
 } from "@/features/shared/components/DataTable";
@@ -11,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FilterToolbar } from "@/features/shared/components/search/FilterToolbar";
 import { useJournalsQuery } from "../hooks";
+import { EllipsisTooltip } from "@/features/shared/components/lists/Ellipsis";
 
 export function JournalsList() {
   const router = useRouter();
@@ -22,12 +24,13 @@ export function JournalsList() {
       key: "cover",
       header: "",
       render: (row) => (
-        <div className="w-12 h-12 rounded overflow-hidden bg-muted shrink-0">
+        <div className="w-12 h-12 rounded overflow-hidden bg-muted shrink-0 relative">
           {row.cover_image_url ? (
-            <img
+            <Image
               src={row.cover_image_url}
               alt={row.title}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs font-bold">
@@ -69,8 +72,9 @@ export function JournalsList() {
     {
       key: "publisher",
       header: "Publisher",
-      accessor: (row) => row.publisher_name || "N/A",
-      cellClassName: "max-w-xs truncate",
+      render: (row) => (
+        <EllipsisTooltip text={row.publisher_name || "N/A"} maxLength={35} />
+      ),
     },
     {
       key: "frequency",

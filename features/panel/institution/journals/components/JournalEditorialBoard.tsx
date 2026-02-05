@@ -10,6 +10,7 @@ import type { EditorialBoardMember } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
+import { EllipsisTooltip } from "@/features/shared/components/lists/Ellipsis";
 
 interface JournalEditorialBoardProps {
   members?: EditorialBoardMember[];
@@ -93,14 +94,16 @@ export function JournalEditorialBoard({
     {
       key: "affiliation",
       header: "Affiliation",
-      accessor: (row) => row.affiliation || "N/A",
-      cellClassName: "max-w-xs truncate",
+      render: (row) => (
+        <EllipsisTooltip text={row.affiliation || "N/A"} maxLength={35} />
+      ),
     },
     {
       key: "expertise",
       header: "Expertise",
-      accessor: (row) => row.expertise || "-",
-      cellClassName: "max-w-xs truncate",
+      render: (row) => (
+        <EllipsisTooltip text={row.expertise || "-"} maxLength={35} />
+      ),
     },
     {
       key: "links",

@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { useEditor, EditorContent, EditorContext } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Link } from "@tiptap/extension-link";
@@ -22,7 +23,6 @@ import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-men
 import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button";
 import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button";
-import { ColorHighlightPopover } from "@/components/tiptap-ui/color-highlight-popover";
 import { LinkPopover } from "@/components/tiptap-ui/link-popover";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
@@ -66,7 +66,7 @@ function parseContent(content?: string) {
     if (typeof parsed === "object" && parsed !== null) {
       return parsed;
     }
-  } catch (e) {
+  } catch {
     // If parsing fails, it's plain text - convert to Tiptap JSON
     const paragraphs = content.split("\n\n").filter((p) => p.trim());
     return {
@@ -141,6 +141,23 @@ export function RichTextEditor({
       onChange?.(json);
     },
   });
+
+  // Update editor content when content prop changes (e.g., from DOI fetch)
+  React.useEffect(() => {
+    if (editor && content !== undefined) {
+      const currentContent = JSON.stringify(editor.getJSON());
+      const newContent = parseContent(content);
+      const newContentString =
+        typeof newContent === "string"
+          ? newContent
+          : JSON.stringify(newContent);
+
+      // Only update if content actually changed to avoid infinite loops
+      if (currentContent !== newContentString) {
+        editor.commands.setContent(newContent);
+      }
+    }
+  }, [editor, content]);
 
   if (!editor) return null;
 
