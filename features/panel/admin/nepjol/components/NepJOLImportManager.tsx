@@ -24,6 +24,7 @@ import type { NepJOLImportStartRequest } from "../types";
 
 export function NepJOLImportManager() {
   const [syncDialogOpen, setSyncDialogOpen] = React.useState(false);
+  const [hasStartedImport, setHasStartedImport] = React.useState(false);
   const [importOptions, setImportOptions] =
     React.useState<NepJOLImportStartRequest>({
       max_journals: null,
@@ -39,21 +40,25 @@ export function NepJOLImportManager() {
     refetch: refetchHistory,
   } = useNepJOLImportHistoryQuery();
 
+  // Fetch initial status
   const { data: status, isLoading: statusLoading } = useNepJOLImportStatusQuery(
     {
       enabled: true,
-      refetchInterval: 1000, // Always poll every 1s when component is mounted
+      // Poll aggressively when import might be running
+      refetchInterval: hasStartedImport ? 1000 : false,
     },
   );
 
   const startImport = useStartNepJOLImportMutation({
     onSuccess: () => {
+      setHasStartedImport(true);
       setSyncDialogOpen(true);
     },
   });
 
   const stopImport = useStopNepJOLImportMutation({
     onSuccess: () => {
+      setHasStartedImport(false);
       refetchHistory();
     },
   });
@@ -68,12 +73,20 @@ export function NepJOLImportManager() {
 
   const isImportRunning = status?.is_running || false;
 
-  // Auto-open sync dialog when import starts
+  // Auto-open sync dialog only when user starts an import
   React.useEffect(() => {
-    if (isImportRunning && !syncDialogOpen) {
+    if (hasStartedImport && isImportRunning && !syncDialogOpen) {
       setSyncDialogOpen(true);
     }
-  }, [isImportRunning, syncDialogOpen]);
+  }, [hasStartedImport, isImportRunning, syncDialogOpen]);
+
+  // Reset hasStartedImport when import completes
+  React.useEffect(() => {
+    if (hasStartedImport && !isImportRunning) {
+      // Import has finished
+      setHasStartedImport(false);
+    }
+  }, [hasStartedImport, isImportRunning]);
 
   if (historyLoading || statusLoading) {
     return (

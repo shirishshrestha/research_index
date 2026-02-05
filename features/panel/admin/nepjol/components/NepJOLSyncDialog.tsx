@@ -35,12 +35,27 @@ export function NepJOLSyncDialog({
   const progress = status.progress_percentage || 0;
   const displayStage = status.current_stage || "Initializing...";
 
-  // Determine current step based on progress
+  // Determine current step based on stats and progress
   const getCurrentStep = () => {
-    if (!status.is_running) return 3;
+    if (!status.is_running && progress === 100) return 3; // Completed
+
+    // Use stats to determine progress more accurately
+    const stats = status.stats;
+    if (stats) {
+      // If publications are being created, we're in processing stage
+      if (stats.publications_created > 0 || stats.publications_skipped > 0) {
+        return 2; // Processing publications
+      }
+      // If journals are being processed, we're in fetching stage
+      if (stats.journals_processed > 0 || stats.journals_created > 0) {
+        return 1; // Fetching journals
+      }
+    }
+
+    // Fallback to progress-based logic
     if (progress >= 75) return 2;
-    if (progress >= 25) return 1;
-    return 0;
+    if (progress >= 10) return 1;
+    return 0; // Connecting
   };
 
   const currentStep = getCurrentStep();
