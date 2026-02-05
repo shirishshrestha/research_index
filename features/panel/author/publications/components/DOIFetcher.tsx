@@ -8,13 +8,57 @@ import { AlertCircle, CheckCircle, Loader2, Search } from "lucide-react";
 import { crossrefApi } from "../api/crossref";
 import type { UseFormReturn } from "react-hook-form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import type { QueryClient } from "@tanstack/react-query";
+import { PUBLIC_JOURNALS_QUERY_KEYS } from "../hooks/publicJournalsQueries";
 
 interface DOIFetcherProps {
-  form: UseFormReturn<any>; // Use any to avoid type conflicts with optional fields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: UseFormReturn<any>;
   journalOptions?: Array<{ id: number; title: string }>;
+  queryClient: QueryClient;
 }
 
-export function DOIFetcher({ form, journalOptions }: DOIFetcherProps) {
+/**
+ * Clean HTML/JATS tags from abstract text
+ * Converts JATS markup to plain text with proper formatting
+ */
+function cleanAbstractHTML(html: string): string {
+  if (!html) return "";
+
+  // Remove JATS tags and convert to plain text
+  const cleaned = html
+    // Remove JATS paragraph tags
+    .replace(/<\/?jats:p>/g, "")
+    // Remove JATS italic tags but keep content
+    .replace(/<jats:italic>/g, "")
+    .replace(/<\/jats:italic>/g, "")
+    // Remove JATS bold tags but keep content
+    .replace(/<jats:bold>/g, "")
+    .replace(/<\/jats:bold>/g, "")
+    // Remove other common JATS tags
+    .replace(/<\/?jats:[^>]+>/g, "")
+    // Remove other HTML tags but keep content
+    .replace(/<[^>]+>/g, "")
+    // Decode HTML entities
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec))
+    // Clean up whitespace
+    .replace(/\r\n/g, "\n")
+    .replace(/\n\s*\n/g, "\n\n")
+    .trim();
+
+  return cleaned;
+}
+
+export function DOIFetcher({
+  form,
+  journalOptions,
+  queryClient,
+}: DOIFetcherProps) {
   const [doiInput, setDoiInput] = React.useState("");
   const [isFetching, setIsFetching] = React.useState(false);
   const [fetchStatus, setFetchStatus] = React.useState<{
@@ -44,9 +88,12 @@ export function DOIFetcher({ form, journalOptions }: DOIFetcherProps) {
         form.setValue("title", data.title || "");
         form.setValue("doi", data.doi || doiInput.trim());
 
-        // Ensure abstract is filled
+        // Clean and set abstract (remove JATS/HTML tags)
         if (data.abstract) {
-          form.setValue("abstract", data.abstract);
+          const cleanedAbstract = cleanAbstractHTML(data.abstract);
+          if (cleanedAbstract) {
+            form.setValue("abstract", cleanedAbstract);
+          }
         }
 
         // Set publication type based on Crossref type
@@ -143,7 +190,20 @@ export function DOIFetcher({ form, journalOptions }: DOIFetcherProps) {
                   "Journal created successfully, ID:",
                   journalResponse.journal.id,
                 );
+
+                // Invalidate and refetch journals query to get the new journal
+                await queryClient.invalidateQueries({
+                  queryKey: PUBLIC_JOURNALS_QUERY_KEYS.lists(),
+                });
+
+                // Wait a moment for the query to refetch
+                await queryClient.refetchQueries({
+                  queryKey: PUBLIC_JOURNALS_QUERY_KEYS.lists(),
+                });
+
+                // Now set the journal value
                 form.setValue("journal", journalResponse.journal.id);
+
                 setFetchStatus({
                   type: "success",
                   message: `Successfully fetched publication and created journal "${journalResponse.journal.title}"`,
@@ -155,12 +215,16 @@ export function DOIFetcher({ form, journalOptions }: DOIFetcherProps) {
                   message: `Successfully fetched publication. Note: Could not create journal "${data.journal}". Please select manually.`,
                 });
               }
-            } catch (journalError: any) {
+            } catch (journalError: unknown) {
               console.error("Error creating journal:", journalError);
-              console.error("Error details:", journalError.response?.data);
+              const errorObj = journalError as {
+                response?: { data?: { message?: string } };
+                message?: string;
+              };
+              console.error("Error details:", errorObj.response?.data);
               setFetchStatus({
                 type: "warning",
-                message: `Successfully fetched publication. Error creating journal "${data.journal}": ${journalError.response?.data?.message || journalError.message}. Please select manually.`,
+                message: `Successfully fetched publication. Error creating journal "${data.journal}": ${errorObj.response?.data?.message || errorObj.message}. Please select manually.`,
               });
             }
           }

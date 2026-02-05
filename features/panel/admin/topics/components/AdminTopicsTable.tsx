@@ -12,6 +12,7 @@ import TopicFormDialog from "./TopicFormDialog";
 import { ConfirmationPopup } from "@/features/shared/components/dialog/ConfirmationPopup";
 import { GitBranch, Pencil, Trash2 } from "lucide-react";
 import type { Topic } from "../types";
+import { EllipsisTooltip } from "@/features/shared/components/lists/Ellipsis";
 
 export function AdminTopicsTable() {
   const router = useRouter();
@@ -30,8 +31,9 @@ export function AdminTopicsTable() {
     {
       key: "description",
       header: "Description",
-      accessor: (row) => row.description || "-",
-      cellClassName: "max-w-md truncate",
+      render: (row) => (
+        <EllipsisTooltip text={row.description || "-"} maxLength={35} />
+      ),
     },
     {
       key: "branches_count",

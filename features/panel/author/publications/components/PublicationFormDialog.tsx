@@ -20,6 +20,7 @@ import { FormTextareaField } from "@/components/form/FormTextareaField";
 import { FormRichTextField } from "@/components/form/FormRichTextField";
 import { FormSelectField } from "@/components/form/FormSelectField";
 import { useForm, useWatch, useFieldArray } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useCreatePublicationMutation,
   useUpdatePublicationMutation,
@@ -82,6 +83,7 @@ export function PublicationFormDialog({
   const [open, setOpen] = React.useState(false);
   const [pdfFile, setPdfFile] = React.useState<File | null>(null);
 
+  const queryClient = useQueryClient();
   const { data: topicsTree } = useTopicTreeQuery(undefined, { enabled: open });
   const { data: journals, isPending: journalsLoading } = usePublicJournalsQuery(
     {
@@ -129,6 +131,13 @@ export function PublicationFormDialog({
     control: form.control,
     name: "journal",
   });
+
+  // Watch issue selection for UI
+  const selectedIssueId = useWatch({
+    control: form.control,
+    name: "issue",
+  });
+
   // Fetch issues for the selected journal (works for both create and edit modes)
   const { data: issues, isPending: issuesLoading } = useJournalIssuesQuery(
     selectedJournalId ? Number(selectedJournalId) : undefined,
@@ -163,6 +172,7 @@ export function PublicationFormDialog({
 
   const update = useUpdatePublicationMutation(publication?.id, {
     onSuccess: () => {
+      form.reset();
       setPdfFile(null);
       setOpen(false);
       onSuccess?.();
@@ -245,8 +255,18 @@ export function PublicationFormDialog({
     );
   }, [topicsTree]);
 
+  // Handle dialog close - reset form when closing
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open);
+    if (!open) {
+      // Reset form when dialog closes
+      form.reset();
+      setPdfFile(null);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button size={"sm"}>
           {isEdit ? <SquarePen /> : "Create Publication"}
@@ -267,6 +287,7 @@ export function PublicationFormDialog({
                 id: j.id,
                 title: j.title,
               }))}
+              queryClient={queryClient}
             />
 
             {/* Basic Information */}
@@ -323,9 +344,7 @@ export function PublicationFormDialog({
                 <Label>Journal</Label>
                 <MultiSelect
                   single
-                  values={
-                    form.watch("journal") ? [String(form.watch("journal"))] : []
-                  }
+                  values={selectedJournalId ? [String(selectedJournalId)] : []}
                   onValuesChange={(values) => {
                     const journalId = values[0] ? Number(values[0]) : null;
                     form.setValue("journal", journalId);
@@ -379,9 +398,7 @@ export function PublicationFormDialog({
                   <Label>Issue (Optional)</Label>
                   <MultiSelect
                     single
-                    values={
-                      form.watch("issue") ? [String(form.watch("issue"))] : []
-                    }
+                    values={selectedIssueId ? [String(selectedIssueId)] : []}
                     onValuesChange={(values) => {
                       const issueId = values[0] ? Number(values[0]) : null;
                       form.setValue("issue", issueId);
