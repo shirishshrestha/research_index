@@ -47,6 +47,7 @@ export default async function JournalPublicationsPage({
   searchParams,
 }: PageProps) {
   const { id } = await params;
+  const resolvedSearchParams = await searchParams;
   const journal = await getJournal(id);
 
   if (!journal) {
@@ -83,7 +84,10 @@ export default async function JournalPublicationsPage({
 
       <Container>
         <Suspense fallback={<FullScreenLoader />}>
-          <JournalPublicationsContent journalId={Number(id)} />
+          <JournalPublicationsContent
+            journalId={Number(id)}
+            searchParams={resolvedSearchParams}
+          />
         </Suspense>
       </Container>
     </section>
@@ -96,11 +100,25 @@ export default async function JournalPublicationsPage({
  */
 async function JournalPublicationsContent({
   journalId,
+  searchParams,
 }: {
   journalId: number;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   try {
-    const publications = await getJournalPublications(journalId);
+    const filters = {
+      type:
+        typeof searchParams.type === "string" ? searchParams.type : undefined,
+      issue:
+        typeof searchParams.issue === "string"
+          ? parseInt(searchParams.issue)
+          : undefined,
+      search:
+        typeof searchParams.search === "string"
+          ? searchParams.search
+          : undefined,
+    };
+    const publications = await getJournalPublications(journalId, filters);
     return <ArticlesListView initialPublications={publications} />;
   } catch (error) {
     console.error("Failed to fetch journal publications:", error);
