@@ -13,7 +13,16 @@ export const metadata: Metadata = {
   description: "Browse research articles",
 };
 
-export default function ArticlesPage() {
+interface ArticlesPageProps {
+  searchParams: {
+    type?: string;
+    topic_branch?: string;
+    author?: string;
+    search?: string;
+  };
+}
+
+export default function ArticlesPage({ searchParams }: ArticlesPageProps) {
   return (
     <section>
       <Container>
@@ -33,7 +42,7 @@ export default function ArticlesPage() {
 
       <Container>
         <Suspense fallback={<ArticlesListSkeleton />}>
-          <ArticlesContent />
+          <ArticlesContent searchParams={searchParams} />
         </Suspense>
       </Container>
     </section>
@@ -45,12 +54,23 @@ export default function ArticlesPage() {
  * Uses Next.js fetch() with cache tag "public-publications"
  * Automatically refetches when cache is revalidated
  */
-async function ArticlesContent() {
+async function ArticlesContent({
+  searchParams,
+}: {
+  searchParams: ArticlesPageProps["searchParams"];
+}) {
   let publications;
   let error = null;
 
   try {
-    publications = await getPublicPublications();
+    publications = await getPublicPublications({
+      type: searchParams.type,
+      topic_branch: searchParams.topic_branch
+        ? parseInt(searchParams.topic_branch)
+        : undefined,
+      author: searchParams.author ? parseInt(searchParams.author) : undefined,
+      search: searchParams.search,
+    });
   } catch (err) {
     console.error("Failed to fetch publications:", err);
     error = err;

@@ -13,17 +13,33 @@ export const metadata: Metadata = {
   description: "Browse academic institutions",
 };
 
-async function getInstitutions() {
+interface InstitutionsPageProps {
+  searchParams: {
+    country?: string;
+    type?: string;
+    search?: string;
+  };
+}
+
+async function getInstitutions(
+  searchParams: InstitutionsPageProps["searchParams"],
+) {
   try {
-    return await getPublicInstitutions();
+    return await getPublicInstitutions({
+      country: searchParams.country,
+      type: searchParams.type,
+      search: searchParams.search,
+    });
   } catch (error) {
     console.error("Error fetching institutions:", error);
     return [];
   }
 }
 
-export default async function InstitutionsPage() {
-  const institutions = await getInstitutions();
+export default async function InstitutionsPage({
+  searchParams,
+}: InstitutionsPageProps) {
+  const institutions = await getInstitutions(searchParams);
 
   return (
     <section>

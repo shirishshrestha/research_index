@@ -15,10 +15,26 @@ export const metadata: Metadata = {
     "Explore our growing list of authors contributing to Nepal's research excellence across diverse disciplines.",
 };
 
-async function AuthorsContent() {
+interface AuthorsPageProps {
+  searchParams: {
+    institute?: string;
+    designation?: string;
+    search?: string;
+  };
+}
+
+async function AuthorsContent({
+  searchParams,
+}: {
+  searchParams: AuthorsPageProps["searchParams"];
+}) {
   let authors: Author[];
   try {
-    authors = await getPublicAuthors();
+    authors = await getPublicAuthors({
+      institute: searchParams.institute,
+      designation: searchParams.designation,
+      search: searchParams.search,
+    });
   } catch (error) {
     console.error("Error fetching authors:", error);
     authors = [];
@@ -27,7 +43,7 @@ async function AuthorsContent() {
   return <AuthorsListView initialData={authors} />;
 }
 
-export default function AuthorsPage() {
+export default function AuthorsPage({ searchParams }: AuthorsPageProps) {
   return (
     <section>
       <Container>
@@ -47,7 +63,7 @@ export default function AuthorsPage() {
 
       <Container>
         <Suspense fallback={<AuthorsListSkeleton />}>
-          <AuthorsContent />
+          <AuthorsContent searchParams={searchParams} />
         </Suspense>
       </Container>
     </section>

@@ -9,7 +9,7 @@ import type {
 
 /**
  * Query hook to fetch current NepJOL import status
- * Poll this every 1s during import for real-time updates
+ * Configure polling via refetchInterval option (e.g., 1000 for 1s)
  */
 export const useNepJOLImportStatusQuery = (options?: {
   enabled?: boolean;
@@ -18,11 +18,7 @@ export const useNepJOLImportStatusQuery = (options?: {
   return useGet<NepJOLImportStatus>(
     ["nepjol", "import", "status"],
     "/nepjol/import/status/",
-    {
-      ...options,
-      // Default to 1s polling if not specified
-      refetchInterval: options?.refetchInterval ?? 1000,
-    },
+    options,
   );
 };
 

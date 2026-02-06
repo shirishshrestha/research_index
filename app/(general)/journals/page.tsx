@@ -13,17 +13,43 @@ export const metadata: Metadata = {
   description: "Browse academic journals",
 };
 
-async function getJournals() {
+interface JournalsPageProps {
+  searchParams: {
+    institution?: string;
+    open_access?: string;
+    peer_reviewed?: string;
+    search?: string;
+  };
+}
+
+async function getJournals(searchParams: JournalsPageProps["searchParams"]) {
   try {
-    return await getPublicJournals();
+    return await getPublicJournals({
+      institution: searchParams.institution,
+      open_access:
+        searchParams.open_access === "true"
+          ? true
+          : searchParams.open_access === "false"
+            ? false
+            : undefined,
+      peer_reviewed:
+        searchParams.peer_reviewed === "true"
+          ? true
+          : searchParams.peer_reviewed === "false"
+            ? false
+            : undefined,
+      search: searchParams.search,
+    });
   } catch (error) {
     console.error("Error fetching journals:", error);
     return [];
   }
 }
 
-export default async function JournalsPage() {
-  const journals = await getJournals();
+export default async function JournalsPage({
+  searchParams,
+}: JournalsPageProps) {
+  const journals = await getJournals(searchParams);
 
   return (
     <section>
