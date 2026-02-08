@@ -110,8 +110,11 @@ export function PublicationFormDialog({
       arxiv_id: publication?.arxiv_id ?? "",
       pubmed_central_id: publication?.pubmed_central_id ?? "",
       is_published: publication?.is_published ?? true,
-      topic_branch:
-        publication?.topic_branch_id ?? publication?.topic_branch?.id ?? null,
+      topic_branch: publication?.topic_branch_id
+        ? String(publication.topic_branch_id)
+        : publication?.topic_branch?.id
+          ? String(publication.topic_branch.id)
+          : null,
       erratum_from: publication?.erratum_from ?? null,
       mesh_terms_data:
         publication?.mesh_terms?.map((t) => ({
