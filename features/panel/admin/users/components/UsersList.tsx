@@ -1,46 +1,53 @@
 "use client";
 
 import * as React from "react";
+import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Trash2,  Search } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useAdminUsersQuery } from "../hooks/queries";
-import { useDeleteAuthorMutation, useDeleteInstitutionMutation } from "../hooks/mutations";
+import {
+  useDeleteAuthorMutation,
+  useDeleteInstitutionMutation,
+} from "../hooks/mutations";
 import { ConfirmationPopup } from "@/features/shared/components/dialog/ConfirmationPopup";
-import DataTable, { type DataTableColumn } from "@/features/shared/components/DataTable";
-import type { AdminUser } from "../types";
+import DataTable, {
+  type DataTableColumn,
+} from "@/features/shared/components/DataTable";
+import {
+  FilterToolbar,
+  Pagination,
+  EllipsisTooltip,
+} from "@/features/shared/components";
+import type {
+  AdminUser,
+  AuthorProfileInfo,
+  InstitutionProfileInfo,
+} from "../types";
 import { InstitutionEditDialog } from "./InstitutionEditDialog";
 import { AuthorEditDialog } from "./AuthorEditDialog";
 
 export function UsersList() {
-  const [userType, setUserType] = React.useState<string>("all");
-  const [search, setSearch] = React.useState("");
-  const [debouncedSearch, setDebouncedSearch] = React.useState("");
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("page_size")) || 10;
+  const userTypeParam = searchParams.get("user_type") || "all";
+  const searchParam = searchParams.get("search") || "";
+
   const [deleteTarget, setDeleteTarget] = React.useState<{
     id: number;
     type: "author" | "institution";
     name: string;
   } | null>(null);
 
-  // Debounce search
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  const { data: users, error, isPending } = useAdminUsersQuery({
-    user_type: userType === "all" ? undefined : (userType as any),
-    search: debouncedSearch || undefined,
+  const { data, error, isPending } = useAdminUsersQuery({
+    user_type:
+      userTypeParam === "all"
+        ? undefined
+        : (userTypeParam as "author" | "institution" | "admin"),
+    search: searchParam || undefined,
+    page: currentPage,
+    page_size: pageSize,
   });
 
   const deleteAuthor = useDeleteAuthorMutation(deleteTarget?.id, {
@@ -67,8 +74,16 @@ export function UsersList() {
       cellClassName: "font-medium",
       render: (row) => (
         <div className="flex flex-col gap-1">
-          <span className="font-medium">{row.profile_name}</span>
-          <span className="text-xs text-muted-foreground">{row.email}</span>
+          <EllipsisTooltip
+            text={row.profile_name}
+            maxLength={30}
+            spanProps={{ className: "font-medium" }}
+          />
+          <EllipsisTooltip
+            text={row.email}
+            maxLength={35}
+            spanProps={{ className: "text-xs text-muted-foreground" }}
+          />
         </div>
       ),
     },
@@ -90,22 +105,35 @@ export function UsersList() {
       header: "Details",
       render: (row) => {
         if (row.user_type === "author" && row.profile_info) {
-          const info = row.profile_info as any;
+          const info = row.profile_info as AuthorProfileInfo;
           return (
             <div className="flex flex-col gap-0.5 text-sm">
-              <span>{info.designation}</span>
-              <span className="text-muted-foreground">{info.institute}</span>
+              <EllipsisTooltip text={info.designation || "—"} maxLength={25} />
+              <EllipsisTooltip
+                text={info.institute || "—"}
+                maxLength={30}
+                spanProps={{ className: "text-muted-foreground" }}
+              />
             </div>
           );
         }
         if (row.user_type === "institution" && row.profile_info) {
-          const info = row.profile_info as any;
+          const info = row.profile_info as InstitutionProfileInfo;
+          const location =
+            info.city && info.country
+              ? `${info.city}, ${info.country}`
+              : info.city || info.country || "—";
           return (
             <div className="flex flex-col gap-0.5 text-sm">
-              <span>{info.institution_type}</span>
-              <span className="text-muted-foreground">
-                {info.city && info.country ? `${info.city}, ${info.country}` : info.city || info.country || "—"}
-              </span>
+              <EllipsisTooltip
+                text={info.institution_type || "—"}
+                maxLength={25}
+              />
+              <EllipsisTooltip
+                text={location}
+                maxLength={30}
+                spanProps={{ className: "text-muted-foreground" }}
+              />
             </div>
           );
         }
@@ -175,43 +203,34 @@ export function UsersList() {
     },
   ];
 
+  const totalPages = data ? Math.ceil(data.count / pageSize) : 1;
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">User Management</h2>
-          <p className="text-muted-foreground">
-            Manage all users in the system
-          </p>
-        </div>
-      </div>
-
       {/* Filters */}
-      <div className="flex items-center gap-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+      <FilterToolbar>
+        <div className="flex items-center gap-4 w-full">
+          <FilterToolbar.Search
+            paramName="search"
             placeholder="Search by name or email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10"
+            className="flex-1"
+          />
+          <FilterToolbar.Select
+            paramName="user_type"
+            options={[
+              { label: "All Users", value: "all" },
+              { label: "Authors", value: "author" },
+              { label: "Institutions", value: "institution" },
+              { label: "Admins", value: "admin" },
+            ]}
+            placeholder="Filter by type"
+            className="w-48"
           />
         </div>
-        <Select value={userType} onValueChange={setUserType}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="All Users" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Users</SelectItem>
-            <SelectItem value="author">Authors</SelectItem>
-            <SelectItem value="institution">Institutions</SelectItem>
-            <SelectItem value="admin">Admins</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      </FilterToolbar>
 
       <DataTable
-        data={users || []}
+        data={data?.results || []}
         columns={columns}
         isPending={isPending}
         error={error}
@@ -221,9 +240,26 @@ export function UsersList() {
         pendingRows={10}
       />
 
+      {data && data.count > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalCount={data.count}
+          pageSize={pageSize}
+          showPageSizeSelector={true}
+          showPageInfo={true}
+          showFirstLast={true}
+        />
+      )}
+
       <ConfirmationPopup
         open={deleteTarget !== null}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        onOpenChange={(open) =>
+          !open &&
+          (setDeleteTarget(null),
+          deleteInstitution.reset(),
+          deleteAuthor.reset())
+        }
         onConfirm={handleDelete}
         title={`Delete ${deleteTarget?.type === "author" ? "Author" : "Institution"}`}
         description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone and will delete all associated data.`}

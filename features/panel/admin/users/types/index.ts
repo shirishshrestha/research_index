@@ -13,6 +13,13 @@ export interface AdminUser {
   publications_count: number;
 }
 
+export interface PaginatedAdminUsersResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: AdminUser[];
+}
+
 export interface AuthorProfileInfo {
   institute: string;
   designation: string;

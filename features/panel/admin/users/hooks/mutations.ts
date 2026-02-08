@@ -20,7 +20,7 @@ export const useUpdateAuthorMutation = (
   return usePatch<
     { message: string; author: AdminAuthorDetail },
     AuthorUpdateData
-  >(`/users/admin/authors/${id}/`, {
+  >(`/auth/admin/authors/${id}/`, {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
       queryClient.invalidateQueries({
@@ -42,7 +42,7 @@ export const useUpdateInstitutionMutation = (
   return usePatch<
     { message: string; institution: AdminInstitutionDetail },
     InstitutionUpdateData
-  >(`/users/admin/institutions/${id}/`, {
+  >(`/auth/admin/institutions/${id}/`, {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
       queryClient.invalidateQueries({
@@ -61,7 +61,7 @@ export const useDeleteAuthorMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useDelete<{ message: string }>(`/users/admin/authors/${id}/`, {
+  return useDelete<{ message: string }>(`/auth/admin/authors/${id}/`, {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
       options?.onSuccess?.();
@@ -77,7 +77,7 @@ export const useDeleteInstitutionMutation = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useDelete<{ message: string }>(`/users/admin/institutions/${id}/`, {
+  return useDelete<{ message: string }>(`/auth/admin/institutions/${id}/`, {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
       options?.onSuccess?.();

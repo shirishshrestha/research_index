@@ -10,7 +10,8 @@ export default function AdminUsersPage() {
         <div>
           <h1 className="heading-2 text-primary!">User Management</h1>
           <p className="text-muted-foreground mt-2">
-            Manage all users in the system - authors, institutions, and administrators
+            Manage all users in the system - authors, institutions, and
+            administrators
           </p>
         </div>
         <UsersList />
