@@ -12,6 +12,7 @@ import DataTable, {
   type DataTableColumn,
 } from "@/features/shared/components/DataTable";
 import type { Publication } from "../types";
+import { EllipsisTooltip } from "@/features/shared";
 
 interface PublicationsListProps {
   initialPublications?: Publication[];
@@ -47,7 +48,9 @@ export function PublicationsList({
       cellClassName: "font-medium",
       render: (row) => (
         <div className="flex flex-col gap-1">
-          <span className="font-medium">{row.title}</span>
+          <span className="font-medium">
+            <EllipsisTooltip text={row.title} />
+          </span>
           {row.doi && (
             <span className="text-xs text-muted-foreground">
               DOI: {row.doi}
@@ -63,7 +66,9 @@ export function PublicationsList({
         row.journal_title || row.journal_name ? (
           <div className="flex flex-col gap-0.5">
             <span className="text-sm font-medium">
-              {row.journal_title || row.journal_name}
+              <EllipsisTooltip
+                text={row.journal_title || row.journal_name || ""}
+              />
             </span>
             {row.journal_issn && (
               <span className="text-xs text-muted-foreground">
@@ -160,18 +165,7 @@ export function PublicationsList({
           >
             <ExternalLink className="w-4 h-4" />
           </Button>
-          {row.doi && (
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() =>
-                window.open(`https://doi.org/${row.doi}`, "_blank")
-              }
-              title="Open DOI link"
-            >
-              <ExternalLink className="w-4 h-4" />
-            </Button>
-          )}
+
           <PublicationFormDialog publication={row} />
           <Button
             size="sm"

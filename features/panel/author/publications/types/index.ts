@@ -114,6 +114,7 @@ export interface Publication {
   publication_type_display: string;
   pdf_file: string;
   pdf_url: string;
+  pdf_file_name: string;
   doi: string;
   published_date: string;
   journal: number; // Changed from journal_name to journal ID
@@ -135,6 +136,10 @@ export interface Publication {
   arxiv_id: string;
   pubmed_central_id: string;
   topic_branch: TopicBranch | null;
+  topic_branch_id: number | null; // Direct topic branch ID
+  topic_branch_name: string | null;
+  topic_id: number | null;
+  topic_name: string | null;
   is_published: boolean;
   created_at: string;
   updated_at: string;
@@ -143,8 +148,11 @@ export interface Publication {
   author_email: string;
   author_orcid: string;
   mesh_terms: MeSHTerm[];
+  mesh_terms_count: number;
   citations: Citation[];
+  citations_count: number;
   references: Reference[];
+  references_count: number;
   link_outs: LinkOut[];
   stats: PublicationStats;
 }
