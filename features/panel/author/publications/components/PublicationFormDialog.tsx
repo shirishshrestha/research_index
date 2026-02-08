@@ -100,7 +100,7 @@ export function PublicationFormDialog({
       publication_type: publication?.publication_type ?? "journal_article",
       doi: publication?.doi ?? "",
       published_date: publication?.published_date ?? "",
-      journal: publication?.journal ?? null,
+      journal: publication?.journal_id ?? publication?.journal ?? null,
       issue: publication?.issue_id ?? publication?.issue ?? null,
       volume: publication?.volume ?? "",
       pages: publication?.pages ?? "",
@@ -110,7 +110,8 @@ export function PublicationFormDialog({
       arxiv_id: publication?.arxiv_id ?? "",
       pubmed_central_id: publication?.pubmed_central_id ?? "",
       is_published: publication?.is_published ?? true,
-      topic_branch: publication?.topic_branch?.id ?? null,
+      topic_branch:
+        publication?.topic_branch_id ?? publication?.topic_branch?.id ?? null,
       erratum_from: publication?.erratum_from ?? null,
       mesh_terms_data:
         publication?.mesh_terms?.map((t) => ({
