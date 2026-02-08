@@ -91,7 +91,7 @@ export function UsersList() {
       key: "user_type",
       header: "Type",
       render: (row) => (
-        <Badge variant="secondary">
+        <Badge variant={row.user_type === "author" ? "secondary" : "default"}>
           {row.user_type === "author"
             ? "Author"
             : row.user_type === "institution"
@@ -246,7 +246,7 @@ export function UsersList() {
           totalPages={totalPages}
           totalCount={data.count}
           pageSize={pageSize}
-          showPageSizeSelector={true}
+          showPageSizeSelector={false}
           showPageInfo={true}
           showFirstLast={true}
         />
@@ -256,7 +256,7 @@ export function UsersList() {
         open={deleteTarget !== null}
         onOpenChange={(open) =>
           !open &&
-          (setDeleteTarget(null),
+          (setTimeout(() => setDeleteTarget(null), 300),
           deleteInstitution.reset(),
           deleteAuthor.reset())
         }
