@@ -15,62 +15,15 @@ import {
   sortOptionsExtended,
   yearOptions,
 } from "@/features/shared/constants/filterOptions";
-import { useState } from "react";
-
-const mockJournals = [
-  {
-    id: "1",
-    title: "Journal of Himalayan Environmental Studies",
-    institution: "Nepal Academy of Science and Technology (NAST)",
-    imageUrl: "/sample-journal.png",
-    badge: { label: "ICV 2024", value: "171.50" },
-    metrics: [
-      { value: "1.2", label: "Impact factor" },
-      { value: "2.8", label: "CiteScore" },
-      { value: "54%", label: "Acceptance Rate" },
-      { value: "45 days", label: "Submission to first decision" },
-      { value: "7 days", label: "Time to acceptance" },
-    ],
-  },
-  {
-    id: "2",
-    title: "Nepal Journal of Medical Sciences",
-    institution: "Institute of Medicine",
-    imageUrl: "/sample-journal.png",
-    badge: { label: "IF 2024", value: "3.45" },
-    metrics: [
-      { value: "3.45", label: "Impact factor" },
-      { value: "4.2", label: "CiteScore" },
-      { value: "32%", label: "Acceptance Rate" },
-      { value: "30 days", label: "Submission to first decision" },
-      { value: "10 days", label: "Time to acceptance" },
-    ],
-  },
-  {
-    id: "3",
-    title: "Himalayan Biodiversity",
-    institution: "Tribhuvan University",
-    imageUrl: "/sample-journal.png",
-    badge: { label: "IF 2024", value: "2.10" },
-    metrics: [
-      { value: "2.1", label: "Impact factor" },
-      { value: "3.0", label: "CiteScore" },
-      { value: "40%", label: "Acceptance Rate" },
-      { value: "60 days", label: "Submission to first decision" },
-      { value: "21 days", label: "Time to acceptance" },
-    ],
-  },
-];
 
 interface JournalsListViewProps {
   initialData?: Journal[];
 }
 
 export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
-  // Use initialData from server-side props or fallback to mock data
-  const [journals] = useState(
-    initialData.length > 0 ? initialData : mockJournals,
-  );
+  // Use journals from server-side props
+  const journals = initialData;
+  const totalResults = journals.length;
 
   return (
     <div className="pt-12.5! section-padding">
@@ -218,75 +171,60 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
             />
           </FilterToolbar>
 
-          {/* Results List */}
-          {journals.map((journal) => (
-            <div key={journal.id} className="space-y-6.25">
-              <JournalCard
-                title={journal.title}
-                institution={
-                  "institution_name" in journal
-                    ? journal.institution_name
-                    : journal.institution
-                }
-                imageUrl={
-                  "cover_image_url" in journal
-                    ? (journal.cover_image_url ?? undefined)
-                    : "imageUrl" in journal
-                      ? journal.imageUrl
-                      : undefined
-                }
-                badge={
-                  "stats" in journal && journal.stats?.impact_factor
-                    ? {
-                        label: "IF 2024",
-                        value: journal.stats.impact_factor.toString(),
-                      }
-                    : "badge" in journal
-                      ? journal.badge
-                      : undefined
-                }
-                metrics={
-                  "stats" in journal
-                    ? [
-                        {
-                          value: journal.stats?.impact_factor?.toString() || 0,
-                          label: "Impact factor",
-                        },
-                        {
-                          value:
-                            journal.stats?.total_publications?.toString() ||
-                            "0",
-                          label: "Total Publications",
-                        },
-                        {
-                          value: journal.stats?.total_issues?.toString() || "0",
-                          label: "Total Issues",
-                        },
-                      ]
-                    : "metrics" in journal
-                      ? journal.metrics
-                      : [
-                          {
-                            value: 0,
-                            label: "Impact factor",
-                          },
-                          {
-                            value: "0",
-                            label: "Total Publications",
-                          },
-                          {
-                            value: "0",
-                            label: "Total Issues",
-                          },
-                        ]
-                }
-                href={`/journals/${journal.id}`}
-              />
+          {/* Results Count */}
+          <div className="flex items-center justify-between">
+            <p className="text-text-gray">
+              Showing {journals.length} of {totalResults} results
+            </p>
+          </div>
+
+          {/* Loading State */}
+          {journals.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-text-gray text-lg">
+                No journals found. Try adjusting your filters.
+              </p>
             </div>
-          ))}
+          )}
+
+          {/* Results List */}
+          {journals.length > 0 &&
+            journals.map((journal) => (
+              <div key={journal.id} className="space-y-6.25">
+                <JournalCard
+                  title={journal.title}
+                  institution={journal.institution_name}
+                  imageUrl={journal.cover_image_url ?? undefined}
+                  badge={
+                    journal.stats?.impact_factor
+                      ? {
+                          label: "IF 2024",
+                          value: journal.stats.impact_factor.toString(),
+                        }
+                      : undefined
+                  }
+                  metrics={[
+                    {
+                      value: journal.stats?.impact_factor?.toString() || "0",
+                      label: "Impact factor",
+                    },
+                    {
+                      value:
+                        journal.stats?.total_publications?.toString() || "0",
+                      label: "Total Publications",
+                    },
+                    {
+                      value: journal.stats?.total_issues?.toString() || "0",
+                      label: "Total Issues",
+                    },
+                  ]}
+                  href={`/journals/${journal.id}`}
+                />
+              </div>
+            ))}
 
           {/* Pagination */}
-          {journals.length > 0 && (
+          {journals.length > 10 && (
             <Pagination
               currentPage={1}
               totalPages={Math.ceil(journals.length / 10)}
