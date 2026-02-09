@@ -22,15 +22,16 @@ interface InstitutionsPageProps {
 }
 
 async function getInstitutions(
-  searchParamsPromise: InstitutionsPageProps["searchParams"],
+  searchParams:
+    | InstitutionsPageProps["searchParams"]
+    | Promise<InstitutionsPageProps["searchParams"]>,
 ) {
-  // `searchParams` can be a Promise in some Next.js runtimes — unwrap it safely.
-  const searchParams = await Promise.resolve(searchParamsPromise as any);
+  const params = await searchParams;
   try {
     return await getPublicInstitutions({
-      country: searchParams?.country,
-      type: searchParams?.type,
-      search: searchParams?.search,
+      country: params?.country,
+      type: params?.type,
+      search: params?.search,
     });
   } catch (error) {
     console.error("Error fetching institutions:", error);

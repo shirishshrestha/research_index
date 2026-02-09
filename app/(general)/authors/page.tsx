@@ -23,14 +23,20 @@ interface AuthorsPageProps {
   };
 }
 
-async function getAuthors(searchParamsPromise: AuthorsPageProps["searchParams"]) {
-  // `searchParams` can be a Promise in some Next.js runtimes — unwrap it safely.
-  const searchParams = await Promise.resolve(searchParamsPromise as any);
+async function AuthorsContent({
+  searchParams,
+}: {
+  searchParams:
+    | AuthorsPageProps["searchParams"]
+    | Promise<AuthorsPageProps["searchParams"]>;
+}) {
+  const params = await searchParams;
+  let authors: Author[];
   try {
-    return await getPublicAuthors({
-      institute: searchParams?.institute,
-      designation: searchParams?.designation,
-      search: searchParams?.search,
+    authors = await getPublicAuthors({
+      institute: params?.institute,
+      designation: params?.designation,
+      search: params?.search,
     });
   } catch (error) {
     console.error("Error fetching authors:", error);
