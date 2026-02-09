@@ -35,6 +35,16 @@ export interface InstitutionDetail extends Institution {
 export interface InstitutionFilters {
   country?: string;
   type?: string;
+  city?: string;
+  state?: string;
+  established_year?: number;
+  established_from?: number;
+  established_to?: number;
+  research_area?: string;
+  min_researchers?: number;
+  min_publications?: number;
+  min_citations?: number;
+  has_website?: boolean;
   search?: string;
 }
 

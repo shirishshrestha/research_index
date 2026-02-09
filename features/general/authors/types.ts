@@ -61,8 +61,23 @@ export interface AuthorDetail {
 
 // Author filters
 export interface AuthorFilters {
+  title?: string;
   institute?: string;
   designation?: string;
+  gender?: string;
+  degree?: string;
+  research_interest?: string;
+  h_index_min?: number;
+  h_index_max?: number;
+  i10_index_min?: number;
+  i10_index_max?: number;
+  min_citations?: number;
+  max_citations?: number;
+  min_publications?: number;
+  max_publications?: number;
+  has_orcid?: boolean;
+  has_google_scholar?: boolean;
+  has_website?: boolean;
   search?: string;
 }
 

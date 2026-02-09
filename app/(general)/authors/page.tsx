@@ -23,27 +23,23 @@ interface AuthorsPageProps {
   };
 }
 
-async function AuthorsContent({
-  searchParams,
-}: {
-  searchParams: AuthorsPageProps["searchParams"];
-}) {
-  let authors: Author[];
+async function getAuthors(searchParamsPromise: AuthorsPageProps["searchParams"]) {
+  // `searchParams` can be a Promise in some Next.js runtimes — unwrap it safely.
+  const searchParams = await Promise.resolve(searchParamsPromise as any);
   try {
-    authors = await getPublicAuthors({
-      institute: searchParams.institute,
-      designation: searchParams.designation,
-      search: searchParams.search,
+    return await getPublicAuthors({
+      institute: searchParams?.institute,
+      designation: searchParams?.designation,
+      search: searchParams?.search,
     });
   } catch (error) {
     console.error("Error fetching authors:", error);
-    authors = [];
+    return [];
   }
-
-  return <AuthorsListView initialData={authors} />;
 }
 
-export default function AuthorsPage({ searchParams }: AuthorsPageProps) {
+export default async function AuthorsPage({ searchParams }: AuthorsPageProps) {
+  const authors = await getAuthors(searchParams);
   return (
     <section>
       <Container>
@@ -63,7 +59,7 @@ export default function AuthorsPage({ searchParams }: AuthorsPageProps) {
 
       <Container>
         <Suspense fallback={<AuthorsListSkeleton />}>
-          <AuthorsContent searchParams={searchParams} />
+          <AuthorsListView initialData={authors} />
         </Suspense>
       </Container>
     </section>

@@ -23,13 +23,15 @@ const sortOptions = [
 ];
 
 interface ArticlesListViewProps {
-  initialPublications?: Publication[];
+  initialPublications?: Publication[] | { results: Publication[] };
 }
 
 export function ArticlesListView({
   initialPublications = [],
 }: ArticlesListViewProps) {
-  const publications = initialPublications;
+  const publications: Publication[] = Array.isArray(initialPublications)
+    ? initialPublications
+    : (initialPublications?.results ?? []);
   const totalResults = publications.length;
 
   return (
