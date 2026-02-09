@@ -15,30 +15,42 @@ export const metadata: Metadata = {
 
 interface JournalsPageProps {
   searchParams: {
-    institution?: string;
-    open_access?: string;
-    peer_reviewed?: string;
+    access_type?: string;
+    category?: string;
+    language?: string;
+    license?: string;
+    years?: string;
+    institutions?: string;
+    country?: string;
+    peer_review?: string;
+    impact_factor?: string;
+    cite_score?: string;
+    time_to_decision?: string;
+    time_to_acceptance?: string;
     search?: string;
+    sort?: string;
   };
 }
 
-async function getJournals(searchParams: JournalsPageProps["searchParams"]) {
+async function getJournals(searchParamsPromise: JournalsPageProps["searchParams"]) {
+  // `searchParams` can be a Promise in some Next.js runtimes — unwrap it safely.
+  const searchParams = await Promise.resolve(searchParamsPromise as any);
   try {
     return await getPublicJournals({
-      institution: searchParams.institution,
-      open_access:
-        searchParams.open_access === "true"
-          ? true
-          : searchParams.open_access === "false"
-            ? false
-            : undefined,
-      peer_reviewed:
-        searchParams.peer_reviewed === "true"
-          ? true
-          : searchParams.peer_reviewed === "false"
-            ? false
-            : undefined,
-      search: searchParams.search,
+      access_type: searchParams?.access_type,
+      category: searchParams?.category,
+      language: searchParams?.language,
+      license: searchParams?.license,
+      years: searchParams?.years,
+      institutions: searchParams?.institutions,
+      country: searchParams?.country,
+      peer_review: searchParams?.peer_review,
+      impact_factor: searchParams?.impact_factor,
+      cite_score: searchParams?.cite_score,
+      time_to_decision: searchParams?.time_to_decision,
+      time_to_acceptance: searchParams?.time_to_acceptance,
+      search: searchParams?.search,
+      sort: searchParams?.sort,
     });
   } catch (error) {
     console.error("Error fetching journals:", error);

@@ -157,9 +157,22 @@ export interface JournalVolumesResponse {
 
 export interface JournalFilters {
   institution?: number | string;
+  institutions?: string;
+  access_type?: string;
   open_access?: boolean;
+  category?: string;
+  language?: string;
+  license?: string;
+  years?: number | string;
+  country?: string;
+  peer_review?: string;
   peer_reviewed?: boolean;
+  impact_factor?: number | string;
+  cite_score?: number | string;
+  time_to_decision?: number | string;
+  time_to_acceptance?: number | string;
   search?: string;
+  sort?: string;
 }
 
 export interface IssueFilters {
@@ -177,10 +190,38 @@ export async function getPublicJournals(
 ): Promise<Journal[]> {
   const params = new URLSearchParams();
 
-  if (filters?.institution) params.append("institution", String(filters.institution));
-  if (filters?.open_access !== undefined) params.append("open_access", String(filters.open_access));
-  if (filters?.peer_reviewed !== undefined) params.append("peer_reviewed", String(filters.peer_reviewed));
+  // Basic filters
+  if (filters?.institution)
+    params.append("institution", String(filters.institution));
+  if (filters?.institutions)
+    params.append("institutions", filters.institutions);
+  if (filters?.access_type) params.append("access_type", filters.access_type);
+  if (filters?.open_access !== undefined)
+    params.append("open_access", String(filters.open_access));
+  if (filters?.peer_reviewed !== undefined)
+    params.append("peer_reviewed", String(filters.peer_reviewed));
   if (filters?.search) params.append("search", filters.search);
+
+  // Category and discipline filters
+  if (filters?.category) params.append("category", filters.category);
+  if (filters?.language) params.append("language", filters.language);
+  if (filters?.license) params.append("license", filters.license);
+  if (filters?.years) params.append("years", String(filters.years));
+  if (filters?.country) params.append("country", filters.country);
+  if (filters?.peer_review) params.append("peer_review", filters.peer_review);
+
+  // Performance metrics filters
+  if (filters?.impact_factor)
+    params.append("impact_factor", String(filters.impact_factor));
+  if (filters?.cite_score)
+    params.append("cite_score", String(filters.cite_score));
+  if (filters?.time_to_decision)
+    params.append("time_to_decision", String(filters.time_to_decision));
+  if (filters?.time_to_acceptance)
+    params.append("time_to_acceptance", String(filters.time_to_acceptance));
+
+  // Sorting
+  if (filters?.sort) params.append("sort", filters.sort);
 
   return serverGet<Journal[]>(
     `/publications/journals/public/${params.toString() ? `?${params}` : ""}`,
@@ -196,10 +237,10 @@ export async function getLatestJournals(): Promise<Journal[]> {
 export async function getPublicJournal(
   id: number | string,
 ): Promise<JournalDetail> {
-  return serverGet<JournalDetail>(
-    `/publications/journals/public/${id}/`,
-    { tags: ["journals", `journal-${id}`], revalidate: 3600 },
-  );
+  return serverGet<JournalDetail>(`/publications/journals/public/${id}/`, {
+    tags: ["journals", `journal-${id}`],
+    revalidate: 3600,
+  });
 }
 
 export async function getJournalPublications(
@@ -207,7 +248,10 @@ export async function getJournalPublications(
 ): Promise<Publication[]> {
   return serverGet<Publication[]>(
     `/publications/journals/${journalId}/publications/`,
-    { tags: ["journals", `journal-${journalId}`, "publications"], revalidate: 3600 },
+    {
+      tags: ["journals", `journal-${journalId}`, "publications"],
+      revalidate: 3600,
+    },
   );
 }
 
@@ -242,6 +286,9 @@ export async function getPublicJournalIssue(
 ): Promise<IssueDetail> {
   return serverGet<IssueDetail>(
     `/publications/journals/public/${journalId}/issues/${issueId}/`,
-    { tags: ["journals", `journal-${journalId}`, "issues", `issue-${issueId}`], revalidate: 3600 },
+    {
+      tags: ["journals", `journal-${journalId}`, "issues", `issue-${issueId}`],
+      revalidate: 3600,
+    },
   );
 }
