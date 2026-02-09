@@ -55,23 +55,23 @@ export const sidebarConfig: Record<string, MenuItem[]> = {
       name: "Support Pages",
       icon: Files,
     },
-    {
-      name: "Journals",
-      path: "/admin/journals",
-      icon: Book,
-      children: [
-        {
-          name: "Journal Management",
-          path: "/admin/journals",
-          icon: BookOpen,
-        },
-        {
-          name: "Verify Journals",
-          path: "/admin/inactive-journals",
-          icon: BookCheck,
-        },
-      ],
-    },
+    // {
+    //   name: "Journals",
+    //   path: "/admin/journals",
+    //   icon: Book,
+    //   children: [
+    //     {
+    //       name: "Journal Management",
+    //       path: "/admin/journals",
+    //       icon: BookOpen,
+    //     },
+    //     {
+    //       name: "Verify Journals",
+    //       path: "/admin/inactive-journals",
+    //       icon: BookCheck,
+    //     },
+    //   ],
+    // },
   ],
   INSTITUTION: [
     {

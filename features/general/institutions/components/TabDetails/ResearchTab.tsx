@@ -1,7 +1,6 @@
 "use client";
 
 import { ArticleCard } from "@/features/general/articles/components";
-import type { Publication } from "@/features/general/articles/types";
 import {
   FilterToolbar,
   Pagination,
@@ -19,186 +18,6 @@ const categories = [
   { label: "Preprint", value: "preprint", count: 49 },
 ];
 
-const mockPublications: Publication[] = [
-  {
-    id: 1,
-    title: "Impact of Climate Change on Rice Cultivation in Nepal",
-    abstract:
-      "This study examines the effects of climate change on rice cultivation patterns in Nepal.",
-    publication_type: "journal_article",
-    publication_type_display: "Journal Article",
-    pdf_file: "",
-    pdf_url: "https://example.com/paper1.pdf",
-    pdf_file_name: "paper1.pdf",
-    doi: "10.58291/nrjp.2025.00123",
-    published_date: "2025-05-02",
-    journal: 1,
-    journal_id: 1,
-    journal_title: "Journal of Agricultural Research",
-    journal_name: "Journal of Agricultural Research",
-    journal_issn: "2091-0878",
-    issue_id: null,
-    issue_number: null,
-    issue_volume: null,
-    volume: "45",
-    issue: 3,
-    pages: "123-145",
-    publisher: "Nepal Research Index",
-    co_authors: "Glenn S. Orton, Magnus Gustafsson, Leigh N. Fletcher",
-    erratum_from: null,
-    erratum_from_title: "",
-    pubmed_id: "",
-    arxiv_id: "",
-    pubmed_central_id: "",
-    topic_branch: null,
-    topic_branch_id: null,
-    topic_branch_name: null,
-    topic_id: null,
-    topic_name: null,
-    is_published: true,
-    created_at: "2025-05-02T00:00:00Z",
-    updated_at: "2025-05-02T00:00:00Z",
-    author_id: 1,
-    author_name: "Dr. Ram Prasad Yadav",
-    author_email: "ram.yadav@example.com",
-    author_orcid: "",
-    mesh_terms: [],
-    mesh_terms_count: 0,
-    citations: [],
-    citations_count: 33,
-    references: [],
-    references_count: 0,
-    link_outs: [],
-    stats: {
-      citations_count: 33,
-      reads_count: 245,
-      downloads_count: 89,
-      recommendations_count: 12,
-      altmetric_score: "8.5",
-      field_citation_ratio: "1.2",
-      last_updated: "2025-05-02T00:00:00Z",
-    },
-  },
-  {
-    id: 2,
-    title: "Advances in Medical Science and Clinical Practice",
-    abstract:
-      "Recent advances in medical science and their clinical applications.",
-    publication_type: "journal_article",
-    publication_type_display: "Journal Article",
-    pdf_file: "",
-    pdf_url: "https://example.com/paper2.pdf",
-    pdf_file_name: "paper2.pdf",
-    doi: "10.58291/nrjp.2025.00128",
-    published_date: "2025-04-18",
-    journal: 2,
-    journal_id: 2,
-    journal_title: "Nepal Medical Journal",
-    journal_name: "Nepal Medical Journal",
-    journal_issn: "2091-0789",
-    issue_id: null,
-    issue_number: null,
-    issue_volume: null,
-    volume: "12",
-    issue: 2,
-    pages: "78-95",
-    publisher: "Nepal Research Index",
-    co_authors: "Dr. Bikash Thapa, Dr. Ram Prasad Yadav",
-    erratum_from: null,
-    erratum_from_title: "",
-    pubmed_id: "",
-    arxiv_id: "",
-    pubmed_central_id: "",
-    topic_branch: null,
-    topic_branch_id: null,
-    topic_branch_name: null,
-    topic_id: null,
-    topic_name: null,
-    is_published: true,
-    created_at: "2025-04-18T00:00:00Z",
-    updated_at: "2025-04-18T00:00:00Z",
-    author_id: 2,
-    author_name: "Dr. Sita Sharma",
-    author_email: "sita.sharma@example.com",
-    author_orcid: "",
-    mesh_terms: [],
-    mesh_terms_count: 0,
-    citations: [],
-    citations_count: 41,
-    references: [],
-    references_count: 0,
-    link_outs: [],
-    stats: {
-      citations_count: 41,
-      reads_count: 298,
-      downloads_count: 112,
-      recommendations_count: 18,
-      altmetric_score: "9.2",
-      field_citation_ratio: "1.3",
-      last_updated: "2025-04-18T00:00:00Z",
-    },
-  },
-  {
-    id: 3,
-    title: "Public Health Initiatives in Karnali Province",
-    abstract:
-      "A comprehensive study of public health initiatives in Karnali Province.",
-    publication_type: "journal_article",
-    publication_type_display: "Journal Article",
-    pdf_file: "",
-    pdf_url: "https://example.com/paper3.pdf",
-    pdf_file_name: "paper3.pdf",
-    doi: "10.58291/nrjp.2025.00129",
-    published_date: "2025-03-25",
-    journal: 2,
-    journal_id: 2,
-    journal_title: "Nepal Medical Journal",
-    journal_name: "Nepal Medical Journal",
-    journal_issn: "2091-0789",
-    issue_id: null,
-    issue_number: null,
-    issue_volume: null,
-    volume: "12",
-    issue: 1,
-    pages: "23-45",
-    publisher: "Nepal Research Index",
-    co_authors: "Dr. Sita Sharma",
-    erratum_from: null,
-    erratum_from_title: "",
-    pubmed_id: "",
-    arxiv_id: "",
-    pubmed_central_id: "",
-    topic_branch: null,
-    topic_branch_id: null,
-    topic_branch_name: null,
-    topic_id: null,
-    topic_name: null,
-    is_published: true,
-    created_at: "2025-03-25T00:00:00Z",
-    updated_at: "2025-03-25T00:00:00Z",
-    author_id: 3,
-    author_name: "Dr. Bikash Thapa",
-    author_email: "bikash.thapa@example.com",
-    author_orcid: "",
-    mesh_terms: [],
-    mesh_terms_count: 0,
-    citations: [],
-    citations_count: 37,
-    references: [],
-    references_count: 0,
-    link_outs: [],
-    stats: {
-      citations_count: 37,
-      reads_count: 267,
-      downloads_count: 98,
-      recommendations_count: 14,
-      altmetric_score: "8.1",
-      field_citation_ratio: "1.15",
-      last_updated: "2025-03-25T00:00:00Z",
-    },
-  },
-];
-
 interface ResearchTabProps {
   institutionId?: number;
 }
@@ -214,7 +33,7 @@ export const ResearchTab = ({ institutionId }: ResearchTabProps) => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6 ">
         <CategoryFilter categories={categories} />
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <p className="text-muted-foreground">Loading publications...</p>
         </div>
       </div>
@@ -225,7 +44,7 @@ export const ResearchTab = ({ institutionId }: ResearchTabProps) => {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6 ">
         <CategoryFilter categories={categories} />
-        <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex items-center justify-center min-h-100">
           <p className="text-destructive">Failed to load publications</p>
         </div>
       </div>
