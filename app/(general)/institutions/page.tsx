@@ -22,13 +22,16 @@ interface InstitutionsPageProps {
 }
 
 async function getInstitutions(
-  searchParams: InstitutionsPageProps["searchParams"],
+  searchParams:
+    | InstitutionsPageProps["searchParams"]
+    | Promise<InstitutionsPageProps["searchParams"]>,
 ) {
+  const params = await searchParams;
   try {
     return await getPublicInstitutions({
-      country: searchParams.country,
-      type: searchParams.type,
-      search: searchParams.search,
+      country: params?.country,
+      type: params?.type,
+      search: params?.search,
     });
   } catch (error) {
     console.error("Error fetching institutions:", error);
