@@ -12,6 +12,7 @@ import {
 } from "@/features/shared/constants/filterOptions";
 import { ArticleCard } from "./ArticleCard";
 import type { Publication } from "../types";
+import { useSearchParams } from "next/navigation";
 
 const sortOptions = [
   { value: "relevance", label: "Relevance" },
@@ -22,17 +23,31 @@ const sortOptions = [
   { value: "title_desc", label: "Title (Z-A)" },
 ];
 
+interface PaginationData {
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
 interface ArticlesListViewProps {
   initialPublications?: Publication[] | { results: Publication[] };
+  pagination?: PaginationData;
 }
 
 export function ArticlesListView({
   initialPublications = [],
+  pagination,
 }: ArticlesListViewProps) {
   const publications: Publication[] = Array.isArray(initialPublications)
     ? initialPublications
     : (initialPublications?.results ?? []);
-  const totalResults = publications.length;
+  const searchParams = useSearchParams();
+
+  // Extract pagination info from URL
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const pageSize = parseInt(searchParams.get("page_size") || "10");
+  const totalCount = pagination?.count || publications.length;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <div className="pt-12.5! section-padding">
@@ -46,6 +61,7 @@ export function ArticlesListView({
             </h3>
 
             <div className="space-y-4 max-h-140 overflow-y-auto">
+      
               <FilterToolbar>
                 {/* Access Type */}
                 <FilterToolbar.RadioGroup
@@ -132,7 +148,7 @@ export function ArticlesListView({
           {/* Results Count */}
           <div className="flex items-center justify-between">
             <p className="text-text-gray">
-              Showing {publications.length} of {totalResults} articles
+              Showing {publications.length} of {totalCount} articles
             </p>
           </div>
 
@@ -156,11 +172,11 @@ export function ArticlesListView({
 
               {/* Pagination */}
               <Pagination
-                currentPage={1}
-                totalPages={Math.ceil(totalResults / 10)}
-                totalCount={totalResults}
-                pageSize={10}
-                showPageSizeSelector={false}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalCount={totalCount}
+                pageSize={pageSize}
+                showPageSizeSelector={true}
               />
             </>
           )}

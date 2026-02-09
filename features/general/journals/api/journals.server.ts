@@ -1,4 +1,5 @@
 import { serverGet } from "@/lib/server-api";
+import type { PaginatedResponse, PaginationParams } from "@/types/pagination";
 import type { Publication } from "@/features/general/articles/types";
 
 /* =======================
@@ -181,14 +182,27 @@ export interface IssueFilters {
   status?: "draft" | "published" | "archived";
 }
 
+export interface JournalsResponse {
+  results: Journal[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
 /* =======================
    API Functions
 ======================= */
 
 export async function getPublicJournals(
   filters?: JournalFilters,
-): Promise<Journal[]> {
+  pagination?: PaginationParams,
+): Promise<JournalsResponse> {
   const params = new URLSearchParams();
+
+  // Pagination
+  if (pagination?.page) params.append("page", pagination.page.toString());
+  if (pagination?.page_size)
+    params.append("page_size", pagination.page_size.toString());
 
   // Basic filters
   if (filters?.institution)
@@ -223,15 +237,22 @@ export async function getPublicJournals(
   // Sorting
   if (filters?.sort) params.append("sort", filters.sort);
 
-  return serverGet<Journal[]>(
+  const response = await serverGet<PaginatedResponse<Journal>>(
     `/publications/journals/public/${params.toString() ? `?${params}` : ""}`,
-    { tags: ["journals"], revalidate: 3600 },
+    { tags: ["journals"], revalidate: 3600, requireAuth: false },
   );
+
+  return {
+    results: response.results,
+    count: response.count,
+    next: response.next,
+    previous: response.previous,
+  };
 }
 
 export async function getLatestJournals(): Promise<Journal[]> {
-  const journals = await getPublicJournals();
-  return journals.slice(0, 4);
+  const journals = await getPublicJournals({}, { page_size: 4 });
+  return journals.results;
 }
 
 export async function getPublicJournal(

@@ -6,7 +6,10 @@ import {
 } from "@/features/general/journals";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { getPublicJournals } from "@/features/general/journals/api/journals.server";
+import {
+  getPublicJournals,
+  type JournalsResponse,
+} from "@/features/general/journals/api/journals.server";
 
 export const metadata: Metadata = {
   title: "Journals - Resource Index",
@@ -15,14 +18,19 @@ export const metadata: Metadata = {
 
 interface JournalsPageProps {
   searchParams: {
+    page?: string;
+    page_size?: string;
+    institution?: string;
+    institutions?: string;
     access_type?: string;
+    open_access?: string;
     category?: string;
     language?: string;
     license?: string;
     years?: string;
-    institutions?: string;
     country?: string;
     peer_review?: string;
+    peer_reviewed?: string;
     impact_factor?: string;
     cite_score?: string;
     time_to_decision?: string;
@@ -32,36 +40,60 @@ interface JournalsPageProps {
   };
 }
 
-async function getJournals(searchParamsPromise: JournalsPageProps["searchParams"]) {
-  // `searchParams` can be a Promise in some Next.js runtimes — unwrap it safely.
+async function getJournals(
+  searchParamsPromise:
+    | JournalsPageProps["searchParams"]
+    | Promise<JournalsPageProps["searchParams"]>,
+): Promise<JournalsResponse> {
   const searchParams = await Promise.resolve(searchParamsPromise as any);
   try {
-    return await getPublicJournals({
-      access_type: searchParams?.access_type,
-      category: searchParams?.category,
-      language: searchParams?.language,
-      license: searchParams?.license,
-      years: searchParams?.years,
-      institutions: searchParams?.institutions,
-      country: searchParams?.country,
-      peer_review: searchParams?.peer_review,
-      impact_factor: searchParams?.impact_factor,
-      cite_score: searchParams?.cite_score,
-      time_to_decision: searchParams?.time_to_decision,
-      time_to_acceptance: searchParams?.time_to_acceptance,
-      search: searchParams?.search,
-      sort: searchParams?.sort,
-    });
+    return await getPublicJournals(
+      {
+        institution: searchParams?.institution,
+        institutions: searchParams?.institutions,
+        access_type: searchParams?.access_type,
+        open_access:
+          searchParams?.open_access === "true"
+            ? true
+            : searchParams?.open_access === "false"
+              ? false
+              : undefined,
+        category: searchParams?.category,
+        language: searchParams?.language,
+        license: searchParams?.license,
+        years: searchParams?.years,
+        country: searchParams?.country,
+        peer_review: searchParams?.peer_review,
+        peer_reviewed:
+          searchParams?.peer_reviewed === "true"
+            ? true
+            : searchParams?.peer_reviewed === "false"
+              ? false
+              : undefined,
+        impact_factor: searchParams?.impact_factor,
+        cite_score: searchParams?.cite_score,
+        time_to_decision: searchParams?.time_to_decision,
+        time_to_acceptance: searchParams?.time_to_acceptance,
+        search: searchParams?.search,
+        sort: searchParams?.sort,
+      },
+      {
+        page: searchParams?.page ? parseInt(searchParams.page) : 1,
+        page_size: searchParams?.page_size
+          ? parseInt(searchParams.page_size)
+          : 10,
+      },
+    );
   } catch (error) {
     console.error("Error fetching journals:", error);
-    return [];
+    return { results: [], count: 0, next: null, previous: null };
   }
 }
 
 export default async function JournalsPage({
   searchParams,
 }: JournalsPageProps) {
-  const journals = await getJournals(searchParams);
+  const journalsData = await getJournals(searchParams);
 
   return (
     <section>
@@ -82,7 +114,10 @@ export default async function JournalsPage({
 
       <Container>
         <Suspense fallback={<JournalsListSkeleton />}>
-          <JournalsListView initialData={journals} />
+          <JournalsListView
+            initialData={journalsData.results}
+            pagination={journalsData}
+          />
         </Suspense>
       </Container>
     </section>

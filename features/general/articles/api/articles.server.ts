@@ -4,18 +4,34 @@
  */
 
 import { serverGet } from "@/lib/server-api";
+import type { PaginatedResponse, PaginationParams } from "@/types/pagination";
 import type { Publication, PublicationFilters } from "../types";
+
+export interface PublicationsResponse {
+  results: Publication[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
 
 /**
  * Fetch all published publications (public endpoint)
  * Supports comprehensive filtering by type, topic, author, year, journal, citations, and more
  * @param filters - Optional filter parameters
+ * @param pagination - Optional pagination parameters
  */
 export async function getPublicPublications(
   filters?: PublicationFilters,
-): Promise<Publication[]> {
+  pagination?: PaginationParams,
+): Promise<PublicationsResponse> {
   const params = new URLSearchParams();
 
+  // Pagination
+  if (pagination?.page) params.append("page", pagination.page.toString());
+  if (pagination?.page_size)
+    params.append("page_size", pagination.page_size.toString());
+
+  // Filters
   if (filters?.type) params.append("type", filters.type);
   if (filters?.topic_branch)
     params.append("topic_branch", filters.topic_branch.toString());
@@ -23,26 +39,37 @@ export async function getPublicPublications(
   if (filters?.author) params.append("author", filters.author.toString());
   if (filters?.journal) params.append("journal", filters.journal.toString());
   if (filters?.year) params.append("year", filters.year.toString());
-  if (filters?.year_from) params.append("year_from", filters.year_from.toString());
+  if (filters?.year_from)
+    params.append("year_from", filters.year_from.toString());
   if (filters?.year_to) params.append("year_to", filters.year_to.toString());
   if (filters?.publisher) params.append("publisher", filters.publisher);
-  if (filters?.min_citations) params.append("min_citations", filters.min_citations.toString());
-  if (filters?.h_index_min) params.append("h_index_min", filters.h_index_min.toString());
-  if (filters?.h_index_max) params.append("h_index_max", filters.h_index_max.toString());
-  if (filters?.has_doi !== undefined) params.append("has_doi", filters.has_doi.toString());
-  if (filters?.has_pdf !== undefined) params.append("has_pdf", filters.has_pdf.toString());
+  if (filters?.min_citations)
+    params.append("min_citations", filters.min_citations.toString());
+  if (filters?.h_index_min)
+    params.append("h_index_min", filters.h_index_min.toString());
+  if (filters?.h_index_max)
+    params.append("h_index_max", filters.h_index_max.toString());
+  if (filters?.has_doi !== undefined)
+    params.append("has_doi", filters.has_doi.toString());
+  if (filters?.has_pdf !== undefined)
+    params.append("has_pdf", filters.has_pdf.toString());
   if (filters?.search) params.append("search", filters.search);
 
   const queryString = params.toString();
   const endpoint = `/publications/public/${queryString ? `?${queryString}` : ""}`;
 
-  const response = await serverGet<Publication[]>(endpoint, {
+  const response = await serverGet<PaginatedResponse<Publication>>(endpoint, {
     requireAuth: false, // Public endpoint
     tags: ["public-publications"],
     revalidate: 300, // Revalidate every 5 minutes
   });
 
-  return response;
+  return {
+    results: response.results,
+    count: response.count,
+    next: response.next,
+    previous: response.previous,
+  };
 }
 
 /**

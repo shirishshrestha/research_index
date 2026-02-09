@@ -8,13 +8,31 @@ import {
 } from "@/features/shared/components";
 import type { Author } from "../types";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+
+interface PaginationData {
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
 
 interface AuthorsListViewProps {
   initialData?: Author[];
+  pagination?: PaginationData;
 }
 
-export function AuthorsListView({ initialData = [] }: AuthorsListViewProps) {
+export function AuthorsListView({
+  initialData = [],
+  pagination,
+}: AuthorsListViewProps) {
   const [authors] = useState<Author[]>(initialData);
+  const searchParams = useSearchParams();
+
+  // Extract pagination info from URL
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const pageSize = parseInt(searchParams.get("page_size") || "10");
+  const totalCount = pagination?.count || authors.length;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const publicationCountOptions = [
     { value: "1-10", label: "1 - 10" },
@@ -157,11 +175,11 @@ export function AuthorsListView({ initialData = [] }: AuthorsListViewProps) {
           {/* Pagination */}
           {authors.length > 0 && (
             <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(authors.length / 10)}
-              totalCount={authors.length}
-              pageSize={10}
-              showPageSizeSelector={false}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalCount={totalCount}
+              pageSize={pageSize}
+              showPageSizeSelector={true}
             />
           )}
         </div>

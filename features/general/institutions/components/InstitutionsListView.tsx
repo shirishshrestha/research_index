@@ -8,15 +8,31 @@ import {
 } from "@/features/shared/components";
 import type { Institution } from "../types";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+
+interface PaginationData {
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
 
 interface InstitutionsListViewProps {
   initialData?: Institution[];
+  pagination?: PaginationData;
 }
 
 export function InstitutionsListView({
   initialData = [],
+  pagination,
 }: InstitutionsListViewProps) {
   const [institutions] = useState<Institution[]>(initialData);
+  const searchParams = useSearchParams();
+
+  // Extract pagination info from URL
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const pageSize = parseInt(searchParams.get("page_size") || "10");
+  const totalCount = pagination?.count || institutions.length;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const mockInstitutions = [
     {
@@ -277,13 +293,11 @@ export function InstitutionsListView({
           {(institutions.length > 0 ? institutions : mockInstitutions).length >
             0 && (
             <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(
-                (institutions.length > 0 ? institutions.length : 400) / 10,
-              )}
-              totalCount={institutions.length > 0 ? institutions.length : 400}
-              pageSize={10}
-              showPageSizeSelector={false}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalCount={totalCount}
+              pageSize={pageSize}
+              showPageSizeSelector={true}
             />
           )}
         </div>
