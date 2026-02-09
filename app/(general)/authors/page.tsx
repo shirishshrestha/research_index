@@ -40,13 +40,12 @@ async function AuthorsContent({
     });
   } catch (error) {
     console.error("Error fetching authors:", error);
-    authors = [];
+    return [];
   }
-
-  return <AuthorsListView initialData={authors} />;
 }
 
-export default function AuthorsPage({ searchParams }: AuthorsPageProps) {
+export default async function AuthorsPage({ searchParams }: AuthorsPageProps) {
+  const authors = await getAuthors(searchParams);
   return (
     <section>
       <Container>
@@ -66,7 +65,7 @@ export default function AuthorsPage({ searchParams }: AuthorsPageProps) {
 
       <Container>
         <Suspense fallback={<AuthorsListSkeleton />}>
-          <AuthorsContent searchParams={searchParams} />
+          <AuthorsListView initialData={authors} />
         </Suspense>
       </Container>
     </section>

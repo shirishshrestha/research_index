@@ -69,7 +69,18 @@ export interface ArticleSidebarProps {
 export interface PublicationFilters {
   type?: string;
   topic_branch?: number;
+  topic?: number;
   author?: number;
+  journal?: number;
+  year?: number;
+  year_from?: number;
+  year_to?: number;
+  publisher?: string;
+  min_citations?: number;
+  h_index_min?: number;
+  h_index_max?: number;
+  has_doi?: boolean;
+  has_pdf?: boolean;
   search?: string;
   page?: number;
 }
