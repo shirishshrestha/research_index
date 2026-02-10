@@ -78,6 +78,27 @@ export default function LoginPage() {
                 </Link>
               </div>
             </div>
+
+            {/* Claim Imported Account */}
+            <div className=" space-y-1.25 pt-2 border-t">
+              <p className="text-sm text-gray-600">
+                Found your profile in our database?
+              </p>
+              <div className="flex flex-col gap-1">
+                <Link
+                  href="/claim-account"
+                  className="text-primary text-sm hover:underline font-medium"
+                >
+                  Claim Your Author Profile
+                </Link>
+                <Link
+                  href="/claim-journals"
+                  className="text-primary text-sm hover:underline font-medium"
+                >
+                  Claim Your Institution's Journals
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -45,7 +45,7 @@ async function AuthorsContent({
 }
 
 export default async function AuthorsPage({ searchParams }: AuthorsPageProps) {
-  const authors = await getAuthors(searchParams);
+  const authors = await getPublicAuthors(searchParams);
   return (
     <section>
       <Container>
