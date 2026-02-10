@@ -31,20 +31,26 @@ export const AuthorProfileTab = ({ author }: AuthorProfileProps) => {
       <div className="space-y-8.75">
         <div>
           <h4 className="heading-4 mb-3 text-text-black">About</h4>
-          <p className="text-text-gray leading-relaxed">{author.about}</p>
+          <p className="text-text-gray leading-relaxed">
+            {author.about || "No information available."}
+          </p>
         </div>
         <div>
           <h4 className="heading-4 mb-3 text-text-black">Discipline</h4>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {author.disciplines.map((discipline) => (
-              <li
-                key={discipline}
-                className="flex items-center gap-2 text-text-gray"
-              >
-                <span className="w-1.5 h-1.5 rounded-[100%] bg-primary shrink-0" />
-                {discipline}
-              </li>
-            ))}
+            {author.disciplines.length > 0 ? (
+              author.disciplines.map((discipline) => (
+                <li
+                  key={discipline}
+                  className="flex items-center gap-2 text-text-gray"
+                >
+                  <span className="w-1.5 h-1.5 rounded-[100%] bg-primary shrink-0" />
+                  {discipline}
+                </li>
+              ))
+            ) : (
+              <li className="text-text-gray">No disciplines available.</li>
+            )}
           </ul>
         </div>
       </div>

@@ -17,6 +17,7 @@ import { FormTextareaField } from "@/components/form/FormTextareaField";
 import { FormSelectField } from "@/components/form/FormSelectField";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useForm } from "react-hook-form";
 import { SquarePen } from "lucide-react";
 import { useAdminInstitutionDetailQuery } from "../hooks/queries";
@@ -101,13 +102,63 @@ export function InstitutionEditDialog({
           <SquarePen className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[60%]! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Institution</DialogTitle>
         </DialogHeader>
         {loading ? (
-          <div className="py-8 text-center text-muted-foreground">
-            Loading...
+          <div className="grid gap-4">
+            {/* Account Information Skeleton */}
+            <div className="grid gap-4">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-10 w-full" />
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-6 w-11 rounded-full" />
+              </div>
+            </div>
+
+            {/* Basic Information Skeleton */}
+            <div className="grid gap-4">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </div>
+
+            {/* Contact & Location Skeleton */}
+            <div className="grid gap-4">
+              <Skeleton className="h-5 w-44" />
+              <Skeleton className="h-20 w-full" />
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </div>
+
+            {/* Research Information Skeleton */}
+            <div className="grid gap-4">
+              <Skeleton className="h-5 w-48" />
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <Skeleton className="h-20 w-full" />
+            </div>
+
+            {/* Footer Skeleton */}
+            <div className="flex justify-end gap-2 pt-4">
+              <Skeleton className="h-10 w-20" />
+              <Skeleton className="h-10 w-28" />
+            </div>
           </div>
         ) : (
           <Form {...form}>
