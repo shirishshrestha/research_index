@@ -230,18 +230,6 @@ export function InstitutionsListView({
               placeholder="Relevance"
             />
           </FilterToolbar>
-          {(institutions.length > 0 ? institutions : mockInstitutions).length >
-            0 && (
-            <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(
-                (institutions.length > 0 ? institutions.length : 400) / 10,
-              )}
-              totalCount={institutions.length > 0 ? institutions.length : 400}
-              pageSize={10}
-              showPageSizeSelector={false}
-            />
-          )}
 
           {/* Results List */}
           <div className="space-y-4">
@@ -297,7 +285,7 @@ export function InstitutionsListView({
               totalPages={totalPages}
               totalCount={totalCount}
               pageSize={pageSize}
-              showPageSizeSelector={true}
+              showPageSizeSelector={false}
             />
           )}
         </div>
