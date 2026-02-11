@@ -80,6 +80,36 @@ export const GeneralInformationSection = forwardRef<
     },
   });
 
+  // Reset form when questionnaire data changes
+  useEffect(() => {
+    form.reset({
+      journal_title: questionnaireData.journal_title || "",
+      issn: questionnaireData.issn || "",
+      e_issn: questionnaireData.e_issn || "",
+      publisher_name: questionnaireData.publisher_name || "",
+      publisher_country: questionnaireData.publisher_country || "",
+      year_first_publication:
+        questionnaireData.year_first_publication || new Date().getFullYear(),
+      publication_frequency:
+        questionnaireData.publication_frequency || "monthly",
+      publication_format: questionnaireData.publication_format || "both",
+      journal_website_url: questionnaireData.journal_website_url || "",
+      contact_email: questionnaireData.contact_email || "",
+    });
+  }, [
+    questionnaireData.journal_title,
+    questionnaireData.issn,
+    questionnaireData.e_issn,
+    questionnaireData.publisher_name,
+    questionnaireData.publisher_country,
+    questionnaireData.year_first_publication,
+    questionnaireData.publication_frequency,
+    questionnaireData.publication_format,
+    questionnaireData.journal_website_url,
+    questionnaireData.contact_email,
+    form,
+  ]);
+
   // Auto-save to Redux on every change
   useEffect(() => {
     const subscription = form.watch((value) => {
