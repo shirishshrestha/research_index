@@ -13,21 +13,32 @@ import DataTable, {
 } from "@/features/shared/components/DataTable";
 import type { Publication } from "../types";
 import { EllipsisTooltip } from "@/features/shared";
+import { Pagination } from "@/features/shared/components/lists/Pagination";
+import { useSearchParams } from "next/navigation";
+import type { PaginatedResponse } from "@/types/pagination";
 
 interface PublicationsListProps {
-  initialPublications?: Publication[];
+  initialPublications?: PaginatedResponse<Publication>;
 }
 
 export function PublicationsList({
   initialPublications,
 }: PublicationsListProps) {
+  const searchParams = useSearchParams();
   // Use server-provided data as initial data, only fetch client-side if not provided
   const {
-    data: publications,
+    data: response,
     error,
     isPending,
   } = usePublicationsQuery(initialPublications);
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
+
+  // Extract pagination data
+  const publications = response?.results || [];
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const pageSize = parseInt(searchParams.get("page_size") || "10");
+  const totalCount = response?.count || 0;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const deleteMutation = useDeletePublicationMutation(deleteId || undefined, {
     onSuccess: () => {
@@ -193,7 +204,7 @@ export function PublicationsList({
       </div>
 
       <DataTable
-        data={publications || []}
+        data={publications}
         columns={columns}
         isPending={isPending}
         error={error}
@@ -203,6 +214,18 @@ export function PublicationsList({
         pendingRows={5}
         tableClassName="bg-card flex items-center justify-center"
       />
+
+      {/* Pagination */}
+      {totalCount > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalCount={totalCount}
+          pageSize={pageSize}
+          showPageSizeSelector={false}
+        />
+      )}
+
       <div onClick={(e) => e.stopPropagation()}>
         <ConfirmationPopup
           open={deleteId !== null}

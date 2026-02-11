@@ -3,13 +3,16 @@
 import { useGet } from "@/hooks/useApi";
 import type { Publication } from "../types";
 import { PUBLICATIONS_QUERY_KEYS, PUBLICATIONS_ENDPOINTS } from "../constants";
+import type { PaginatedResponse } from "@/types/pagination";
 
 /**
  * Query hook to fetch all publications for the authenticated author
  * @param initialData - Optional initial data from server-side rendering
  */
-export const usePublicationsQuery = (initialData?: Publication[]) => {
-  return useGet<Publication[]>(
+export const usePublicationsQuery = (
+  initialData?: PaginatedResponse<Publication>,
+) => {
+  return useGet<PaginatedResponse<Publication>>(
     [...PUBLICATIONS_QUERY_KEYS.lists()],
     PUBLICATIONS_ENDPOINTS.LIST,
     {

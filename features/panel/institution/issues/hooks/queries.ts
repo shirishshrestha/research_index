@@ -3,6 +3,7 @@
 import { useGet } from "@/hooks/useApi";
 import type { Issue, IssueListItem } from "../types";
 import { ISSUES_QUERY_KEYS, ISSUES_ENDPOINTS } from "../constants";
+import type { PaginatedResponse } from "@/types/pagination";
 
 /**
  * Query hook to fetch all issues for a specific journal
@@ -11,9 +12,9 @@ import { ISSUES_QUERY_KEYS, ISSUES_ENDPOINTS } from "../constants";
  */
 export const useIssuesQuery = (
   journalId: number | string | undefined,
-  initialData?: IssueListItem[],
+  initialData?: PaginatedResponse<IssueListItem>,
 ) => {
-  return useGet<IssueListItem[]>(
+  return useGet<PaginatedResponse<IssueListItem>>(
     journalId
       ? (ISSUES_QUERY_KEYS.lists(Number(journalId)) as unknown as string[])
       : [],
