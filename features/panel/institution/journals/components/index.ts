@@ -7,3 +7,4 @@ export * from "./JournalStatistics";
 export * from "./JournalContact";
 export * from "./JournalEditorialBoard";
 export * from "./JournalBreadcrumb";
+export * from "./DOAJSearchDialog";

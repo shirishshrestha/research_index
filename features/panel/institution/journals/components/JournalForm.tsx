@@ -12,7 +12,7 @@ import {
   FormSelectField,
 } from "@/components/form";
 import { FormRichTextField } from "@/components/form/FormRichTextField";
-import { Save, X, Image as ImageIcon } from "lucide-react";
+import { Save, X, Image as ImageIcon, Database } from "lucide-react";
 import { journalFormSchema, type JournalFormSchema } from "../utils";
 import {
   useCreateJournalMutation,
@@ -30,6 +30,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { DOAJSearchDialog } from "./DOAJSearchDialog";
+import type { DOAJJournal } from "../api/doajApi";
+import { toast } from "sonner";
 
 const frequencyOptions = [
   { value: "monthly", label: "Monthly" },
@@ -50,6 +53,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
     journal?.cover_image_url || null,
   );
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [doajDialogOpen, setDoajDialogOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(journalFormSchema),
@@ -147,6 +151,82 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
     }
   };
 
+  const handleDOAJImport = (doajJournal: DOAJJournal) => {
+    // Populate form fields with DOAJ data
+    form.setValue("title", doajJournal.title || "");
+    if (doajJournal.alternative_title) {
+      form.setValue("short_title", doajJournal.alternative_title);
+    }
+    if (doajJournal.issn) {
+      form.setValue("issn", doajJournal.issn);
+    }
+    if (doajJournal.e_issn) {
+      form.setValue("e_issn", doajJournal.e_issn);
+    }
+
+    // Build description from subjects
+    const description =
+      doajJournal.subjects && doajJournal.subjects.length > 0
+        ? `An open access journal covering: ${doajJournal.subjects.join(", ")}`
+        : "";
+    if (description) {
+      form.setValue("description", description);
+    }
+
+    // Set scope/keywords
+    if (doajJournal.keywords) {
+      form.setValue("scope", `Research areas: ${doajJournal.keywords}`);
+    }
+
+    if (doajJournal.publisher_name) {
+      form.setValue("publisher_name", doajJournal.publisher_name);
+    }
+    if (doajJournal.language) {
+      form.setValue("language", doajJournal.language);
+    }
+    if (doajJournal.contact_email) {
+      form.setValue("contact_email", doajJournal.contact_email);
+    }
+    if (doajJournal.website) {
+      form.setValue("website", doajJournal.website);
+    }
+
+    // Set boolean flags
+    form.setValue("is_open_access", doajJournal.is_open_access || false);
+    form.setValue("peer_reviewed", doajJournal.peer_reviewed || true);
+
+    // Build about_journal from available info
+    const aboutParts = [];
+    if (doajJournal.license) {
+      aboutParts.push(`License: ${doajJournal.license}`);
+    }
+    if (doajJournal.peer_review_type) {
+      aboutParts.push(`Peer Review: ${doajJournal.peer_review_type}`);
+    }
+    if (doajJournal.has_plagiarism_detection) {
+      aboutParts.push("Plagiarism detection available");
+    }
+    if (doajJournal.publication_time_weeks) {
+      aboutParts.push(
+        `Publication time: ${doajJournal.publication_time_weeks} weeks`,
+      );
+    }
+    if (
+      doajJournal.has_apc &&
+      doajJournal.apc_amount &&
+      doajJournal.apc_currency
+    ) {
+      aboutParts.push(
+        `APC: ${doajJournal.apc_amount} ${doajJournal.apc_currency}`,
+      );
+    }
+    if (aboutParts.length > 0) {
+      form.setValue("about_journal", aboutParts.join("\n\n"));
+    }
+
+    toast.success("Journal information imported from DOAJ successfully!");
+  };
+
   const isLoading = createMutation.isPending || updateMutation.isPending;
 
   return (
@@ -165,6 +245,17 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
             </p>
           </div>
           <div className="flex gap-2">
+            {mode === "create" && (
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setDoajDialogOpen(true)}
+                disabled={isLoading}
+              >
+                <Database className="mr-2 h-4 w-4" />
+                Search DOAJ
+              </Button>
+            )}
             <Button
               type="button"
               variant="outline"
@@ -480,6 +571,13 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
           </Button>
         </div>
       </form>
+
+      {/* DOAJ Search Dialog */}
+      <DOAJSearchDialog
+        open={doajDialogOpen}
+        onOpenChange={setDoajDialogOpen}
+        onImport={handleDOAJImport}
+      />
     </Form>
   );
 }

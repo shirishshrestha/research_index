@@ -251,8 +251,14 @@ export async function getPublicJournals(
 }
 
 export async function getLatestJournals(): Promise<Journal[]> {
-  const journals = await getPublicJournals({}, { page_size: 4 });
-  return journals.results;
+  const response = await getPublicJournals();
+
+  // If response is an array, use it directly. If it's paginated, use results
+  const journals = Array.isArray(response)
+    ? response
+    : (response as any)?.results || [];
+
+  return journals.slice(0, 4);
 }
 
 export async function getPublicJournal(
