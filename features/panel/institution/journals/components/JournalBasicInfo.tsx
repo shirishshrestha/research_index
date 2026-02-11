@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Info } from "lucide-react";
 import type { Journal } from "../types";
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
 
 interface JournalBasicInfoProps {
   journal?: Journal;
@@ -66,7 +67,10 @@ export function JournalBasicInfo({
             <h3 className="font-semibold text-sm text-muted-foreground mb-1">
               Description
             </h3>
-            <p className="text-sm">{journal.description}</p>
+            <RichTextDisplay
+              content={journal.description}
+              className="text-sm"
+            />
           </div>
         )}
 
@@ -75,7 +79,7 @@ export function JournalBasicInfo({
             <h3 className="font-semibold text-sm text-muted-foreground mb-1">
               Scope
             </h3>
-            <p className="text-sm">{journal.scope}</p>
+            <RichTextDisplay content={journal.scope} className="text-sm" />
           </div>
         )}
 

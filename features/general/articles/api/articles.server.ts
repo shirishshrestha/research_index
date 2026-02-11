@@ -126,7 +126,7 @@ export async function getPublicationsByBranch(
  * @param id - Publication ID
  */
 export async function getPublicArticle(id: number): Promise<Publication> {
-  const response = await serverGet<Publication>(`/publications/${id}/`, {
+  const response = await serverGet<Publication>(`/publications/public/${id}/`, {
     requireAuth: false, // Try public first
     tags: ["public-articles", `article-${id}`],
     revalidate: 300,

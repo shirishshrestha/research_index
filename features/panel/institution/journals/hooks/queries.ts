@@ -3,13 +3,16 @@
 import { useGet } from "@/hooks/useApi";
 import type { Journal, JournalListItem, JournalStats } from "../types";
 import { JOURNALS_QUERY_KEYS, JOURNALS_ENDPOINTS } from "../constants";
+import type { PaginatedResponse } from "@/types/pagination";
 
 /**
  * Query hook to fetch all journals for the authenticated institution
  * @param initialData - Optional initial data from server-side rendering
  */
-export const useJournalsQuery = (initialData?: JournalListItem[]) => {
-  return useGet<JournalListItem[]>(
+export const useJournalsQuery = (
+  initialData?: PaginatedResponse<JournalListItem>,
+) => {
+  return useGet<PaginatedResponse<JournalListItem>>(
     [...JOURNALS_QUERY_KEYS.lists()],
     JOURNALS_ENDPOINTS.LIST,
     {

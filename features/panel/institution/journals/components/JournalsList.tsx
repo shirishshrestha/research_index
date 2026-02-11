@@ -8,16 +8,25 @@ import DataTable, {
   type DataTableColumn,
 } from "@/features/shared/components/DataTable";
 import type { JournalListItem } from "../types";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { FilterToolbar } from "@/features/shared/components/search/FilterToolbar";
 import { useJournalsQuery } from "../hooks";
 import { EllipsisTooltip } from "@/features/shared/components/lists/Ellipsis";
+import { Pagination } from "@/features/shared/components/lists/Pagination";
 
 export function JournalsList() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const { data: journals, isPending: isLoading, isError } = useJournalsQuery();
+  const { data: response, isPending: isLoading, isError } = useJournalsQuery();
+
+  // Extract pagination data
+  const journals = response?.results || [];
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const pageSize = parseInt(searchParams.get("page_size") || "10");
+  const totalCount = response?.count || 0;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const columns: DataTableColumn<JournalListItem>[] = [
     {
@@ -175,7 +184,7 @@ export function JournalsList() {
 
       {/* Journals Table */}
       <DataTable
-        data={journals || []}
+        data={journals}
         columns={columns}
         isPending={isLoading}
         error={isError ? "Failed to load journals" : null}
@@ -185,6 +194,17 @@ export function JournalsList() {
         onRowClick={(row) => router.push(`/institution/journals/${row.id}`)}
         tableClassName="flex justify-center "
       />
+
+      {/* Pagination */}
+      {totalCount > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalCount={totalCount}
+          pageSize={pageSize}
+          showPageSizeSelector={false}
+        />
+      )}
     </div>
   );
 }

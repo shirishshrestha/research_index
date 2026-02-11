@@ -5,16 +5,22 @@
 
 import { serverGet } from "@/lib/server-api";
 import type { Publication } from "../types";
+import type { PaginatedResponse } from "@/types/pagination";
 
 /**
  * Fetch all publications for the authenticated author (server-side)
  * This is used for server-side rendering of the author's publications list
  * Requires authentication token from cookies
  */
-export async function getAuthorPublications(): Promise<Publication[]> {
-  const response = await serverGet<Publication[]>("/publications/", {
-    tags: ["author-publications"],
-  });
+export async function getAuthorPublications(): Promise<
+  PaginatedResponse<Publication>
+> {
+  const response = await serverGet<PaginatedResponse<Publication>>(
+    "/publications/",
+    {
+      tags: ["author-publications"],
+    },
+  );
 
   return response;
 }

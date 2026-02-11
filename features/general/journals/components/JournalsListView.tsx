@@ -45,7 +45,7 @@ export function JournalsListView({
   return (
     <div className="pt-12.5! section-padding">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
-        {/* Left Sidebar - Filters */}  
+        {/* Left Sidebar - Filters */}
         <aside className="space-y-6">
           <div className="sticky top-32">
             <h3 className="heading-3 text-text-black mb-4 flex items-center justify-between gap-3">
@@ -247,7 +247,7 @@ export function JournalsListView({
               totalPages={totalPages}
               totalCount={totalCount}
               pageSize={pageSize}
-              showPageSizeSelector={true}
+              showPageSizeSelector={false}
             />
           )}
         </div>

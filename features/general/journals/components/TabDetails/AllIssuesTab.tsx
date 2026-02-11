@@ -164,18 +164,18 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                 </div>
               </AccordionTrigger>
               <AccordionContent>
-                <Accordion type="multiple" className="w-full space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                   {volume.issues.map((issue) => (
-                    <AccordionItem
+                    <Link
                       key={issue.id}
-                      value={`issue-${issue.id}`}
+                      href={`/journals/${journalId}/issues/${issue.id}`}
                       id={`issue-${issue.id}`}
-                      className="border rounded-md scroll-mt-40"
+                      className="block scroll-mt-40"
                     >
-                      <AccordionTrigger className="hover:no-underline px-4 py-3">
-                        <div className="flex items-start justify-between w-full pr-4 text-left">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-1">
+                      <div className="border rounded-lg p-4 hover:shadow-md hover:border-primary/30 transition-all h-full">
+                        <div className="space-y-3">
+                          <div>
+                            <div className="flex items-center gap-2 mb-2">
                               <span className="font-semibold text-base text-text-black">
                                 Issue {issue.issue_number}
                               </span>
@@ -186,11 +186,14 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                               )}
                             </div>
                             {issue.title && (
-                              <p className="text-sm text-text-gray mb-1">
+                              <p
+                                className="text-sm text-text-gray mb-2 line-clamp-2"
+                                title={issue.title}
+                              >
                                 {issue.title}
                               </p>
                             )}
-                            <div className="flex items-center gap-4 text-xs text-text-gray">
+                            <div className="flex flex-col gap-1 text-xs text-text-gray">
                               <span>
                                 Published:{" "}
                                 {new Date(
@@ -201,7 +204,6 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                                   day: "numeric",
                                 })}
                               </span>
-                              <span>•</span>
                               <span>
                                 {issue.articles.length}{" "}
                                 {issue.articles.length === 1
@@ -210,52 +212,49 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                               </span>
                             </div>
                           </div>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4">
-                        {issue.articles.length === 0 ? (
-                          <p className="text-sm text-text-gray py-2">
-                            No articles in this issue yet.
-                          </p>
-                        ) : (
-                          <div className="space-y-2">
-                            {issue.articles.map((article, index) => (
-                              <Link
-                                key={article.id}
-                                href={`/articles/${article.publication_id}`}
-                                className="block p-3 rounded-md hover:bg-blue-02 transition-colors border border-border hover:border-primary/20"
-                              >
-                                <div className="flex items-start gap-3">
-                                  <span className="text-xs font-medium text-text-gray mt-1 shrink-0">
-                                    {index + 1}.
-                                  </span>
-                                  <div className="flex-1 min-w-0">
-                                    <h4 className="text-sm font-semibold text-text-black mb-1 line-clamp-2">
+
+                          {issue.articles.length > 0 && (
+                            <div className="pt-3 border-t">
+                              <p className="text-xs font-medium text-text-gray mb-2">
+                                Recent articles:
+                              </p>
+                              <div className="space-y-2">
+                                {issue.articles.slice(0, 2).map((article) => (
+                                  <div
+                                    key={article.id}
+                                    className="text-xs"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      window.location.href = `/articles/${article.publication_id}`;
+                                    }}
+                                  >
+                                    <p
+                                      className="font-medium text-text-black line-clamp-1"
+                                      title={article.title}
+                                    >
                                       {article.title}
-                                    </h4>
-                                    <p className="text-xs text-text-gray mb-1">
+                                    </p>
+                                    <p
+                                      className="text-text-gray line-clamp-1"
+                                      title={article.authors}
+                                    >
                                       {article.authors}
                                     </p>
-                                    {article.pages && (
-                                      <p className="text-xs text-text-gray">
-                                        Pages: {article.pages}
-                                      </p>
-                                    )}
-                                    {article.doi && (
-                                      <p className="text-xs text-primary mt-1">
-                                        DOI: {article.doi}
-                                      </p>
-                                    )}
                                   </div>
-                                </div>
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </AccordionContent>
-                    </AccordionItem>
+                                ))}
+                                {issue.articles.length > 2 && (
+                                  <p className="text-xs text-primary font-medium">
+                                    +{issue.articles.length - 2} more articles
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
                   ))}
-                </Accordion>
+                </div>
               </AccordionContent>
             </AccordionItem>
           ))}

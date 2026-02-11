@@ -113,10 +113,7 @@ export function JournalDetails({ journal }: JournalDetailsProps) {
             <button className="flex items-center gap-1.5 heading-para hover:text-primary transition-colors">
               Share <ChevronDown className="stroke-[1.6px]" size={18} />
             </button>
-            <button className="flex items-center gap-1.5 heading-para hover:text-primary transition-colors">
-              More <ChevronDown className="stroke-[1.6px]" size={18} />
-            </button>
-          </div>
+              </div>
         }
       />
     </div>
