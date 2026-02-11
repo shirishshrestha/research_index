@@ -1,6 +1,6 @@
-import { serverGet } from "@/lib/server-api";
-import type { PaginatedResponse, PaginationParams } from "@/types/pagination";
-import type { Author, AuthorDetail, AuthorFilters } from "../types";
+import { api } from "@/services/api";
+import type { PaginationParams } from "@/types/pagination";
+import type { Author, AuthorFilters } from "../types";
 
 export interface AuthorsResponse {
   results: Author[];
@@ -10,12 +10,9 @@ export interface AuthorsResponse {
 }
 
 /**
- * Fetch all authors (public endpoint)
- * Supports comprehensive filtering by title, institute, designation, metrics, and more
- * @param filters - Optional filters for various author attributes
- * @param pagination - Optional pagination parameters
+ * Fetch all authors (client-side)
  */
-export async function getPublicAuthors(
+export async function fetchAuthors(
   filters?: AuthorFilters,
   pagination?: PaginationParams,
 ): Promise<AuthorsResponse> {
@@ -60,35 +57,5 @@ export async function getPublicAuthors(
 
   const endpoint = `/publications/authors/public/${params.toString() ? `?${params.toString()}` : ""}`;
 
-  const response = await serverGet<PaginatedResponse<Author>>(endpoint, {
-    tags: ["authors"],
-    revalidate: 3600, // Revalidate every hour
-    requireAuth: false,
-  });
-
-  return {
-    results: response.results,
-    count: response.count,
-    next: response.next,
-    previous: response.previous,
-  };
-}
-
-/**
- * Fetch a single author by ID (public endpoint)
- * @param id - Author ID
- */
-export async function getPublicAuthor(
-  id: number | string,
-): Promise<AuthorDetail> {
-  const response = await serverGet<AuthorDetail>(
-    `/publications/authors/public/${id}/`,
-    {
-      tags: ["authors", `author-${id}`],
-      revalidate: 3600, // Revalidate every hour
-      requireAuth: false,
-    },
-  );
-
-  return response;
+  return api.get<AuthorsResponse>(endpoint);
 }

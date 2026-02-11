@@ -1,11 +1,9 @@
 import { Breadcrumb, Container, PageHeroSection } from "@/components/shared";
 import { commonBreadcrumbs } from "@/components/shared/Breadcrumb";
 import {
-  AuthorsListView,
+  AuthorsListContainer,
   AuthorsListSkeleton,
 } from "@/features/general/authors";
-import { getPublicAuthors } from "@/features/general/authors/api/authors.server";
-import type { Author } from "@/features/general/authors/types";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -15,37 +13,7 @@ export const metadata: Metadata = {
     "Explore our growing list of authors contributing to Nepal's research excellence across diverse disciplines.",
 };
 
-interface AuthorsPageProps {
-  searchParams: {
-    institute?: string;
-    designation?: string;
-    search?: string;
-  };
-}
-
-async function AuthorsContent({
-  searchParams,
-}: {
-  searchParams:
-    | AuthorsPageProps["searchParams"]
-    | Promise<AuthorsPageProps["searchParams"]>;
-}) {
-  const params = await searchParams;
-  let authors: Author[];
-  try {
-    authors = await getPublicAuthors({
-      institute: params?.institute,
-      designation: params?.designation,
-      search: params?.search,
-    });
-  } catch (error) {
-    console.error("Error fetching authors:", error);
-    return [];
-  }
-}
-
-export default async function AuthorsPage({ searchParams }: AuthorsPageProps) {
-  const authors = await getPublicAuthors(searchParams);
+export default function AuthorsPage() {
   return (
     <section>
       <Container>
@@ -65,7 +33,7 @@ export default async function AuthorsPage({ searchParams }: AuthorsPageProps) {
 
       <Container>
         <Suspense fallback={<AuthorsListSkeleton />}>
-          <AuthorsListView initialData={authors} />
+          <AuthorsListContainer />
         </Suspense>
       </Container>
     </section>

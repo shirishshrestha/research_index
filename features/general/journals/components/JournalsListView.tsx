@@ -4,6 +4,7 @@ import { Icon } from "@/components/shared";
 import { FilterToolbar, Pagination } from "@/features/shared/components";
 import { JournalCard } from "./JournalCard";
 import type { Journal } from "../api/journals.server";
+import { useSearchParams } from "next/navigation";
 import {
   accessTypeOptions,
   categoryOptions,
@@ -16,19 +17,35 @@ import {
   yearOptions,
 } from "@/features/shared/constants/filterOptions";
 
-interface JournalsListViewProps {
-  initialData?: Journal[];
+interface PaginationData {
+  count: number;
+  next: string | null;
+  previous: string | null;
 }
 
-export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
+interface JournalsListViewProps {
+  initialData?: Journal[];
+  pagination?: PaginationData;
+}
+
+export function JournalsListView({
+  initialData = [],
+  pagination,
+}: JournalsListViewProps) {
   // Use journals from server-side props
   const journals = initialData;
-  const totalResults = journals.length;
+  const searchParams = useSearchParams();
+
+  // Extract pagination info from URL
+  const currentPage = parseInt(searchParams.get("page") || "1");
+  const pageSize = parseInt(searchParams.get("page_size") || "10");
+  const totalCount = pagination?.count || journals.length;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
     <div className="pt-12.5! section-padding">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6.25">
-        {/* Left Sidebar - Filters */}
+        {/* Left Sidebar - Filters */}  
         <aside className="space-y-6">
           <div className="sticky top-32">
             <h3 className="heading-3 text-text-black mb-4 flex items-center justify-between gap-3">
@@ -174,7 +191,7 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
           {/* Results Count */}
           <div className="flex items-center justify-between">
             <p className="text-text-gray">
-              Showing {journals.length} of {totalResults} results
+              Showing {journals.length} of {totalCount} results
             </p>
           </div>
 
@@ -224,13 +241,13 @@ export function JournalsListView({ initialData = [] }: JournalsListViewProps) {
             ))}
 
           {/* Pagination */}
-          {journals.length > 10 && (
+          {journals.length > 0 && (
             <Pagination
-              currentPage={1}
-              totalPages={Math.ceil(journals.length / 10)}
-              totalCount={journals.length}
-              pageSize={10}
-              showPageSizeSelector={false}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalCount={totalCount}
+              pageSize={pageSize}
+              showPageSizeSelector={true}
             />
           )}
         </div>

@@ -1,10 +1,6 @@
-import { serverGet } from "@/lib/server-api";
-import type { PaginatedResponse, PaginationParams } from "@/types/pagination";
-import type {
-  Institution,
-  InstitutionDetail,
-  InstitutionFilters,
-} from "../types";
+import { api } from "@/services/api";
+import type { PaginationParams } from "@/types/pagination";
+import type { Institution, InstitutionFilters } from "../types";
 
 export interface InstitutionsResponse {
   results: Institution[];
@@ -14,12 +10,9 @@ export interface InstitutionsResponse {
 }
 
 /**
- * Fetch all institutions (public endpoint)
- * Supports comprehensive filtering by country, type, location, metrics, and more
- * @param filters - Optional filters for country, type, location, research areas, etc.
- * @param pagination - Optional pagination parameters
+ * Fetch all institutions (client-side)
  */
-export async function getPublicInstitutions(
+export async function fetchInstitutions(
   filters?: InstitutionFilters,
   pagination?: PaginationParams,
 ): Promise<InstitutionsResponse> {
@@ -55,34 +48,5 @@ export async function getPublicInstitutions(
 
   const endpoint = `/publications/institutions/public/${params.toString() ? `?${params.toString()}` : ""}`;
 
-  const response = await serverGet<PaginatedResponse<Institution>>(endpoint, {
-    tags: ["institutions"],
-    revalidate: 3600, // Revalidate every hour
-    requireAuth: false,
-  });
-
-  return {
-    results: response.results,
-    count: response.count,
-    next: response.next,
-    previous: response.previous,
-  };
-}
-
-/**
- * Fetch a single institution by ID (public endpoint)
- * @param id - Institution ID
- */
-export async function getPublicInstitution(
-  id: number | string,
-): Promise<InstitutionDetail> {
-  const response = await serverGet<InstitutionDetail>(
-    `/publications/institutions/public/${id}/`,
-    {
-      tags: ["institutions", `institution-${id}`],
-      revalidate: 3600, // Revalidate every hour
-    },
-  );
-
-  return response;
+  return api.get<InstitutionsResponse>(endpoint);
 }
