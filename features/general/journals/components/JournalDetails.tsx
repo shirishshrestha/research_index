@@ -1,4 +1,6 @@
 import { JournalProfileCard } from "./JournalProfileCard";
+import { ExportJournalButton } from "./ExportJournalButton";
+import { ShareJournalButton } from "./ShareJournalButton";
 import { ProfileTabs } from "@/features/shared/components/profile";
 import { ChevronDown } from "lucide-react";
 import {
@@ -107,13 +109,12 @@ export function JournalDetails({ journal }: JournalDetailsProps) {
         ]}
         moreOptions={
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1.5 heading-para hover:text-primary transition-colors">
-              Export <ChevronDown className="stroke-[1.6px]" size={18} />
-            </button>
-            <button className="flex items-center gap-1.5 heading-para hover:text-primary transition-colors">
-              Share <ChevronDown className="stroke-[1.6px]" size={18} />
-            </button>
-              </div>
+            <ExportJournalButton journalId={journal.id} />
+            <ShareJournalButton
+              journalId={journal.id}
+              journalTitle={journal.title}
+            />
+          </div>
         }
       />
     </div>
