@@ -41,10 +41,17 @@ export interface EditorialBoardMember {
   id: number;
   name: string;
   role: string;
-  affiliation: string;
-  email: string;
-  bio: string;
-  is_active: boolean;
+  role_display?: string;
+  title?: string;
+  affiliation?: string;
+  email?: string;
+  bio?: string;
+  expertise?: string;
+  photo_url?: string;
+  orcid?: string;
+  website?: string;
+  order?: number;
+  is_active?: boolean;
 }
 
 export interface JournalDetail extends Journal {

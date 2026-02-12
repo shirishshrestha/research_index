@@ -82,7 +82,7 @@ export function JournalStatistics({
   return (
     <div className="space-y-4">
       {/* Highlight Stats */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-4">
         <Card className="bg-linear-to-br from-blue-50 to-blue-100/50 border-blue-200">
           <CardContent className="">
             <div className="flex items-start justify-between">
@@ -129,7 +129,7 @@ export function JournalStatistics({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <StatItem
               icon={<Target className="h-4 w-4" />}
               label="H-Index"

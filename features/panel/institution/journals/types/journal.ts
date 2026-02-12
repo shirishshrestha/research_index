@@ -1,5 +1,7 @@
 // Journal types based on backend API
 
+import type { EditorialBoardMemberFormData } from "../schemas";
+
 export interface JournalStats {
   impact_factor: number;
   cite_score: number;
@@ -120,20 +122,8 @@ export interface JournalFormData {
   editorial_board_data?: EditorialBoardMemberFormData[];
 }
 
-export interface EditorialBoardMemberFormData {
-  name: string;
-  role: string;
-  title: string;
-  affiliation: string;
-  email: string;
-  bio: string;
-  expertise: string;
-  photo?: File;
-  orcid: string;
-  website: string;
-  order: number;
-  is_active: boolean;
-}
+// Re-export from schema for consistency
+export type { EditorialBoardMemberFormData } from "../schemas";
 
 export interface JournalCreateResponse {
   message: string;

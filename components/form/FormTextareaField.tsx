@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 
 interface FormTextareaFieldProps<
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 > {
   control: Control<TFieldValues>;
   name: FieldPath<TFieldValues>;
@@ -21,10 +21,11 @@ interface FormTextareaFieldProps<
   form_classname?: string;
   maxLength?: number;
   showCounter?: boolean;
+  rows?: number;
 }
 
 export const FormTextareaField = <
-  TFieldValues extends FieldValues = FieldValues
+  TFieldValues extends FieldValues = FieldValues,
 >({
   control,
   name,

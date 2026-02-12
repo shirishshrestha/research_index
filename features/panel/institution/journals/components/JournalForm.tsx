@@ -118,6 +118,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
   const updateMutation = useUpdateJournalMutation(journal?.id, {
     onSuccess: () => {
       router.push(`/institution/journals/${journal!.id}`);
+      
     },
   });
 
@@ -533,7 +534,7 @@ export function JournalForm({ journal, mode }: JournalFormProps) {
                   placeholder="+1 234 567 8900"
                 />
 
-                <FormRichTextField
+                <FormInputField
                   control={form.control}
                   name="contact_address"
                   label="Contact Address"
