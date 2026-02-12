@@ -128,7 +128,7 @@ export function LatestJournalsSection({
                   <Image
                     width={92}
                     height={123}
-                    src={journal.cover_image_url || "/sample-journal.png"}
+                    src={journal.cover_image_url || "/placeholder.png"}
                     alt={`${journal.title} cover`}
                     className="w-[80%] h-45 object-cover "
                   />

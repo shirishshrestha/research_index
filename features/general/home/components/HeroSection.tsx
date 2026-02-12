@@ -7,6 +7,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useRouter } from "next/navigation";
 // Use plain <img> for SVGs so CSS height/width behave predictably
 
 const stats = [
@@ -16,13 +17,30 @@ const stats = [
 ];
 
 export function HeroSection() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState<"journals" | "articles">(
-    "journals"
+    "journals",
   );
 
-  const handleSearch = (value: string) => {
-    console.log("Searching for:", value, "Type:", searchType);
-    // Add your search logic here
+  const handleSearch = (value?: string) => {
+    const query = value !== undefined ? value : searchQuery;
+    if (!query.trim()) return;
+
+    // Build the search URL based on the selected type
+    const searchParams = new URLSearchParams();
+    searchParams.set("search", query.trim());
+
+    // Redirect to the appropriate page based on search type
+    if (searchType === "journals") {
+      router.push(`/journals?${searchParams.toString()}`);
+    } else {
+      router.push(`/articles?${searchParams.toString()}`);
+    }
+  };
+
+  const handleSearchClick = () => {
+    handleSearch(searchQuery);
   };
 
   return (
@@ -83,12 +101,21 @@ export function HeroSection() {
             <div className="space-y-5 mt-15">
               <div className="flex gap-3">
                 <SearchInput
-                  placeholder="Search author, journal, articles, institutions....."
-                  onSearch={handleSearch}
-                  debounceMs={500}
+                  placeholder={`Search ${searchType === "journals" ? "journals, publishers, ISSN" : "articles, authors, DOI"}...`}
+                  onSearch={(value) => {
+                    setSearchQuery(value);
+                  }}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearchClick();
+                    }
+                  }}
+                  debounceMs={0}
                   className="flex-1"
                 />
-                <Button size="lg" className="">
+                <Button size="lg" onClick={handleSearchClick} className="">
                   <Search size={20} />
                   Search
                 </Button>

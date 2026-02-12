@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { JournalSidebarNav } from "../JournalSidebarNav";
 import { useJournalVolumes } from "../../api/journals.client";
 import Link from "next/link";
@@ -142,7 +143,14 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
 
       {/* Main Content */}
       <aside className="space-y-6.25">
-        <h2 className="heading-3 text-primary!">All Issues</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="heading-3 text-primary!">All Issues</h2>
+          <Link href={`/issues?journal=${journalId}`}>
+            <Button variant="outline" size="sm">
+              View All Issues →
+            </Button>
+          </Link>
+        </div>
         <Accordion type="multiple" className="w-full space-y-4">
           {volumes.map((volume) => (
             <AccordionItem

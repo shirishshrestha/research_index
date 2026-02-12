@@ -142,7 +142,14 @@ export function LatestIssuesTab({ journalId }: LatestIssuesTabProps) {
         <div className="space-y-6">
           {/* Latest Volume Header */}
           <div>
-            <h2 className="heading-3 text-primary mb-8.75">Latest Issues</h2>
+            <div className="flex items-center justify-between mb-8.75">
+              <h2 className="heading-3 text-primary">Latest Issues</h2>
+              <Link href={`/issues?journal=${journalId}`}>
+                <Button variant="outline" size="sm">
+                  View All Issues →
+                </Button>
+              </Link>
+            </div>
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="heading-4 text-text-black">
