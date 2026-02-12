@@ -174,9 +174,8 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
               <AccordionContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                   {volume.issues.map((issue) => (
-                    <Link
+                    <div
                       key={issue.id}
-                      href={`/journals/${journalId}/issues/${issue.id}`}
                       id={`issue-${issue.id}`}
                       className="block scroll-mt-40"
                     >
@@ -228,13 +227,10 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                               </p>
                               <div className="space-y-2">
                                 {issue.articles.slice(0, 2).map((article) => (
-                                  <div
+                                  <Link
                                     key={article.id}
                                     className="text-xs"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      window.location.href = `/articles/${article.publication_id}`;
-                                    }}
+                                    href={`/articles/${article.publication_id}`}
                                   >
                                     <p
                                       className="font-medium text-text-black line-clamp-1"
@@ -248,19 +244,22 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                                     >
                                       {article.authors}
                                     </p>
-                                  </div>
+                                  </Link>
                                 ))}
                                 {issue.articles.length > 2 && (
-                                  <p className="text-xs text-primary font-medium">
+                                  <Link
+                                    href={`/issues/?journal=${journalId}/`}
+                                    className="text-xs text-primary font-medium"
+                                  >
                                     +{issue.articles.length - 2} more articles
-                                  </p>
+                                  </Link>
                                 )}
                               </div>
                             </div>
                           )}
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               </AccordionContent>
