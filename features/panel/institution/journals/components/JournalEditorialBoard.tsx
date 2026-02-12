@@ -28,6 +28,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEditorialBoardMember } from "../api";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { extractErrorMessage } from "@/utils/errorHandling";
 
 interface JournalEditorialBoardProps {
   members?: EditorialBoardMember[];
@@ -60,7 +61,9 @@ export function JournalEditorialBoard({
       setSelectedMember(null);
     },
     onError: (error: Error) => {
-      toast.error(error.message || "Failed to delete editorial board member");
+      toast.error(
+        extractErrorMessage(error, "Failed to delete editorial board member"),
+      );
     },
   });
 

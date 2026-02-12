@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Dialog,
   DialogContent,
@@ -11,56 +10,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  FormInputField,
+  FormTextareaField,
+  FormSelectField,
+  FormMultiSelectField,
+} from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Loader2, Upload, X } from "lucide-react";
-import { createEditorialBoardMember, updateEditorialBoardMember } from "../api";
-import type { EditorialBoardMember } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-const ROLE_OPTIONS = [
-  { value: "editor_in_chief", label: "Editor-in-Chief" },
-  { value: "managing_editor", label: "Managing Editor" },
-  { value: "associate_editor", label: "Associate Editor" },
-  { value: "section_editor", label: "Section Editor" },
-  { value: "editorial_board", label: "Editorial Board Member" },
-  { value: "reviewer", label: "Reviewer" },
-  { value: "advisory_board", label: "Advisory Board Member" },
-];
-
-const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  role: z.string().min(1, "Please select a role"),
-  title: z.string().optional(),
-  affiliation: z.string().optional(),
-  email: z.string().email("Invalid email address").optional().or(z.literal("")),
-  bio: z.string().optional(),
-  expertise: z.string().optional(),
-  orcid: z.string().optional(),
-  website: z.string().url("Invalid URL").optional().or(z.literal("")),
-  order: z.number().min(0).default(0),
-  is_active: z.boolean().default(true),
-});
-
-type FormData = z.infer<typeof formSchema>;
+import { FormLabel } from "@/components/ui/form";
+import type { EditorialBoardMember } from "../types";
+import {
+  useCreateEditorialBoardMemberMutation,
+  useUpdateEditorialBoardMemberMutation,
+  useExpertiseAreasQuery,
+} from "../hooks";
+import {
+  editorialBoardMemberSchema,
+  titleOptions,
+  ROLE_OPTIONS,
+  type EditorialBoardMemberFormData,
+} from "../schemas";
 
 interface EditorialBoardMemberDialogProps {
   open: boolean;
@@ -77,12 +49,15 @@ export function EditorialBoardMemberDialog({
   member,
   mode,
 }: EditorialBoardMemberDialogProps) {
-  const queryClient = useQueryClient();
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
+  // Fetch expertise areas
+  const { data: expertiseAreas = [], isLoading: isLoadingExpertise } =
+    useExpertiseAreasQuery();
+
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(editorialBoardMemberSchema),
     defaultValues: {
       name: "",
       role: "",
@@ -90,7 +65,7 @@ export function EditorialBoardMemberDialog({
       affiliation: "",
       email: "",
       bio: "",
-      expertise: "",
+      expertise: [],
       orcid: "",
       website: "",
       order: 0,
@@ -98,11 +73,35 @@ export function EditorialBoardMemberDialog({
     },
   });
 
+  const createMutation = useCreateEditorialBoardMemberMutation(journalId);
+  const updateMutation = useUpdateEditorialBoardMemberMutation(
+    journalId,
+    member?.id ?? 0,
+  );
+
   // Reset form and photo states when dialog opens/closes or mode changes
   useEffect(() => {
     if (!open) return;
 
     if (member && mode === "edit") {
+      // Parse expertise if it's a string
+      let expertiseArray: string[] = [];
+      if (member.expertise) {
+        try {
+          // Try to parse as JSON first
+          expertiseArray =
+            typeof member.expertise === "string"
+              ? JSON.parse(member.expertise)
+              : member.expertise;
+        } catch {
+          // If parsing fails, split by comma
+          expertiseArray =
+            typeof member.expertise === "string"
+              ? member.expertise.split(",").map((s) => s.trim())
+              : [];
+        }
+      }
+
       form.reset({
         name: member.name,
         role: member.role,
@@ -110,7 +109,7 @@ export function EditorialBoardMemberDialog({
         affiliation: member.affiliation || "",
         email: member.email || "",
         bio: member.bio || "",
-        expertise: member.expertise || "",
+        expertise: expertiseArray,
         orcid: member.orcid || "",
         website: member.website || "",
         order: member.order,
@@ -129,7 +128,7 @@ export function EditorialBoardMemberDialog({
         affiliation: "",
         email: "",
         bio: "",
-        expertise: "",
+        expertise: [],
         orcid: "",
         website: "",
         order: 0,
@@ -141,36 +140,6 @@ export function EditorialBoardMemberDialog({
       });
     }
   }, [open, member, mode, form]);
-
-  const createMutation = useMutation({
-    mutationFn: (data: FormData & { photo?: File }) =>
-      createEditorialBoardMember(journalId, data),
-    onSuccess: (data) => {
-      toast.success(
-        data.message || "Editorial board member added successfully",
-      );
-      queryClient.invalidateQueries({ queryKey: ["journal", journalId] });
-      onOpenChange(false);
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to add editorial board member");
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: (data: Partial<FormData> & { photo?: File }) =>
-      updateEditorialBoardMember(journalId, member!.id, data),
-    onSuccess: (data) => {
-      toast.success(
-        data.message || "Editorial board member updated successfully",
-      );
-      queryClient.invalidateQueries({ queryKey: ["journal", journalId] });
-      onOpenChange(false);
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || "Failed to update editorial board member");
-    },
-  });
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -192,24 +161,48 @@ export function EditorialBoardMemberDialog({
     );
   };
 
-  const onSubmit = (data: FormData) => {
-    const payload: Record<string, unknown> = { ...data };
+  const onSubmit = (data: EditorialBoardMemberFormData) => {
+    const payload: Record<string, unknown> = {
+      ...data,
+      // Convert expertise array to comma-separated string for backend
+      expertise: data.expertise?.join(", ") || "",
+    };
+
     if (photoFile) {
       payload.photo = photoFile;
     }
 
     if (mode === "create") {
-      createMutation.mutate(payload as FormData & { photo?: File });
+      createMutation.mutate(
+        payload as EditorialBoardMemberFormData & { photo?: File },
+        {
+          onSuccess: () => {
+            onOpenChange(false);
+          },
+        },
+      );
     } else {
-      updateMutation.mutate(payload);
+      updateMutation.mutate(payload, {
+        onSuccess: () => {
+          onOpenChange(false);
+        },
+      });
     }
   };
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
+  const isLoading =
+    createMutation.isPending || updateMutation.isPending || isLoadingExpertise;
+
+  // Convert expertise areas to options format
+  const expertiseOptions =
+    expertiseAreas.map((area) => ({
+      value: area.name,
+      label: area.name,
+    })) || [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {mode === "create"
@@ -271,184 +264,89 @@ export function EditorialBoardMemberDialog({
 
             {/* Basic Information */}
             <div className="grid gap-4 md:grid-cols-2">
-              <FormField
+              <FormInputField
                 control={form.control}
                 name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full Name *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Dr. John Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Full Name *"
+                placeholder="Dr. John Doe"
               />
 
-              <FormField
+              <FormSelectField
                 control={form.control}
                 name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role *</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ROLE_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Role *"
+                placeholder="Select a role"
+                options={ROLE_OPTIONS}
               />
 
-              <FormField
+              <FormSelectField
                 control={form.control}
                 name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Academic Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Dr., Prof." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Academic Title"
+                placeholder="Select title"
+                options={titleOptions}
               />
 
-              <FormField
+              <FormInputField
                 control={form.control}
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder="john.doe@example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                type="email"
+                label="Email"
+                placeholder="john.doe@example.com"
               />
             </div>
 
-            <FormField
+            <FormInputField
               control={form.control}
               name="affiliation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Affiliation</FormLabel>
-                  <FormControl>
-                    <Input placeholder="University or Institution" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Affiliation"
+              placeholder="University or Institution"
             />
 
-            <FormField
+            <FormTextareaField
               control={form.control}
               name="bio"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Biography</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Short biography..."
-                      rows={3}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Biography"
+              placeholder="Short biography..."
+              rows={3}
             />
 
-            <FormField
+            <FormMultiSelectField
               control={form.control}
               name="expertise"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Areas of Expertise</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Research areas and expertise..."
-                      rows={2}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Areas of Expertise"
+              placeholder="Select expertise areas"
+              options={expertiseOptions}
+              search={{
+                placeholder: "Search expertise areas...",
+                emptyMessage: "No expertise areas found.",
+              }}
             />
 
             {/* External Links */}
             <div className="grid gap-4 md:grid-cols-2">
-              <FormField
+              <FormInputField
                 control={form.control}
                 name="orcid"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ORCID ID</FormLabel>
-                    <FormControl>
-                      <Input placeholder="0000-0000-0000-0000" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="ORCID ID"
+                placeholder="0000-0000-0000-0000"
               />
 
-              <FormField
+              <FormInputField
                 control={form.control}
                 name="website"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Website</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://example.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                type="url"
+                label="Website"
+                placeholder="https://example.com"
               />
             </div>
 
-            <FormField
+            <FormInputField
               control={form.control}
               name="order"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Display Order</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min={0}
-                      {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              type="number"
+              label="Display Order"
+              placeholder="0"
             />
 
             {/* Actions */}
