@@ -123,16 +123,16 @@ export interface JournalFormData {
 export interface EditorialBoardMemberFormData {
   name: string;
   role: string;
-  title: string;
-  affiliation: string;
-  email: string;
-  bio: string;
-  expertise: string;
+  title?: string;
+  affiliation?: string;
+  email?: string;
+  bio?: string;
+  expertise?: string;
   photo?: File;
-  orcid: string;
-  website: string;
-  order: number;
-  is_active: boolean;
+  orcid?: string;
+  website?: string;
+  order?: number;
+  is_active?: boolean;
 }
 
 export interface JournalCreateResponse {

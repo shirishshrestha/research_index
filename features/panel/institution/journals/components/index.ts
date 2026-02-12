@@ -6,5 +6,6 @@ export * from "./JournalBasicInfo";
 export * from "./JournalStatistics";
 export * from "./JournalContact";
 export * from "./JournalEditorialBoard";
+export * from "./EditorialBoardMemberDialog";
 export * from "./JournalBreadcrumb";
 export * from "./DOAJSearchDialog";
