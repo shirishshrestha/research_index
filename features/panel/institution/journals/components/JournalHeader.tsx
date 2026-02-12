@@ -57,9 +57,9 @@ export function JournalHeader({ journal, isPending }: JournalHeaderProps) {
 
         {/* Content Overlay */}
         <div className="relative ">
-          <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <div className="flex flex-col md:flex-row gap-4 items-start">
             {/* Journal Logo/Avatar */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <div className="h-32 w-32 rounded-xl border-4 border-background bg-card  overflow-hidden">
                 {journal.cover_image_url ? (
                   <img

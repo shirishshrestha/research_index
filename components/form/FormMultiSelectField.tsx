@@ -58,7 +58,7 @@ export const FormMultiSelectField = <
               onValuesChange={(values) => field.onChange(values)}
               single={false}
             >
-              <MultiSelectTrigger>
+              <MultiSelectTrigger className="w-full">
                 <MultiSelectValue placeholder={placeholder} />
               </MultiSelectTrigger>
               <MultiSelectContent search={search}>

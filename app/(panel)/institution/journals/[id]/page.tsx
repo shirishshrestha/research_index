@@ -52,9 +52,9 @@ export default function JournalDetailPage({
       <div className="space-y-6">
         <JournalHeader journal={journal} isPending={isPending} />
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 xl:grid-cols-3">
           {/* Left Column - Basic Info & Editorial Board */}
-          <div className="space-y-6 lg:col-span-2">
+          <div className="space-y-6 xl:col-span-2">
             <JournalBasicInfo journal={journal} isPending={isPending} />
             <JournalEditorialBoard
               members={journal?.editorial_board}

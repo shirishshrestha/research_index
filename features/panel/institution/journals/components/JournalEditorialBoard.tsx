@@ -253,15 +253,14 @@ export function JournalEditorialBoard({
             </div>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <DataTable
-            data={members || []}
-            columns={columns}
-            emptyMessage="No editorial board members added yet"
-            hoverable
-          />
-        </CardContent>
       </Card>
+      <DataTable
+        data={members || []}
+        columns={columns}
+        emptyMessage="No editorial board members added yet"
+        hoverable
+        tableClassName="flex items-center justify-center"
+      />
 
       <EditorialBoardMemberDialog
         open={dialogOpen}
