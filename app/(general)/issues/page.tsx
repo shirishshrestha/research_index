@@ -12,54 +12,44 @@ export const metadata: Metadata = {
 };
 
 interface IssuesPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     page_size?: string;
     journal?: string;
     year?: string;
     is_special_issue?: string;
     search?: string;
-  };
+  }>;
 }
 
-async function getIssues(
-  searchParamsPromise:
-    | IssuesPageProps["searchParams"]
-    | Promise<IssuesPageProps["searchParams"]>,
-) {
-  const searchParams = await Promise.resolve(searchParamsPromise as any);
+export default async function IssuesPage({ searchParams }: IssuesPageProps) {
+  const params = await searchParams;
+
+  let issuesData;
   try {
-    return await getPublicIssues(
+    issuesData = await getPublicIssues(
       {
-        journal: searchParams?.journal
-          ? parseInt(searchParams.journal)
-          : undefined,
-        year: searchParams?.year ? parseInt(searchParams.year) : undefined,
+        journal: params.journal ? parseInt(params.journal) : undefined,
+        year: params.year ? parseInt(params.year) : undefined,
         is_special_issue:
-          searchParams?.is_special_issue === "true"
+          params.is_special_issue === "true"
             ? true
-            : searchParams?.is_special_issue === "false"
+            : params.is_special_issue === "false"
               ? false
               : undefined,
-        search: searchParams?.search,
+        search: params.search,
         status: "published",
         sort: "-publication_date",
       },
       {
-        page: searchParams?.page ? parseInt(searchParams.page) : 1,
-        page_size: searchParams?.page_size
-          ? parseInt(searchParams.page_size)
-          : 12,
+        page: params.page ? parseInt(params.page) : 1,
+        page_size: params.page_size ? parseInt(params.page_size) : 12,
       },
     );
   } catch (error) {
     console.error("Error fetching issues:", error);
-    return { results: [], count: 0, next: null, previous: null };
+    issuesData = { results: [], count: 0, next: null, previous: null };
   }
-}
-
-export default async function IssuesPage({ searchParams }: IssuesPageProps) {
-  const issuesData = await getIssues(searchParams);
 
   return (
     <section>
