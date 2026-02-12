@@ -176,10 +176,11 @@ export interface JournalFilters {
   sort?: string;
 }
 
-export interface IssueFilters {
+export interface IssueFilters extends PaginationParams {
   year?: number;
   volume?: number;
   status?: "draft" | "published" | "archived";
+  search?: string;
 }
 
 export interface JournalsResponse {
@@ -294,14 +295,17 @@ export async function getJournalVolumes(
 export async function getPublicJournalIssues(
   journalId: number | string,
   filters?: IssueFilters,
-): Promise<Issue[]> {
+): Promise<PaginatedResponse<Issue>> {
   const params = new URLSearchParams();
 
   if (filters?.year) params.append("year", String(filters.year));
   if (filters?.volume) params.append("volume", String(filters.volume));
   if (filters?.status) params.append("status", filters.status);
+  if (filters?.search) params.append("search", filters.search);
+  if (filters?.page) params.append("page", String(filters.page));
+  if (filters?.page_size) params.append("page_size", String(filters.page_size));
 
-  return serverGet<Issue[]>(
+  return serverGet<PaginatedResponse<Issue>>(
     `/publications/journals/public/${journalId}/issues/${params.toString() ? `?${params}` : ""}`,
     { tags: ["journals", `journal-${journalId}`, "issues"], revalidate: 3600 },
   );

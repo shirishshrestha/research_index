@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { JournalSidebarNav } from "../JournalSidebarNav";
 import { useJournalVolumes } from "../../api/journals.client";
 import Link from "next/link";
@@ -142,7 +143,14 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
 
       {/* Main Content */}
       <aside className="space-y-6.25">
-        <h2 className="heading-3 text-primary!">All Issues</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="heading-3 text-primary!">All Issues</h2>
+          <Link href={`/issues?journal=${journalId}`}>
+            <Button variant="outline" size="sm">
+              View All Issues →
+            </Button>
+          </Link>
+        </div>
         <Accordion type="multiple" className="w-full space-y-4">
           {volumes.map((volume) => (
             <AccordionItem
@@ -166,9 +174,8 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
               <AccordionContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                   {volume.issues.map((issue) => (
-                    <Link
+                    <div
                       key={issue.id}
-                      href={`/journals/${journalId}/issues/${issue.id}`}
                       id={`issue-${issue.id}`}
                       className="block scroll-mt-40"
                     >
@@ -220,13 +227,10 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                               </p>
                               <div className="space-y-2">
                                 {issue.articles.slice(0, 2).map((article) => (
-                                  <div
+                                  <Link
                                     key={article.id}
                                     className="text-xs"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      window.location.href = `/articles/${article.publication_id}`;
-                                    }}
+                                    href={`/articles/${article.publication_id}`}
                                   >
                                     <p
                                       className="font-medium text-text-black line-clamp-1"
@@ -240,19 +244,22 @@ export const AllIssuesTab = ({ journalId }: AllIssuesTabProps) => {
                                     >
                                       {article.authors}
                                     </p>
-                                  </div>
+                                  </Link>
                                 ))}
                                 {issue.articles.length > 2 && (
-                                  <p className="text-xs text-primary font-medium">
+                                  <Link
+                                    href={`/issues/?journal=${journalId}/`}
+                                    className="text-xs text-primary font-medium"
+                                  >
                                     +{issue.articles.length - 2} more articles
-                                  </p>
+                                  </Link>
                                 )}
                               </div>
                             </div>
                           )}
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               </AccordionContent>
