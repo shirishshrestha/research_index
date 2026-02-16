@@ -92,7 +92,7 @@ export function ArticleDetails({ article }: ArticleDetailsProps) {
           },
         ]}
         moreOptions={
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full justify-end">
             <ExportButton entityId={article.id} entityType="publication" />
             <ShareButton
               entityId={article.id}
