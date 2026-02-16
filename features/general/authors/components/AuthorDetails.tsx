@@ -116,7 +116,7 @@ export function AuthorDetails({ author }: AuthorDetailsProps) {
             },
           ]}
           moreOptions={
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full justify-end">
               <ExportButton entityId={author.id} entityType="author" />
               <ShareButton
                 entityId={author.id}

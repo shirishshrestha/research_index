@@ -149,7 +149,7 @@ export function InstitutionDetails({
           ]}
           moreOptions={
             serverInstitution ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 w-full justify-end">
                 <ExportButton
                   entityId={serverInstitution.id}
                   entityType="institution"
