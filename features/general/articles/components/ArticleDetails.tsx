@@ -1,9 +1,12 @@
 "use client";
 
 import { ProfileTabs } from "@/features/shared/components/profile";
+import {
+  ExportButton,
+  ShareButton,
+} from "@/features/shared/components/export-share";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/shared";
-import { ChevronDown } from "lucide-react";
 import {
   CitationsTab,
   OverviewTab,
@@ -89,10 +92,13 @@ export function ArticleDetails({ article }: ArticleDetailsProps) {
           },
         ]}
         moreOptions={
-          <div>
-            <p className="flex items-center gap-1.5 heading-para">
-              More <ChevronDown className="stroke-[1.6px]" size={18} />
-            </p>
+          <div className="flex items-center gap-3">
+            <ExportButton entityId={article.id} entityType="publication" />
+            <ShareButton
+              entityId={article.id}
+              entityType="publication"
+              entityTitle={article.title}
+            />
           </div>
         }
       />
