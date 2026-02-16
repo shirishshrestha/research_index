@@ -62,24 +62,16 @@ export const EditorialBoard = ({ editorialBoard }: EditorialBoardProps) => {
                   key={member.id}
                   className="overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <CardContent className="p-6 text-center space-y-4">
+                  <CardContent className=" text-center space-y-4">
                     <div className="flex justify-center">
                       <div className="relative">
                         <div className="absolute inset-0 bg-primary/10 rounded-2xl transform rotate-3"></div>
                         <Avatar className="h-32 w-32 border-4 border-primary/20 relative">
                           <AvatarImage
-                            src={member.photo_url}
+                            src={member.photo_url || "/fallback-image.png"}
                             alt={member.name}
                             className="object-cover"
                           />
-                          <AvatarFallback className="text-2xl bg-primary/5">
-                            {member.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")
-                              .toUpperCase()
-                              .slice(0, 2)}
-                          </AvatarFallback>
                         </Avatar>
                       </div>
                     </div>
