@@ -2,7 +2,6 @@ import { JournalProfileCard } from "./JournalProfileCard";
 import { ExportJournalButton } from "./ExportJournalButton";
 import { ShareJournalButton } from "./ShareJournalButton";
 import { ProfileTabs } from "@/features/shared/components/profile";
-import { ChevronDown } from "lucide-react";
 import {
   JournalOverviewTab,
   LatestIssuesTab,

@@ -5,7 +5,10 @@ import {
   ProfileStats,
   ProfileTabs,
 } from "@/features/shared/components/profile";
-import { ChevronDown } from "lucide-react";
+import {
+  ExportButton,
+  ShareButton,
+} from "@/features/shared/components/export-share";
 import { useFollowToggle } from "@/features/shared/hooks";
 import {
   AuthorProfileTab,
@@ -113,10 +116,13 @@ export function AuthorDetails({ author }: AuthorDetailsProps) {
             },
           ]}
           moreOptions={
-            <div>
-              <p className="flex items-center gap-1.5 heading-para">
-                More <ChevronDown className="stroke-[1.6px] " size={18} />
-              </p>
+            <div className="flex items-center gap-3">
+              <ExportButton entityId={author.id} entityType="author" />
+              <ShareButton
+                entityId={author.id}
+                entityType="author"
+                entityTitle={author.full_name}
+              />
             </div>
           }
         />

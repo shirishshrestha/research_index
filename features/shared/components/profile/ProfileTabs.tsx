@@ -35,7 +35,7 @@ export function ProfileTabs({
           if (value !== tabValue) {
             paramList.forEach((param) => params.delete(param));
           }
-        }
+        },
       );
     }
 
@@ -48,8 +48,8 @@ export function ProfileTabs({
       onValueChange={handleTabChange}
       className={`w-full mt-7.5 pt-5 gap-0 ${className}`}
     >
-      <div className=" border-b border-b-[#ccc] flex justify-between items-center mb-8.75">
-        <TabsList className="bg-background flex gap-3 rounded-none pb-0 px-0">
+      <div className=" border-b border-b-[#ccc] flex justify-between lg:items-center mb-8.75 flex-col lg:flex-row gap-3 items-start">
+        <TabsList className="bg-background flex-wrap items-start w-fit justify-start! h-full flex gap-2 md:gap-3 rounded-none pb-0 px-0">
           {tabs.map((tab) => {
             // If tab has dropdown items
             if (tab.dropdown && tab.dropdown.length > 0) {
@@ -58,7 +58,7 @@ export function ProfileTabs({
                   <DropdownMenuTrigger asChild>
                     <button
                       className={
-                        "relative capitalize pt-1! px-5 pb-3.75 rounded-none heading-para shadow-none! cursor-pointer flex items-center gap-1 before:content-[''] before:absolute before:left-0 before:rounded-sm before:bottom-0.75 before:h-0.5  before:w-full before:opacity-0 before:transition-opacity before:duration-200 data-[state=open]:before:opacity-100 data-[state=open]:before:bg-primary hover:text-primary data-[state=active]:before:opacity-100 data-[state=active]:before:bg-primary"
+                        "relative capitalize pt-1! px-5 pb-3.75 rounded-none heading-para shadow-none! cursor-pointer flex items-center gap-1 before:content-[''] before:absolute before:left-0 before:rounded-sm before:bottom-0.75 before:h-0.5  before:w-full before:opacity-0 before:transition-opacity before:duration-200 data-[state=open]:before:opacity-100 data-[state=open]:before:bg-primary hover:text-primary data-[state=active]:before:opacity-100 data-[state=active]:before:bg-primary w-fit!"
                       }
                     >
                       {tab.label}
@@ -86,7 +86,7 @@ export function ProfileTabs({
                 key={tab.value}
                 value={tab.value}
                 className={
-                  "relative capitalize px-5 pb-3.75 rounded-none heading-para shadow-none! cursor-pointer before:content-[''] before:absolute before:left-0 before:rounded-sm before:-bottom-0.75 before:h-0.5 before:w-full before:opacity-0 before:transition-opacity before:duration-200 data-[state=active]:before:opacity-100 data-[state=active]:before:bg-primary"
+                  "relative capitalize px-5 pb-3.75 rounded-none heading-para shadow-none! cursor-pointer before:content-[''] before:absolute before:left-0 before:rounded-sm before:-bottom-0.75 before:h-0.5 before:w-full before:opacity-0 before:transition-opacity before:duration-200 data-[state=active]:before:opacity-100 data-[state=active]:before:bg-primary w-fit!"
                 }
               >
                 {tab.label}
