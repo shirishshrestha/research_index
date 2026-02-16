@@ -107,7 +107,7 @@ export function JournalDetails({ journal }: JournalDetailsProps) {
           },
         ]}
         moreOptions={
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 justify-end w-full">
             <ExportJournalButton journalId={journal.id} />
             <ShareJournalButton
               journalId={journal.id}
