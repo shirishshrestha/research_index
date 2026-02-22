@@ -25,6 +25,7 @@ import type { NepJOLImportStartRequest } from "../types";
 export function NepJOLImportManager() {
   const [syncDialogOpen, setSyncDialogOpen] = React.useState(false);
   const [hasStartedImport, setHasStartedImport] = React.useState(false);
+  const [pollingInterval, setPollingInterval] = React.useState<number>(5000); // Start with slow polling
   const [importOptions, setImportOptions] =
     React.useState<NepJOLImportStartRequest>({
       max_journals: null,
@@ -40,14 +41,24 @@ export function NepJOLImportManager() {
     refetch: refetchHistory,
   } = useNepJOLImportHistoryQuery();
 
-  // Fetch initial status
+  // Fetch initial status - poll to detect running imports
   const { data: status, isLoading: statusLoading } = useNepJOLImportStatusQuery(
     {
       enabled: true,
-      // Poll aggressively when import might be running
-      refetchInterval: hasStartedImport ? 1000 : false,
+      refetchInterval: pollingInterval,
     },
   );
+
+  const isImportRunning = status?.is_running || false;
+
+  // Adjust polling speed based on import status
+  React.useEffect(() => {
+    const shouldPollFast = isImportRunning || hasStartedImport;
+    const newInterval = shouldPollFast ? 1000 : 5000; // 1s when running, 5s when idle
+    if (newInterval !== pollingInterval) {
+      setPollingInterval(newInterval);
+    }
+  }, [isImportRunning, hasStartedImport, pollingInterval]);
 
   const startImport = useStartNepJOLImportMutation({
     onSuccess: () => {
@@ -71,22 +82,24 @@ export function NepJOLImportManager() {
     stopImport.mutate();
   };
 
-  const isImportRunning = status?.is_running || false;
-
-  // Auto-open sync dialog only when user starts an import
+  // Auto-open sync dialog when user starts an import OR when an import is detected on mount
   React.useEffect(() => {
-    if (hasStartedImport && isImportRunning && !syncDialogOpen) {
-      setSyncDialogOpen(true);
+    if (isImportRunning && !syncDialogOpen) {
+      // Only auto-open if user started it or if we just detected a running import
+      if (hasStartedImport) {
+        setSyncDialogOpen(true);
+      }
     }
-  }, [hasStartedImport, isImportRunning, syncDialogOpen]);
+  }, [isImportRunning, syncDialogOpen, hasStartedImport]);
 
   // Reset hasStartedImport when import completes
   React.useEffect(() => {
     if (hasStartedImport && !isImportRunning) {
       // Import has finished
       setHasStartedImport(false);
+      refetchHistory(); // Refresh statistics
     }
-  }, [hasStartedImport, isImportRunning]);
+  }, [hasStartedImport, isImportRunning, refetchHistory]);
 
   if (historyLoading || statusLoading) {
     return (
