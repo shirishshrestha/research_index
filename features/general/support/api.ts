@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import type { SupportPage, Sponsor } from "./types";
+import type { SupportPage, Sponsor, PaginatedSponsorResponse } from "./types";
 
 export const supportApi = {
   // Get Author Supporter page
@@ -18,8 +18,8 @@ export const supportApi = {
   },
 
   // Sponsor management
-  getAllSponsors: async (): Promise<Sponsor[]> => {
-    return api.get<Sponsor[]>(`/support/sponsors/`);
+  getAllSponsors: async (): Promise<PaginatedSponsorResponse> => {
+    return api.get<PaginatedSponsorResponse>(`/support/sponsors/`);
   },
 
   createSponsor: async (data: FormData): Promise<Sponsor> => {

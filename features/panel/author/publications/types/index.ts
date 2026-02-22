@@ -157,6 +157,13 @@ export interface Publication {
   stats: PublicationStats;
 }
 
+export interface PaginatedPublicationResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Publication[];
+}
+
 export interface PublicationFormData {
   title: string;
   abstract?: string;

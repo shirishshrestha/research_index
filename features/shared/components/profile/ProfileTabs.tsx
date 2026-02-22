@@ -49,7 +49,7 @@ export function ProfileTabs({
       className={`w-full mt-7.5 pt-5 gap-0 ${className}`}
     >
       <div className=" border-b border-b-[#ccc] flex justify-between lg:items-center mb-8.75 flex-col lg:flex-row gap-6 lg:gap-3 items-start pb-6 lg:pb-0">
-        <TabsList className="bg-background flex-wrap items-start w-fit justify-start! h-full flex gap-2 gap-x-10! md:gap-3 rounded-none pb-0 px-0">
+        <TabsList className="bg-background flex-wrap lg:flex-nowrap items-start w-fit justify-start! h-full flex gap-2 gap-x-10! md:gap-3 rounded-none pb-0 px-0">
           {tabs.map((tab) => {
             // If tab has dropdown items
             if (tab.dropdown && tab.dropdown.length > 0) {

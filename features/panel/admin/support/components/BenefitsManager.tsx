@@ -25,6 +25,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   useCreateBenefitMutation,
   useDeleteBenefitMutation,
 } from "@/features/general/support/mutations";
@@ -112,11 +122,20 @@ export function BenefitsManager({
   benefits,
 }: BenefitsManagerProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [benefitToDelete, setBenefitToDelete] = useState<number | null>(null);
   const deleteMutation = useDeleteBenefitMutation(pageId, pageType);
 
-  const handleDelete = (benefitId: number) => {
-    if (confirm("Are you sure you want to delete this benefit?")) {
-      deleteMutation.mutate(benefitId);
+  const handleDeleteClick = (benefitId: number) => {
+    setBenefitToDelete(benefitId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (benefitToDelete) {
+      deleteMutation.mutate(benefitToDelete);
+      setDeleteDialogOpen(false);
+      setBenefitToDelete(null);
     }
   };
 
@@ -169,7 +188,7 @@ export function BenefitsManager({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => handleDelete(benefit.id)}
+                onClick={() => handleDeleteClick(benefit.id)}
               >
                 <Trash2 className="h-4 w-4 text-red-500" />
               </Button>
@@ -177,11 +196,32 @@ export function BenefitsManager({
           ))}
           {benefits.length === 0 && (
             <p className="text-center text-gray-500 py-8">
-              No benefits yet. Click "Add Benefit" to create one.
+              No benefits yet. Click &apos;Add Benefit&apos; to create one.
             </p>
           )}
         </div>
       </CardContent>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this benefit? This action cannot
+              be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

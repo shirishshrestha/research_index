@@ -1,5 +1,6 @@
 import { ProfileSideList } from "@/features/shared/components";
 import type { InstitutionProfileProps } from "../../types";
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
 
 const members = [
   {
@@ -33,7 +34,7 @@ export const InstitutionProfileTab = ({
       <div className="space-y-8.75">
         <div>
           <h4 className="heading-4 mb-3 text-text-black">About</h4>
-          <p className="text-text-gray leading-relaxed">{institution.about}</p>
+          <RichTextDisplay content={institution.about} />
         </div>
         <div>
           <h4 className="heading-4 mb-3 text-text-black">Discipline</h4>

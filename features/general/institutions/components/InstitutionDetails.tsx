@@ -27,6 +27,7 @@ export function InstitutionDetails({
 }: InstitutionDetailsProps) {
   // Mock data for demonstration (fallback if no server data)
   const mockInstitution = {
+    id: 1,
     name: "KAHS",
     position: "Karnali Academy of Health Sciences (KAHS)",
     affiliation: "Karnali Province",
@@ -47,6 +48,7 @@ export function InstitutionDetails({
   // Use server data if available, map to component format
   const institution = serverInstitution
     ? {
+        id: serverInstitution.id,
         name: serverInstitution.institution_name || "Institution Name",
         position: serverInstitution.institution_type?.trim() || "Institution",
         affiliation: (() => {
@@ -116,7 +118,7 @@ export function InstitutionDetails({
             {
               label: "Research",
               value: "research",
-              content: <ResearchTab />,
+              content: <ResearchTab institutionId={institution.id} />,
             },
             {
               label: "Stats",

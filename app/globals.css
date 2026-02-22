@@ -324,3 +324,9 @@ h6 {
     @apply bg-background text-foreground;
   }
 }
+
+@media (max-width: 480px) {
+  .tiptap-toolbar[data-variant="fixed"] {
+    max-width: 78vw;
+  }
+}

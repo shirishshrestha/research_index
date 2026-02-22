@@ -55,6 +55,11 @@ export const sidebarConfig: Record<string, MenuItem[]> = {
       name: "Support Pages",
       icon: Files,
     },
+    {
+      path: "/admin/nepjol-import",
+      name: "NepJOL Import",
+      icon: FilePlus2Icon,
+    },
     // {
     //   name: "Journals",
     //   path: "/admin/journals",

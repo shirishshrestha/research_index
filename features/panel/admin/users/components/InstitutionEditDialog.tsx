@@ -102,7 +102,7 @@ export function InstitutionEditDialog({
           <SquarePen className="w-4 h-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[60%]! max-h-[90vh] overflow-y-auto">
+      <DialogContent className="ms:max-w-[60%]! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Institution</DialogTitle>
         </DialogHeader>

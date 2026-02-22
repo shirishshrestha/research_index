@@ -1,11 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Publication } from "@/features/panel/author/publications/types";
+import type {
+  PaginatedPublicationResponse,
+  Publication,
+} from "@/features/panel/author/publications/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 async function fetchAuthorPublications(
   authorId: number | string,
-): Promise<Publication[]> {
+): Promise<PaginatedPublicationResponse> {
   const response = await fetch(
     `${API_BASE_URL}/publications/authors/public/${authorId}/publications/`,
     {
@@ -27,7 +30,7 @@ async function fetchAuthorPublications(
 
 async function fetchInstitutionPublications(
   institutionId: number | string,
-): Promise<Publication[]> {
+): Promise<PaginatedPublicationResponse> {
   const response = await fetch(
     `${API_BASE_URL}/publications/institutions/public/${institutionId}/publications/`,
     {
@@ -56,6 +59,7 @@ export function useAuthorPublications(authorId?: number | string) {
 }
 
 export function useInstitutionPublications(institutionId?: number | string) {
+  console.log("Fetching publications for institution ID:", institutionId);
   return useQuery({
     queryKey: ["institution-publications", institutionId],
     queryFn: () => fetchInstitutionPublications(institutionId!),

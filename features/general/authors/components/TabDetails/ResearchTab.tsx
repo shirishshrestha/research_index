@@ -1,7 +1,6 @@
 "use client";
 
 import { ArticleCard } from "@/features/general/articles/components";
-import type { Publication } from "@/features/general/articles/types";
 import {
   FilterToolbar,
   Pagination,
@@ -25,12 +24,12 @@ interface ResearchTabProps {
 
 export const ResearchTab = ({ authorId }: ResearchTabProps) => {
   const {
-    data: publications = [],
+    data: publications,
     isLoading,
     error,
   } = useAuthorPublications(authorId);
 
-  if (isLoading) {
+  if (isLoading || !publications) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-[287px_1fr] gap-6">
         <CategoryFilter categories={categories} />
@@ -64,6 +63,7 @@ export const ResearchTab = ({ authorId }: ResearchTabProps) => {
           <FilterToolbar.Search
             placeholder="Search publications..."
             paramName="search"
+            label="Search"
           />
           <FilterToolbar.Select
             label="Sort by"
@@ -74,21 +74,21 @@ export const ResearchTab = ({ authorId }: ResearchTabProps) => {
         </FilterToolbar>
 
         <div className="flex flex-col gap-6.25">
-          {publications.length === 0 ? (
+          {publications.results.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
               No publications found
             </p>
           ) : (
-            publications.map((publication) => (
+            publications.results.map((publication) => (
               <ArticleCard key={publication.id} publication={publication} />
             ))
           )}
         </div>
-        {publications.length > 0 && (
+        {publications.results.length > 0 && (
           <Pagination
             currentPage={1}
-            totalPages={Math.ceil(publications.length / 10)}
-            totalCount={publications.length}
+            totalPages={Math.ceil(publications.count / 10)}
+            totalCount={publications.count}
             pageSize={10}
             showPageSizeSelector={false}
           />

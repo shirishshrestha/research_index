@@ -38,6 +38,13 @@ export interface Sponsor {
   updated_at: string;
 }
 
+export interface PaginatedSponsorResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Sponsor[];
+}
+
 export interface SupportPage {
   id: number;
   page_type:
