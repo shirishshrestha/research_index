@@ -35,7 +35,7 @@ export default function AdminSupportPage() {
         value={activeTab}
         onValueChange={(v) => setActiveTab(v as typeof activeTab)}
       >
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full md:grid-cols-3 h-full">
           <TabsTrigger value="author">Author Supporter</TabsTrigger>
           <TabsTrigger value="institutional">
             Institutional Supporter

@@ -1,5 +1,6 @@
 import { ProfileSideList } from "@/features/shared/components";
 import type { AuthorProfileProps } from "../../types";
+import { RichTextDisplay } from "@/components/shared/RichTextDisplay";
 
 const coWriters = [
   {
@@ -32,7 +33,7 @@ export const AuthorProfileTab = ({ author }: AuthorProfileProps) => {
         <div>
           <h4 className="heading-4 mb-3 text-text-black">About</h4>
           <p className="text-text-gray leading-relaxed">
-            {author.about || "No information available."}
+          <RichTextDisplay content={author.about} />
           </p>
         </div>
         <div>

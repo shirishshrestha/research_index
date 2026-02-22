@@ -11,9 +11,8 @@ import { useRouter } from "next/navigation";
 // Use plain <img> for SVGs so CSS height/width behave predictably
 
 const stats = [
-  { value: 139, label: "Countries Represented" },
-  { value: 22110, label: "Journals" },
-  { value: 11699408, label: "Article Records" },
+  { value: 22, label: "Journals" },
+  { value: 1122, label: "Article Records" },
 ];
 
 export function HeroSection() {
@@ -120,26 +119,6 @@ export function HeroSection() {
                   Search
                 </Button>
               </div>
-              <Link
-                href="/search/advanced"
-                className="inline-flex items-center gap-2 text-sm hover:text-white/80 transition-colors"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2 4h12M4 8h8M6 12h4"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                Advanced Search
-              </Link>
             </div>
 
             {/* Statistics Counter */}

@@ -25,6 +25,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   useCreateWhySupportMutation,
   useDeleteWhySupportMutation,
 } from "@/features/general/support/mutations";
@@ -112,11 +122,20 @@ export function WhySupportManager({
   points,
 }: WhySupportManagerProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [pointToDelete, setPointToDelete] = useState<number | null>(null);
   const deleteMutation = useDeleteWhySupportMutation(pageId, pageType);
 
-  const handleDelete = (pointId: number) => {
-    if (confirm("Are you sure you want to delete this point?")) {
-      deleteMutation.mutate(pointId);
+  const handleDeleteClick = (pointId: number) => {
+    setPointToDelete(pointId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (pointToDelete) {
+      deleteMutation.mutate(pointToDelete);
+      setDeleteDialogOpen(false);
+      setPointToDelete(null);
     }
   };
 
@@ -169,7 +188,7 @@ export function WhySupportManager({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={() => handleDelete(point.id)}
+                onClick={() => handleDeleteClick(point.id)}
               >
                 <Trash2 className="h-4 w-4 text-red-500" />
               </Button>
@@ -182,6 +201,27 @@ export function WhySupportManager({
           )}
         </div>
       </CardContent>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this point? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

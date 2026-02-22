@@ -175,7 +175,7 @@ export const StatsTab = ({ article }: StatsTabProps) => {
               </p>
             </div>
             {/* Comparison Chart with Description */}
-            <div className="grid xl:grid-cols-[40%_1fr] bg-card rounded-xl shadow-sm ring-1 ring-border p-6">
+            <div className="grid  bg-card rounded-xl shadow-sm ring-1 ring-border p-6">
               <DoughnutChart
                 data={metricsDistribution}
                 className="shadow-none! border-none! flex-1"

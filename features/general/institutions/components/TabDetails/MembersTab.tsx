@@ -62,20 +62,6 @@ export const MembersTab = () => {
         </div>
       </aside>
       <aside className="space-y-6.25">
-        {/* Search and Sort */}
-        <FilterToolbar containerClass="flex-row! bg-white p-4 rounded-lg shadow-xs">
-          <FilterToolbar.Search
-            placeholder="Search members..."
-            paramName="search"
-            label="Search"
-          />
-          <FilterToolbar.Select
-            label="Sort by"
-            options={sortOptions}
-            paramName="sort"
-            placeholder="Relevance"
-          />
-        </FilterToolbar>
         {mockAuthors.map((author) => (
           <ListCard key={author.id} {...author} href="/authors/1" />
         ))}

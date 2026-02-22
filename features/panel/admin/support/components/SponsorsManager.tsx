@@ -25,6 +25,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   useSponsorsQuery,
   useCreateSponsorMutation,
   useUpdateSponsorMutation,
@@ -271,10 +281,22 @@ function SponsorDialog({ sponsor, onClose }: SponsorDialogProps) {
 export function SponsorsManager() {
   const { data: sponsors, isLoading } = useSponsorsQuery();
   const deleteMutation = useDeleteSponsorMutation();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [sponsorToDelete, setSponsorToDelete] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
 
-  const handleDelete = async (id: number, name: string) => {
-    if (confirm(`Are you sure you want to delete sponsor "${name}"?`)) {
-      deleteMutation.mutate(id);
+  const handleDeleteClick = (id: number, name: string) => {
+    setSponsorToDelete({ id, name });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (sponsorToDelete) {
+      deleteMutation.mutate(sponsorToDelete.id);
+      setDeleteDialogOpen(false);
+      setSponsorToDelete(null);
     }
   };
 
@@ -294,16 +316,16 @@ export function SponsorsManager() {
       <CardContent>
         {isLoading ? (
           <p className="text-gray-500">Loading sponsors...</p>
-        ) : !sponsors || sponsors.length === 0 ? (
+        ) : !sponsors || sponsors.results.length === 0 ? (
           <p className="text-gray-500">
             No sponsors yet. Add your first sponsor!
           </p>
         ) : (
           <div className="space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {sponsors.map((sponsor) => (
+            {sponsors.results.map((sponsor) => (
               <div
                 key={sponsor.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
+                className="flex md:items-center justify-between p-4 border rounded-lg flex-col gap-3 md:flex-row md:gap-0"
               >
                 <div className="flex items-center gap-4 flex-1">
                   {sponsor.logo_url && (
@@ -357,7 +379,7 @@ export function SponsorsManager() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDelete(sponsor.id, sponsor.name)}
+                    onClick={() => handleDeleteClick(sponsor.id, sponsor.name)}
                     disabled={deleteMutation.isPending}
                   >
                     <Trash2 className="h-4 w-4 text-red-500" />
@@ -368,6 +390,27 @@ export function SponsorsManager() {
           </div>
         )}
       </CardContent>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete sponsor &apos;
+              {sponsorToDelete?.name}&apos;? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

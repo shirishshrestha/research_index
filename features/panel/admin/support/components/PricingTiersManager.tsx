@@ -24,6 +24,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   useCreatePricingTierMutation,
   useUpdatePricingTierMutation,
   useDeletePricingTierMutation,
@@ -149,11 +159,20 @@ export function PricingTiersManager({
 }: PricingTiersManagerProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTier, setEditingTier] = useState<PricingTier | undefined>();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [tierToDelete, setTierToDelete] = useState<number | null>(null);
   const deleteMutation = useDeletePricingTierMutation(pageId, pageType);
 
-  const handleDelete = (tierId: number) => {
-    if (confirm("Are you sure you want to delete this pricing tier?")) {
-      deleteMutation.mutate(tierId);
+  const handleDeleteClick = (tierId: number) => {
+    setTierToDelete(tierId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (tierToDelete) {
+      deleteMutation.mutate(tierToDelete);
+      setDeleteDialogOpen(false);
+      setTierToDelete(null);
     }
   };
 
@@ -229,7 +248,7 @@ export function PricingTiersManager({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => handleDelete(tier.id)}
+                  onClick={() => handleDeleteClick(tier.id)}
                 >
                   <Trash2 className="h-4 w-4 text-red-500" />
                 </Button>
@@ -238,11 +257,32 @@ export function PricingTiersManager({
           ))}
           {tiers.length === 0 && (
             <p className="text-center text-gray-500 py-8">
-              No pricing tiers yet. Click "Add Tier" to create one.
+              No pricing tiers yet. Click &apos;Add Tier&apos; to create one.
             </p>
           )}
         </div>
       </CardContent>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this pricing tier? This action
+              cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }

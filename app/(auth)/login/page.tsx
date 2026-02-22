@@ -21,7 +21,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right Section - Login Form */}
-      <div className="w-full lg:w-1/2 h-screen p-19 bg-white overflow-y-auto">
+      <div className="w-full lg:w-1/2 h-screen p-8 md:p-12 lg:p-15 xl:p-19 bg-white overflow-y-auto">
         <div className="w-full space-y-12.5">
           <div>
             <h1 className="heading-2 text-text-black! ">Login</h1>
@@ -95,7 +95,7 @@ export default function LoginPage() {
                   href="/claim-journals"
                   className="text-primary text-sm hover:underline font-medium"
                 >
-                  Claim Your Institution's Journals
+                  Claim Your Institution&apos;s Journals
                 </Link>
               </div>
             </div>

@@ -3,6 +3,7 @@
  */
 
 import { api } from "@/services/api";
+import { AuthTokens, UserProfile } from "../types";
 
 export interface ClaimableJournal {
   id: number;
@@ -45,23 +46,30 @@ export interface ClaimJournalsWithInstitutionRequest {
   journal_ids: number[];
 }
 
+export interface ClaimJournalsWithLoginRequest {
+  // Login credentials
+  email: string;
+  password: string;
+
+  // Journals to claim
+  journal_ids: number[];
+}
+
 export interface ClaimJournalRequest {
   journal_id: number;
 }
 
 export interface ClaimJournalsResponse {
   message: string;
-  user: {
-    email: string;
-    user_type: string;
-    is_active: boolean;
-  };
+  tokens: AuthTokens;
+  user: UserProfile;
   institution: {
     id: number;
-    institution_name: string;
+    name: string;
+    email: string;
   };
   journals_claimed: number;
-  journals: ClaimableJournal[];
+  journal_titles: string[];
 }
 
 export interface MyJournalsResponse {
@@ -94,6 +102,20 @@ export async function claimJournalsWithInstitution(
 ): Promise<ClaimJournalsResponse> {
   const response = await api.post<ClaimJournalsResponse>(
     "/auth/journals/claim/create-institution/",
+    data,
+  );
+  return response;
+}
+
+/**
+ * Claim journals by logging in with existing credentials
+ * This allows existing institutions to claim multiple journals at once
+ */
+export async function claimJournalsWithLogin(
+  data: ClaimJournalsWithLoginRequest,
+): Promise<ClaimJournalsResponse> {
+  const response = await api.post<ClaimJournalsResponse>(
+    "/auth/journals/claim/with-login/",
     data,
   );
   return response;

@@ -78,7 +78,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { isAuthenticated, user } = useAppSelector(
-    (state) => state?.auth || {}
+    (state) => state?.auth || {},
   );
 
   // Get role-specific dashboard route
@@ -98,14 +98,6 @@ export function Header() {
         <div className="wrapper flex items-center justify-between text-white text-sm">
           <div></div>
           <div className="flex gap-2 items-center">
-            <Link
-              href="/search"
-              className="hover:text-white/80 transition-colors flex gap-1.5 px-4 items-center"
-            >
-              Search
-              <Search size={17} />
-            </Link>
-
             {!isAuthenticated ? (
               <Link
                 href="/login"

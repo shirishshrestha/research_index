@@ -70,14 +70,37 @@ export const StatsTab = ({ institutionStats }: StatsTabProps) => {
     </div>
   );
 
-  // Research areas distribution
-  const researchAreasData = [
-    { name: "Medicine", value: 35, color: "#1e3a8a" },
-    { name: "Engineering", value: 25, color: "#3b82f6" },
-    { name: "Agriculture", value: 20, color: "#93c5fd" },
-    { name: "Social Sciences", value: 12, color: "#7dd3c0" },
-    { name: "Others", value: 8, color: "#bae6fd" },
+  // Score breakdown data for doughnut chart
+  const scoreBreakdownData = [
+    {
+      name: "Citations",
+      value: institutionStats?.total_citations || 0,
+      color: "#3F7E1F",
+    },
+    {
+      name: "Recommendations",
+      value: institutionStats?.recommendations_count || 0,
+      color: "#023B8B",
+    },
+    {
+      name: "Reads",
+      value: institutionStats?.total_reads || 0,
+      color: "#8DB3ED",
+    },
+    {
+      name: "Downloads",
+      value: institutionStats?.total_downloads || 0,
+      color: "#82D558",
+    },
   ];
+
+  // Calculate total and convert to percentages for doughnut chart
+  const total = scoreBreakdownData.reduce((sum, item) => sum + item.value, 0);
+  const comparisonData = scoreBreakdownData.map((item) => ({
+    name: item.name,
+    value: total > 0 ? parseFloat(((item.value / total) * 100).toFixed(2)) : 0,
+    color: item.color,
+  }));
 
   return (
     <div className="space-y-8">
@@ -178,24 +201,24 @@ export const StatsTab = ({ institutionStats }: StatsTabProps) => {
               </p>
             </div>
             {/* Comparison Chart with Description */}
-            <div className="grid xl:grid-cols-[40%_1fr] bg-card rounded-xl shadow-sm ring-1 ring-border p-6">
+            <div className="grid bg-card rounded-xl shadow-sm ring-1 ring-border p-6">
               <DoughnutChart
-                data={researchAreasData}
+                data={comparisonData}
                 className="shadow-none! border-none! flex-1"
                 height={200}
                 innerRadius={60}
                 outerRadius={100}
-                showLegend={false}
+                showLegend={true}
               />
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center mt-4">
                 <h4 className="heading-4 text-lg! mb-3.75 text-text-black">
-                  Research Areas Distribution
+                  Engagement Distribution
                 </h4>
                 <p className="text-sm text-text-gray">
-                  This institution&apos;s research spans multiple disciplines,
-                  with strong focus on Medicine and Engineering, reflecting
-                  diverse academic excellence and impactful contributions to
-                  research in Nepal.
+                  This chart shows the distribution of engagement metrics across
+                  citations, recommendations, reads, and downloads, reflecting
+                  the institution&apos;s impact and reach in the research
+                  community.
                 </p>
               </div>
             </div>

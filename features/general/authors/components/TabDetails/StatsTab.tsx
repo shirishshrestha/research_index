@@ -14,22 +14,22 @@ export const StatsTab = ({ author }: StatsTabProps) => {
   const scoreBreakdownData = [
     {
       name: "Citations",
-      value: author?.stats?.total_citations || 10,
+      value: author?.stats?.total_citations || 0,
       color: "#1e3a8a",
     },
     {
       name: "Recommendations",
-      value: author?.stats?.recommendations_count || 10,
+      value: author?.stats?.recommendations_count || 0,
       color: "#3b82f6",
     },
     {
       name: "Reads",
-      value: author?.stats?.total_reads || 10,
+      value: author?.stats?.total_reads || 0,
       color: "#93c5fd",
     },
     {
       name: "Downloads",
-      value: author?.stats?.total_downloads || 10,
+      value: author?.stats?.total_downloads || 0,
       color: "#7dd3c0",
     },
   ];
@@ -154,7 +154,7 @@ export const StatsTab = ({ author }: StatsTabProps) => {
               </p>
             </div>
             {/* Left: Chart with description */}
-            <div className=" grid xl:grid-cols-[40%_1fr] bg-card rounded-xl shadow-sm ring-1 ring-border p-6 ">
+            <div className=" grid bg-card rounded-xl shadow-sm ring-1 ring-border p-6 ">
               <DoughnutChart
                 data={comparisonData}
                 className="shadow-none! border-none! flex-1 "

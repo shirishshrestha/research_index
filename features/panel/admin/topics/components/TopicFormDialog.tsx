@@ -79,7 +79,7 @@ export function TopicFormDialog({
       <DialogTrigger asChild>
         {children || <Button>{isEdit ? <SquarePen /> : "Create Topic"}</Button>}
       </DialogTrigger>
-      <DialogContent className="max-w-3xl! max-h-[90vh] overflow-y-auto">
+      <DialogContent className="md:max-w-3xl! max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit Topic" : "Create Topic"}</DialogTitle>
         </DialogHeader>

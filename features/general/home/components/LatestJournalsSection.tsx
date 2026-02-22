@@ -13,6 +13,39 @@ interface LatestJournalsSectionProps {
 export function LatestJournalsSection({
   journals,
 }: LatestJournalsSectionProps) {
+  const displayJournals = journals.length > 0 ? journals : [];
+  const isEmpty = displayJournals.length === 0;
+
+  if (isEmpty) {
+    return (
+      <section className="section-padding">
+        <Container>
+          <div className="flex justify-between items-end mb-12">
+            <div className="text-start">
+              <p className="subheading">Recently Added</p>
+              <h2 className="heading-2 heading-gradient mb-5">
+                Latest Published Journals
+              </h2>
+              <p className="heading-para max-w-3xl">
+                No journals have been published yet. Check back later or view all journals.
+              </p>
+            </div>
+            <Button
+              variant="outline"
+              className="border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+              asChild
+            >
+              <Link href="/journals">View All</Link>
+            </Button>
+          </div>
+
+          <div className="p-6 rounded-md bg-white text-center text-text-gray">
+            There are no journals to display.
+          </div>
+        </Container>
+      </section>
+    );
+  }
   return (
     <section className="section-padding">
       <Container>
